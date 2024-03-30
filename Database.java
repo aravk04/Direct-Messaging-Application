@@ -1,4 +1,5 @@
-public class Database implements Dat {
+import java.util.ArrayList;
+public class Database implements Data {
     private String input;
     private String output;
     private ArrayList<User> users;
@@ -9,12 +10,12 @@ public class Database implements Dat {
         this.users = null;
     }
     public boolean editUser(String oldInfo, String newInfo) {
-        for (u : users) {
+        for (User u : users) {
             if (u.toString.equals(oldInfo)) {
                 try {
                     User newUser = new User(newInfo);
                     u = newUser;
-                    return true
+                    return true;
                 } catch(IncorrectInfoException e) {
                     return false;
                 }
