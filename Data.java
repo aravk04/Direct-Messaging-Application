@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public interface Data {
-    String searchUser(String info);
+    void readFile() throws IncorrectInfoException;
+    void writeFile();
+    boolean searchUser(String username);
     boolean addUser(String info);
-    boolean viewUser(String info);
+    String viewUser(String username);
     boolean editUser(String oldInfo, String newInfo);
-    boolean outputData(String info);
 }
