@@ -1,5 +1,5 @@
 /**
- * UserInteerface
+ * UserInterface
  *
  * Interface for User
  *
