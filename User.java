@@ -53,6 +53,15 @@ public class User extends Thread implements UserInterface{
         }
         return false;
     }
+    // unblock a user
+    public boolean unblockUser(User u) {
+        if (u != null && blocked.contains(u)) {
+            blocked.remove(u);
+            return true;
+        }
+        return false;
+    }
+
 
     // Remove friend from list
     public boolean removeFriend(User u) {
