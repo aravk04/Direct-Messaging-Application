@@ -79,6 +79,14 @@ public class UserTest {
         assertTrue(user1.removeFriend(user2));
         assertFalse(user1.getFriends().contains(user2));
     }
+    public void testUnblockUser() throws BadInputException {
+        User user1 = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
+        User user2 = new User("Jane Smith", "janesmith", "password456", "janesmith@example.com");
+        user1.blockUser(user2);
+        assertTrue(user1.getBlocked().contains(user2));
+        assertTrue(user1.unblockUser(user2));
+        assertFalse(user1.getBlocked().contains(user2));
+    }
 
     @Test
     public void testEquals() throws BadInputException {
