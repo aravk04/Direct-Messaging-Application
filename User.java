@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.*;
 import java.io.File;
 import java.util.Collections;
 public class User extends Thread implements UserInterface{
@@ -33,11 +34,11 @@ public class User extends Thread implements UserInterface{
         this.blocked = new ArrayList<User>();
     }
 
-    public void sendMessage(User sender, ArrayList<User> recipients, String message) {
+    public void sendMessage(Message m) throws FileNotFoundException, IOException {
         ArrayList<String> usernames = new ArrayList<>();
         String fileName = "";
-        usernames.add(sender.getUsername());
-        for (User u : recipients) {
+        usernames.add(m.getSender().getUsername());
+        for (User u : m.getReceivers()) {
             usernames.add(u.getUsername());
         }
         Collections.sort(usernames);
@@ -48,11 +49,11 @@ public class User extends Thread implements UserInterface{
         File file = new File(fileName);
         if (!file.exists()) {
             file.createNewFile();
-            MessageDatabase textFile = new MessageDatabase();
-            textFile.addMessage(fileName, message);
+            MessageDatabase db = new MessageDatabase();
+            db.addMessage(fileName, m);
         } else {
-            MessageDatabase textFile = new MessageDatabase();
-            textFile.addMessage(fileName, message);
+            MessageDatabase db = new MessageDatabase();
+            db.addMessage(fileName, m);
         }
 
     }
