@@ -1,11 +1,11 @@
 /**
  * MessageData
  *
- * interface for MessageDatabase 
+ * interface for MessageDatabase
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version March 31, 2024
+ * @version April 1, 2024
  */
 import java.io.FileNotFoundException;
 import java.io.IOException;
