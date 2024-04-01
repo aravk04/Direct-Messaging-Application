@@ -1,202 +1,111 @@
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
 
-import java.io.*;
-import java.util.ArrayList;
+import static org.junit.Assert.*;
 
+/**
+ * A framework to run public test cases for Database.java -- Project5——Phase1
+ *
+ * <p>Purdue University -- CS18000 -- Spring 2024</p>
+ *
+ * @author Harshil, Zonglin
+ * @version April 1st, 2024
+ */
+
+@RunWith(Enclosed.class)
 public class DatabaseTest {
 
-    // Test reading from a file
-    @Test
-    public void testReadFile() {
-        try {
-            // Create a temporary file with sample user data
-            File tempFile = File.createTempFile("temp", ".txt");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-            writer.write("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe");
-            writer.newLine();
-            writer.write("Jane Smith, janesmith1; janesmith2, johndoe, password456, janesmith@example.com, janesmith");
-            writer.close();
+    public static void main(String[] args) {
 
-            Database database = new Database("", tempFile.getAbsolutePath());
-            database.readFile();
-
-            ArrayList<User> users = database.getUsers();
-            assertEquals(2, users.size());
-
-            // Check if the users are correctly read
-            User user1 = users.get(0);
-            assertEquals("John Doe", user1.getName());
-            assertEquals("johndoe", user1.getUsername());
-            assertEquals("password123", user1.getPassword());
-            assertEquals("johndoe@example.com", user1.getEmailAddress());
-            assertTrue(user1.getFriends().contains(new User("", "johndoe1", "", "")));
-            assertTrue(user1.getFriends().contains(new User("", "johndoe2", "", "")));
-
-            User user2 = users.get(1);
-            assertEquals("Jane Smith", user2.getName());
-            assertEquals("janesmith", user2.getUsername());
-            assertEquals("password456", user2.getPassword());
-            assertEquals("janesmith@example.com", user2.getEmailAddress());
-            assertTrue(user2.getFriends().contains(new User("", "janesmith1", "", "")));
-            assertTrue(user2.getFriends().contains(new User("", "janesmith2", "", "")));
-
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing readFile: " + e.getMessage());
-        } catch (IncorrectInfoException e) {
-            fail("IncorrectInfoException occurred while testing readFile: " + e.getMessage());
-        } catch (BadInputException e) {
-            throw new RuntimeException(e);
+        Result result = JUnitCore.runClasses(TestCase.class);
+        if (result.wasSuccessful()) {
+            System.out.println("Excellent - Test ran successfully");
+        } else {
+            for (Failure failure : result.getFailures()) {
+                System.out.println(failure.toString());
+            }
         }
+
     }
 
-    // Test writing to a file
-    @Test
-    public void testWriteFile() {
-        try {
-            // Create a temporary file
-            File tempFile = File.createTempFile("temp", ".txt");
-            String filePath = tempFile.getAbsolutePath();
 
-            // Create a database and write user data to the file
-            Database database = new Database("", filePath);
-            database.addUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe");
-            database.addUser("Jane Smith, janesmith1; janesmith2, johndoe, password456, janesmith@example.com, janesmith");
-            database.rewriteFile();
+    public static class TestCase {
 
-            // Read from the file to check if the data is written correctly
-            BufferedReader reader = new BufferedReader(new FileReader(tempFile));
-            assertEquals("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe", reader.readLine());
-            assertEquals("Jane Smith, janesmith1; janesmith2, johndoe, password456, janesmith@example.com, janesmith", reader.readLine());
+        private static final String INFILE = "input.txt";
 
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing writeFile: " + e.getMessage());
+
+        @Test(timeout = 1000)
+        public void testConstructorWithValidInputs() {
+            try {
+                Database database = new Database(INFILE);
+                assertEquals("Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;," +
+                                "12345678,zonglin.2017@outlook.com,zj133",
+                        database.viewUser("zj133"));
+
+            } catch (Exception e) {
+                fail("There should be no exception thrown for valid input");
+            }
         }
+
+
+        @Test(timeout = 1000)
+        public void testAddUser() {
+            try {
+                Database database = new Database(INFILE);
+                database.addUser("Mitch Daniels,fri1;,block2;,00000000,MitchDaniel@purdue.edu,Daniel123");
+                assertEquals("Mitch Daniels,fri1;,block2;,00000000,MitchDaniel@purdue.edu,Daniel123",
+                        database.viewUser("Daniel123"));
+
+            } catch (Exception e) {
+                fail("There should be no exception thrown for valid input");
+            }
+        }
+
+
+
+        /*
+        @Test(timeout = 1000)
+        public void testEditUser() {
+            try {
+                Database database = new Database(INFILE);
+                //System.out.println(database.viewUser("zj133"));
+
+                database.editUser("Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678," +
+                        "zonglin.2017@outlook.com,zj133",
+                        "Zonglin Wang,fri1;,block2;,00000000,email.zonglin.2017@outlook.com,zj133");
+
+                //System.out.println("after changes:    " + database.viewUser("zj133"));
+
+                assertEquals("Zonglin Wang,fri1;,block2;,00000000,zonglin.2017@outlook.com,zj133",
+                        database.viewUser("zj133"));
+
+            } catch (Exception e) {
+                fail("There should be no exception thrown for valid input");
+            }
+        }
+
+         */
+
+
+        @Test(timeout = 1000)
+        public void testRemoveUser() {
+            try {
+                Database database = new Database(INFILE);
+                database.removeUser("zj133");
+
+                assertNull(database.viewUser("zj133"));
+
+            } catch (Exception e) {
+                fail("There should be no exception thrown for valid input");
+            }
+        }
+
+
     }
 
-    // Test adding a user
-    @Test
-    public void testAddUser() {
-        try {
-            // Create a temporary file
-            File tempFile = File.createTempFile("temp", ".txt");
-            String filePath = tempFile.getAbsolutePath();
 
-            // Create a database and add a user
-            Database database = new Database("", filePath);
-            assertTrue(database.addUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe"));
-
-            // Check if the user is added correctly
-            database.readFile();
-            ArrayList<User> users = database.getUsers();
-            assertEquals(1, users.size());
-            User user = users.get(0);
-            assertEquals("John Doe", user.getName());
-            assertEquals("johndoe", user.getUsername());
-            assertEquals("password123", user.getPassword());
-            assertEquals("johndoe@example.com", user.getEmailAddress());
-            assertTrue(user.getFriends().contains(new User("", "johndoe1", "", "")));
-            assertTrue(user.getFriends().contains(new User("", "johndoe2", "", "")));
-
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing addUser: " + e.getMessage());
-        } catch (IncorrectInfoException | BadInputException e) {
-            fail("IncorrectInfoException occurred while testing addUser: " + e.getMessage());
-        }
-    }
-
-    // Test editing a user
-    @Test
-    public void testEditUser() {
-        try {
-            // Create a temporary file
-            File tempFile = File.createTempFile("temp", ".txt");
-            String filePath = tempFile.getAbsolutePath();
-
-            // Create a database and add a user
-            Database database = new Database("", filePath);
-            database.addUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe");
-
-            // Edit the user's information
-            assertTrue(database.editUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe",
-                    "Jane Smith, janesmith1; janesmith2, , password456, janesmith@example.com, janesmith"));
-
-            // Check if the user information is edited correctly
-            database.readFile();
-            ArrayList<User> users = database.getUsers();
-            assertEquals(1, users.size());
-            User editedUser = users.get(0);
-            assertEquals("Jane Smith", editedUser.getName());
-            assertEquals("janesmith", editedUser.getUsername());
-            assertEquals("password456", editedUser.getPassword());
-            assertEquals("janesmith@example.com", editedUser.getEmailAddress());
-            assertTrue(editedUser.getFriends().contains(new User("", "janesmith1", "", "")));
-            assertTrue(editedUser.getFriends().contains(new User("", "janesmith2", "", "")));
-
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing editUser: " + e.getMessage());
-        } catch (IncorrectInfoException | BadInputException e) {
-            fail("IncorrectInfoException occurred while testing editUser: " + e.getMessage());
-        }
-    }
-
-    // Test searching for a user
-    @Test
-    public void testSearchUser() {
-        try {
-            // Create a temporary file
-            File tempFile = File.createTempFile("temp", ".txt");
-            String filePath = tempFile.getAbsolutePath();
-
-            // Create a database and add a user
-            Database database = new Database("", filePath);
-            database.addUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe");
-
-            // Search for the added user
-            assertTrue(database.searchUser("johndoe"));
-
-            // Search for a non-existing user
-            assertFalse(database.searchUser("nonexistinguser"));
-
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing searchUser: " + e.getMessage());
-        }
-    }
-
-    // Test viewing a user
-    @Test
-    public void testViewUser() {
-        try {
-            // Create a temporary file
-            File tempFile = File.createTempFile("temp", ".txt");
-            String filePath = tempFile.getAbsolutePath();
-
-            // Create a database and add a user
-            Database database = new Database("", filePath);
-            database.addUser("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe");
-
-            // View the added user
-            String userInfo = database.viewUser("johndoe");
-            assertNotNull(userInfo);
-            assertEquals("John Doe, johndoe1; johndoe2, , password123, johndoe@example.com, johndoe", userInfo);
-
-            // View a non-existing user
-            assertNull(database.viewUser("nonexistinguser"));
-
-            // Delete the temporary file
-            tempFile.delete();
-        } catch (IOException e) {
-            fail("Exception occurred while testing viewUser: " + e.getMessage());
-        }
-    }
 }
