@@ -4,18 +4,15 @@ import java.util.ArrayList;
 public class Database implements Data {
     private String file;
     private  ArrayList<User> users;
-    private String input;
 
-    public Database(String input, String file) {
+    public Database(String file) {
+        this.file = file;
+        this.users = null;
         try {
             readFile();
         } catch (IncorrectInfoException e) {
             System.out.println(e.getMessage());
         }
-        this.input = input;
-        this.file = file;
-        this.users = null;
-        writeFile();
     }
 
     public ArrayList<User> getUsers() {
@@ -53,33 +50,9 @@ public class Database implements Data {
                     System.out.println("Invalid data format: " + line);
                 }
             }
+            this.users = userList;
         } catch (IOException | BadInputException e) {
             throw new IncorrectInfoException("Invalid Data");
-        }
-        this.users = userList;
-    }
-
-    public void writeFile() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
-            if (users != null) {
-                for (User u : users) {
-                    String[] userData = this.input.split(",");
-                    String username = userData[5].trim();
-                    if (u.getUsername().equals(username)) {
-                        System.out.println("Invalid username");
-                        break;
-                    }
-                    bw.write(this.input);
-                }
-            } else {
-                bw.write(this.input);
-            }
-        } catch (IOException e) {
-            try {
-                throw new IncorrectInfoException("Invalid Data");
-            } catch (IncorrectInfoException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
@@ -98,15 +71,13 @@ public class Database implements Data {
     }
 
     public boolean addUser(String info) {
-        boolean sameUser = false;
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
-            for (User u : users) {
-                if (u.toString().equals(info)) {
-                    sameUser = true;
-                    return false;
+            if (users != null) {
+                for (User u : users) {
+                    if (u.toString().equals(info)) {
+                        return false;
+                    }
                 }
-            }
-            if (!sameUser) {
                 bw.write(info);
                 return true;
             }
