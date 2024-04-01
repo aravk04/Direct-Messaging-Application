@@ -1,6 +1,15 @@
+/**
+ * BadInputException
+ *
+ * Add messages to files
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version March 31, 2024
+ */
 import java.util.ArrayList;
 import java.io.*;
-public class MessageDatabase {
+public class MessageDatabase implements MessageData {
     public MessageDatabase() {
 
     }
