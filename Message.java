@@ -1,17 +1,17 @@
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class Message {
+public class Message implements MessageInterface {
     private User sender;
-    private User receiver;
+    private ArrayList<User> receivers;
     private String content;
     private String timestamp;
-
     private long exactTime;
 
-    public Message(User sender, User receiver, String content) {
+    public Message(User sender, ArrayList<User> receivers, String content) {
         this.sender = sender;
-        this.receiver = receiver;
+        this.receivers = receivers;
         this.content = content;
         this.timestamp = LocalDate.now().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + " "
                 + LocalTime.now().format(DateTimeFormatter.ofPattern("HH[:mm]"));
@@ -23,8 +23,8 @@ public class Message {
         return sender;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public ArrayList<User> getReceivers() {
+        return receivers;
     }
 
     public String getContent() {
@@ -39,10 +39,19 @@ public class Message {
         return exactTime;
     }
 
+    @Override
+    public boolean sameDM(MessageInterface m) {
+        return false;
+    }
+
     public boolean sameDM(Message m) {
-        if (m.getSender().equals(this.getSender()) || m.getSender().equals(this.getReceiver())) {
-            if ((m.getReceiver().equals(this.getSender()) || m.getReceiver().equals(this.getReceiver()))) {
-                return true;
+        for (User receiver : m.getReceivers()) {
+            if (receiver.equals(this.getSender()) || this.receivers.contains(receiver)) {
+                for (User thisReceiver : this.receivers) {
+                    if (thisReceiver.equals(m.getSender()) || m.getReceivers().contains(thisReceiver)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -50,9 +59,18 @@ public class Message {
 
     @Override
     public String toString() {
+        StringBuilder receiverList = new StringBuilder();
+        for (User user : receivers) {
+            receiverList.append(user.getUsername()).append(", ");
+        }
+        // Remove the last comma and space
+        if (receiverList.length() > 2) {
+            receiverList.setLength(receiverList.length() - 2);
+        }
+
         return "Message{" +
                 "sender=" + sender.getUsername() +
-                ", receiver=" + receiver.getUsername() +
+                ", receivers=" + receiverList.toString() +
                 ", content='" + content + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 ", exactTime=" + exactTime +

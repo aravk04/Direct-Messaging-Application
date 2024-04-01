@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.util.ArrayList;
 
 public class MessageTest {
 
@@ -9,11 +10,14 @@ public class MessageTest {
         User receiver = new User("Jane Smith", "janesmith", "password456", "janesmith@example.com");
         String content = "Hello, Jane!";
 
-        Message message = new Message(sender, receiver, content);
+        ArrayList<User> receivers = new ArrayList<>();
+        receivers.add(receiver);
+
+        Message message = new Message(sender, receivers, content);
 
         assertNotNull(message);
         assertEquals(sender, message.getSender());
-        assertEquals(receiver, message.getReceiver());
+        assertEquals(receivers, message.getReceivers());
         assertEquals(content, message.getContent());
         assertNotNull(message.getTimestamp());
         assertTrue(message.getExactTime() > 0);
@@ -26,10 +30,15 @@ public class MessageTest {
         User sender2 = new User("Alice", "alice", "password789", "alice@example.com");
         User receiver2 = new User("Bob", "bob", "password101", "bob@example.com");
 
-        Message message1 = new Message(sender1, receiver1, "Hello, Jane!");
-        Message message2 = new Message(sender2, receiver2, "Hey, Bob!");
-        Message message3 = new Message(sender1, receiver2, "Hi, Bob!");
-        Message message4 = new Message(receiver1, sender1, "Hello, John!");
+        ArrayList<User> receivers1 = new ArrayList<>();
+        receivers1.add(receiver1);
+        ArrayList<User> receivers2 = new ArrayList<>();
+        receivers2.add(receiver2);
+
+        Message message1 = new Message(sender1, receivers1, "Hello, Jane!");
+        Message message2 = new Message(sender2, receivers2, "Hey, Bob!");
+        Message message3 = new Message(sender1, receivers2, "Hi, Bob!");
+        Message message4 = new Message(receiver1, receivers1, "Hello, John!");
 
         assertTrue(message1.sameDM(message4)); // Same conversation
         assertFalse(message1.sameDM(message2)); // Different conversation
@@ -42,9 +51,12 @@ public class MessageTest {
         User receiver = new User("Jane Smith", "janesmith", "password456", "janesmith@example.com");
         String content = "Hello, Jane!";
 
-        Message message = new Message(sender, receiver, content);
+        ArrayList<User> receivers = new ArrayList<>();
+        receivers.add(receiver);
 
-        String expectedString = "Message{sender=johndoe, receiver=janesmith, content='Hello, Jane!', timestamp='" + message.getTimestamp() + "', exactTime=" + message.getExactTime() + '}';
+        Message message = new Message(sender, receivers, content);
+
+        String expectedString = "Message{sender=johndoe, receivers=[janesmith], content='Hello, Jane!', timestamp='" + message.getTimestamp() + "', exactTime=" + message.getExactTime() + '}';
         assertEquals(expectedString, message.toString());
     }
 }
