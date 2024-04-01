@@ -9,6 +9,9 @@
  * @version March 31, 2024
  */
 import java.util.ArrayList;
+import java.io.*;
+import java.io.File;
+import java.util.Collections;
 public class User extends Thread implements UserInterface{
     // Variables
     private String name;
@@ -41,6 +44,29 @@ public class User extends Thread implements UserInterface{
         this.blocked = new ArrayList<User>();
     }
 
+    public void sendMessage(Message m) throws FileNotFoundException, IOException {
+        ArrayList<String> usernames = new ArrayList<>();
+        String fileName = "";
+        usernames.add(m.getSender().getUsername());
+        for (User u : m.getReceivers()) {
+            usernames.add(u.getUsername());
+        }
+        Collections.sort(usernames);
+        for (String username : usernames) {
+            fileName += username + ",";
+        }
+        fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+            MessageDatabase db = new MessageDatabase();
+            db.addMessage(fileName, m);
+        } else {
+            MessageDatabase db = new MessageDatabase();
+            db.addMessage(fileName, m);
+        }
+
+    }
     // Add friend to list
 
     public boolean addFriend(User u) {

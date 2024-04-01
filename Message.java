@@ -69,24 +69,20 @@ public class Message implements MessageInterface {
 
     @Override
     public String toString() {
-        StringBuilder receiverList = new StringBuilder();
-        for (User user : receivers) {
-            receiverList.append(user.getUsername()).append(", ");
-        }
-        // Remove the last comma and space
-        if (receiverList.length() > 2) {
-            receiverList.setLength(receiverList.length() - 2);
+        String receiversString = "";
+        if (!receivers.isEmpty()) {
+            receiversString = receivers.get(0).getUsername();
+            for (int i = 1; i < receivers.size(); i++) {
+                receiversString += ", " + receivers.get(i).getUsername();
+            }
         }
 
         return "Message{" +
-                "sender=" + sender.getUsername() +
-                ", receivers=" + receiverList.toString() +
-                ", content='" + content + '\'' +
-                ", timestamp='" + timestamp + '\'' +
-                ", exactTime=" + exactTime +
-                '}';
+            "sender=" + sender.getUsername() +
+            ", receivers=" + receiversString +
+            ", content='" + content + '\'' +
+            ", timestamp='" + timestamp + '\'' +
+            ", exactTime=" + exactTime +
+            '}';
     }
-
 }
-
-
