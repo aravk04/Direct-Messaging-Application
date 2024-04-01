@@ -1,3 +1,12 @@
+/**
+ * MessageTest
+ *
+ * Run tests for message class
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version March 31, 2024
+ */
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.ArrayList;

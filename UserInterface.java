@@ -1,3 +1,12 @@
+/**
+ * UserInteerface
+ *
+ * Interface for User
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version March 31, 2024
+ */
 import java.util.ArrayList;
 public interface UserInterface {
     boolean addFriend(User u);

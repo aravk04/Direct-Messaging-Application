@@ -1,3 +1,13 @@
+/**
+ * User
+ *
+ * Represents user and contains information
+ * about them
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version March 31, 2024
+ */
 import java.util.ArrayList;
 public class User extends Thread implements UserInterface{
     // Variables

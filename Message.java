@@ -1,3 +1,13 @@
+/**
+ * Message
+ *
+ * Used for users to communicate includes things
+ * like sender, receiver, time, etc.
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version March 31, 2024
+ */
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
