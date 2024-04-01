@@ -67,30 +67,6 @@ public class DatabaseTest {
 
 
 
-        /*
-        @Test(timeout = 1000)
-        public void testEditUser() {
-            try {
-                Database database = new Database(INFILE);
-                //System.out.println(database.viewUser("zj133"));
-
-                database.editUser("Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678," +
-                        "zonglin.2017@outlook.com,zj133",
-                        "Zonglin Wang,fri1;,block2;,00000000,email.zonglin.2017@outlook.com,zj133");
-
-                //System.out.println("after changes:    " + database.viewUser("zj133"));
-
-                assertEquals("Zonglin Wang,fri1;,block2;,00000000,zonglin.2017@outlook.com,zj133",
-                        database.viewUser("zj133"));
-
-            } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
-            }
-        }
-
-         */
-
-
         @Test(timeout = 1000)
         public void testRemoveUser() {
             try {
