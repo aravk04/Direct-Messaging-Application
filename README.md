@@ -102,6 +102,12 @@ testToString: Checks toString method and the information is in the right order a
 
 DatabaseTest.java
 
+testConstructorWithValidInputs: This test check if the constructor in the database class properly initializes a database object with valid parameters, and it is created without error
+
+testAddUser: This test check if the addUser in the database class properly add a user to the input.txt with valid information
+
+testRemoveUser: This test check if the removeUser in the database class properly remove a user to the input.txt
+
 There are 4 interfaces as well one for each class 
 
 MessageInterface:
