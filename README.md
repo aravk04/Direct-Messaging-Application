@@ -107,5 +107,11 @@ There are 4 interfaces as well one for each class
 MessageInterface:
 This interface specifies methods that the Message class should use which are getSender, getReceivers, getContent, getTimestamp, getExactTime, sameDM(MessageInterface m), and a toString method
 
+MessageData:
+This interface specifies methods that the MessageDatabase class should use which includes boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException
+
 UserInterface:
 This interface specifies methods that User class should use which include the addFriend(User u), blockUser(User u), removeFriend(User u), unblockUser(User u), getName, getFriends, getBlocked, getPassword, getEmailAddress, getUsername, setName(String name), setEmailAddress(String emailAddress), and setPassword(String password).
+
+Data:
+This interface specifies methods that the Database class should use which include void setUsers(ArrayList<User> users), void readFile() throws IncorrectInfoException, boolean searchUser(String username), boolean addUser(String info), String viewUser(String username), boolean editUser(String oldInfo, String newInfo), boolean removeUser(String username)
