@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.io.File;
+import java.util.Collections;
 public class User extends Thread implements UserInterface{
     // Variables
     private String name;
@@ -31,6 +33,29 @@ public class User extends Thread implements UserInterface{
         this.blocked = new ArrayList<User>();
     }
 
+    public void sendMessage(User sender, ArrayList<User> recipients, String message) {
+        ArrayList<String> usernames = new ArrayList<>();
+        String fileName = "";
+        usernames.add(sender.getUsername());
+        for (User u : recipients) {
+            usernames.add(u.getUsername());
+        }
+        Collections.sort(usernames);
+        for (String username : usernames) {
+            fileName += username + ",";
+        }
+        fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+            MessageDatabase textFile = new MessageDatabase();
+            textFile.addMessage(fileName, message);
+        } else {
+            MessageDatabase textFile = new MessageDatabase();
+            textFile.addMessage(fileName, message);
+        }
+
+    }
     // Add friend to list
 
     public boolean addFriend(User u) {
