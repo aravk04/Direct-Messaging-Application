@@ -108,6 +108,11 @@ testAddUser: This test check if the addUser in the database class properly add a
 
 testRemoveUser: This test check if the removeUser in the database class properly remove a user to the input.txt
 
+MessageDatabaseTest.java
+
+testAddMessage: tests if the method add message to file correctly
+
+
 There are 4 interfaces as well one for each class 
 
 MessageInterface:
