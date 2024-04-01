@@ -7,7 +7,11 @@ public class Database implements Data {
     private String input;
 
     public Database(String input, String file) {
-        rewriteFile();
+        try {
+            readFile();
+        } catch (IncorrectInfoException e) {
+            System.out.println(e.getMessage());
+        }
         this.input = input;
         this.file = file;
         this.users = null;
