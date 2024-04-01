@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  *
  * <p>Purdue University -- CS18000 -- Spring 2024</p>
  *
- * @author Harshil, Zonglin
+ * @author Harshil, Zonglin, Arav, Eesha, Benjamin
  * @version April 1st, 2024
  */
 
