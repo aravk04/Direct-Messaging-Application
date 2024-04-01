@@ -116,37 +116,46 @@ Then there are the Test classes for each class to test and see if the methods ar
 We have 4 test classes:
 
 UserTest.java
+
 testUserConstructor:
 Checks if constructor in User class if it initializes a user object with valid input parameters
+
 testAddFriend:
 Checks addFriend method and user can add another user as a friend without errors
+
 testBlockUser:
 Checks blockUser method and if you can block a user, and it adds them to the blocked list
+
 testRemoveFriend:
-Checks removeFriend method and when they remove a friend it removes them from the friend list
+Checks removeFriend method and when they remove a friend it removes them from the friend list 
+
 testEqual: 
 Checks equals method and sees if two users are the same by checking name, email, address, username, and password
+
 testToString:
 Checks toString method and makes sure it is the right information for the user object
+
 testUpdateName:
 Checks updateName method and if the username is updated when it has been changed
+
 testSetEmailAddress:
 Checks setEmailAddress  and makes sure it can be updated when it has been changed
+
 testSetPassword:
 Checks setPassword method and see if the user's password can be updated and properly set
+
 testSetUsername:
 Checks setUsername method and if the username can be updated and it is changed in the user object
 
 MessageTest.java
+
 testMessageConstructor:
 This test checks if the constructor in the message class properly initializes a message object with valid parameters, and it is created without error
+
 testSameDM:
 Checks sameDM method and if two messages are part of the same conversation by checking if the message has the same sender and receiver or different sender and receiver
+
 testToString:
 Checks toString method and the information is in the right order and formatted properly
 
 DatabaseTest.java
-testReadFile:
-Creates temporary file and sample data and checks if the file can be properly read, parsed, and stored in the database object
-testWriteFile:
-Checks if data can be written to a file from the database object
