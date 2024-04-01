@@ -56,12 +56,18 @@ public class Database implements Data {
 
     public void writeFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
-            for (User u : users) {
-                String[] userData = this.input.split(",");
-                String username = userData[5].trim();
-                if (u.getUsername().equals(username)) {
-                    System.out.println("Invalid username");
+            if (users != null) {
+                for (User u : users) {
+                    String[] userData = this.input.split(",");
+                    String username = userData[5].trim();
+                    if (u.getUsername().equals(username)) {
+                        System.out.println("Invalid username");
+                        break;
+                    }
+                    bw.write(this.input);
                 }
+            } else {
+                bw.write(this.input);
             }
         } catch (IOException e) {
             try {
