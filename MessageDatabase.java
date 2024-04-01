@@ -1,5 +1,5 @@
 /**
- * BadInputException
+ * MessageDatabase.java
  *
  * Add messages to files
  *
@@ -19,12 +19,12 @@ public class MessageDatabase implements MessageData {
             String receivers = "";
             for (User r : m.getReceivers()) {
                 receivers += r.getUsername() + ",";
-            }  
-            writer.write(m.getSender().getUsername() + "," +  "," + m.getContent() + "," + m.getTimestamp());   
-            writer.newLine();  
+            }
+            writer.write(m.getSender().getUsername() + "," +  "," + m.getContent() + "," + m.getTimestamp());
+            writer.newLine();
             return true;
         } catch (IOException e) {
             return false;
-        }       
-    }       
-}  
+        }
+    }
+}

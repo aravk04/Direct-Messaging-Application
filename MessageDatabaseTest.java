@@ -13,42 +13,31 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class MessageDatabaseTest {
-
     @Test
     public void testAddMessage() {
-        User sender = new User("Eesha Faruqi", "efaruqi", "00003062", "efaruqi@gmail.com");
-        User receiver = new User("Eesha1 Faruqi", "efaruqi1", "00003063", "efaruqi1@gmail.com");
-
-        ArrayList<User> receivers = new ArrayList<>();
-        receivers.add(receiver);
-        Message message = new Message(sender, receivers, "Test message content");  // test message
-
-        MessageDatabase database = new MessageDatabase();
-
-        String fileName = "test_messages.txt";
         try {
+            // temp file for test
+            File tempFile = File.createTempFile("temp", ".txt");
+            String fileName = tempFile.getAbsolutePath();
+            User sender = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
+            ArrayList<User> receivers = new ArrayList<>();
+            receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com"));
+            Message message = new Message(sender, receivers, "Hello, Jane!");
+            MessageDatabase database = new MessageDatabase();
             assertTrue(database.addMessage(fileName, message));
-
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line;
-            boolean found = false;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("efaruqi,efaruqi1") && line.contains("Test message content")) {
-                    found = true;
-                    break;
-                }
-            }
+            BufferedReader reader = new BufferedReader(new FileReader(tempFile));
+            String line = reader.readLine();
+            assertNotNull(line);
+            String[] parts = line.split(",");
+            assertEquals(sender.getUsername(), parts[0]);
+            assertEquals("", parts[1].trim());
+            assertEquals(message.getContent(), parts[2]);
+            assertNotNull(parts[3]);
+            assertNull(reader.readLine());
             reader.close();
-            assertTrue("Message not found in the file", found);
-        } catch (IOException e) {
-            fail("IOException occurred: " + e.getMessage());
-        }
-
-        // Clean up test file
-        File file = new File(fileName);
-        if (file.exists()) {
-            file.delete();
+            tempFile.delete();
+        } catch (IOException | BadInputException e) {
+            fail("Exception occurred: " + e.getMessage());
         }
     }
 }
-
