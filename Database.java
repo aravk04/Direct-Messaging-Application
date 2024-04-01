@@ -13,6 +13,14 @@ public class Database implements Data {
         writeFile();
     }
 
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
     public void readFile() throws IncorrectInfoException {
         ArrayList<User> userList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(this.file))) {
@@ -27,37 +35,40 @@ public class Database implements Data {
                     String emailAddress = userData[4].trim();
                     String username = userData[5].trim();
                     User user = new User(name, username, password, emailAddress);
-
                     for (String friendsUserName : friendNames) {
                         User friend = new User("", friendsUserName, "", "");
                         user.addFriend(friend);
                     }
-
-                    // Blocking users
                     for (String blockedUserName : blockedNames) {
                         User blockedUser = new User("", blockedUserName, "", "");
                         user.blockUser(blockedUser);
                     }
-
-
                     userList.add(user);
                 } else {
                     System.out.println("Invalid data format: " + line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | BadInputException e) {
             throw new IncorrectInfoException("Invalid Data");
-        } catch (BadInputException e) {
-
         }
         this.users = userList;
     }
 
     public void writeFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
-            bw.write(this.input);
+            for (User u : users) {
+                String[] userData = this.input.split(",");
+                String username = userData[5].trim();
+                if (u.getUsername().equals(username)) {
+                    System.out.println("Invalid username");
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                throw new IncorrectInfoException("Invalid Data");
+            } catch (IncorrectInfoException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -67,7 +78,11 @@ public class Database implements Data {
                 bw.write(u.toString());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                throw new IncorrectInfoException("Invalid Data");
+            } catch (IncorrectInfoException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -85,7 +100,11 @@ public class Database implements Data {
                 return true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                throw new IncorrectInfoException("Invalid Data");
+            } catch (IncorrectInfoException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }
@@ -137,5 +156,15 @@ public class Database implements Data {
             }
         }
         return null;
+    }
+
+    public boolean removeUser(String username) {
+        for (User u : users) {
+            if (u.getUsername().equals(username)) {
+                users.remove(u);
+                return true;
+            }
+        }
+        return false;
     }
 }
