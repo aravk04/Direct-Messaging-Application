@@ -7,6 +7,7 @@ public class Database implements Data {
     private String input;
 
     public Database(String input, String file) {
+        rewriteFile();
         this.input = input;
         this.file = file;
         this.users = null;
