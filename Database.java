@@ -79,6 +79,7 @@ public class Database implements Data {
                     }
                 }
                 bw.write(info);
+                bw.newLine();
                 return true;
             }
         } catch (IOException e) {
