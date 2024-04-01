@@ -74,12 +74,17 @@ returns true if the user is removed
 boolean equals(Object o)
 determines if the name, username, email, and password are the same between this User and the input User
 
+void sendMessage(Message m)
+creates a filename consisting of the sender's username followed by the receiver's or receivers' username(s)
+checks if a file by this name already exists
+if it does, creates a MessageDatabase object and calls addMessage to enter the sender's message onto the already existing file
+if it does not, creates the file and then creates, creates a MessageDatabase object and calls addMessage to enter the sender's message onto the created file
+
 String toString()
 Returns the String in the form:
 name,friends,blocked,password,email,username
 Friends and Blocked will be each Users username separated by semicolons
 
-Database
 Message
 Variables(All private):
 
@@ -111,6 +116,15 @@ boolean sameDM(Message m)
 checks if the input message is part of the same DM as this messages by checking if both the sender and receiver of the input message match with the sender either the sender or receiver of this message
 s1 == s2 or s1 == r2
 r1 == s2 or r1 == r2
+
+MessageDatabase
+
+Constructor: 
+empty constructor
+
+Method(public):
+boolean addMessage(String fileName, Message m)
+writes message, timestampt, sender, and receiver(s) onto file
 
 Then there are the Test classes for each class to test and see if the methods are working as intended
 We have 4 test classes:
