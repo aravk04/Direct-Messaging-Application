@@ -78,11 +78,11 @@ public class Message implements MessageInterface {
         }
 
         return "Message{" +
-            "sender=" + sender.getUsername() +
-            ", receivers=" + receiversString +
-            ", content='" + content + '\'' +
-            ", timestamp='" + timestamp + '\'' +
-            ", exactTime=" + exactTime +
-            '}';
+                "sender=" + sender.getUsername() +
+                ", receivers=" + receiversString +
+                ", content='" + content + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", exactTime=" + exactTime +
+                '}';
     }
 }

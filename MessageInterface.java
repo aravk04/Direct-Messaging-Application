@@ -18,4 +18,3 @@ public interface MessageInterface {
     boolean sameDM(MessageInterface m);
     String toString();
 }
-

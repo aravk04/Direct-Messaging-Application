@@ -28,9 +28,12 @@ public class User extends Thread implements UserInterface{
             throw new BadInputException("Username cannot be empty");
         }
         //check email
+        /*
         if (!isValidEmailAddress(emailAddress)) {
             throw new BadInputException("Invalid email address format");
         }
+
+         */
         //check password
         if (password == null || password.length() < 8) {
             throw new BadInputException("Password must be at least 8 characters long");
@@ -118,7 +121,7 @@ public class User extends Thread implements UserInterface{
             if (u.retrieveName().equals(this.retrieveName())) {
                 if (u.getEmailAddress().equals(this.getEmailAddress())) {
                     if (u.getUsername().equals(this.getUsername())) {
-                        if (this.getPassword().equals(this.getPassword())) {
+                        if (u.getPassword().equals(this.getPassword())) {
                             return true;
                         }
                     }
@@ -171,21 +174,25 @@ public class User extends Thread implements UserInterface{
         this.username = username;
     }
 
+    /*
     private boolean isValidEmailAddress(String email) {
         //checks if the email follows the basic pattern
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
 
+     */
+
     @Override
     public String toString() {
         String output = name + ",";
         for (int i = 0; i < friends.size(); i++) {
-            output = output + friends.get(i).getName() + ";";
+            output = output + friends.get(i).retrieveName() + ";";
         }
         output += ",";
 
         for (int i = 0; i < blocked.size(); i++) {
-            output = output + blocked.get(i).getName() + ";";
+            System.out.println();
+            output = output + blocked.get(i).retrieveName() + ";";
         }
 
         output = output + "," + password + "," + emailAddress + "," + username;

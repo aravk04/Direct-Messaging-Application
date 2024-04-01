@@ -1,5 +1,5 @@
 /**
- * BadInputException
+ * MessageData
  *
  * interface for MessageDatabase 
  *

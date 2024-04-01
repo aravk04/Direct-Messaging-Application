@@ -107,5 +107,3 @@ public class UserTest {
         assertFalse(user1.equals(user3));
     }
 }
-
-

@@ -1,5 +1,5 @@
 /**
- * MessageDatabase.java
+ * MessageDatabase
  *
  * Add messages to files
  *
