@@ -36,19 +36,6 @@ public class UserTest {
             fail("BadInputException should be thrown for empty username");
         }
     }
-
-    @Test
-    public void testConstructorWithInvalidEmailAddress() {
-        try {
-            User user = new User("John Doe", "johndoe", "password123", "invalid-email");
-            fail("Exception should be thrown for invalid email address");
-        } catch (BadInputException e) {
-            assertEquals("Invalid email address format", e.getMessage());
-        } catch (Exception e) {
-            fail("BadInputException should be thrown for invalid email address");
-        }
-    }
-
     @Test
     public void testConstructorWithInvalidPassword() {
         try {

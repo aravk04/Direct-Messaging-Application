@@ -27,13 +27,6 @@ public class User extends Thread implements UserInterface{
         if (username == null || username.isEmpty()) {
             throw new BadInputException("Username cannot be empty");
         }
-        //check email
-        /*
-        if (!isValidEmailAddress(emailAddress)) {
-            throw new BadInputException("Invalid email address format");
-        }
-
-         */
         //check password
         if (password == null || password.length() < 8) {
             throw new BadInputException("Password must be at least 8 characters long");
@@ -173,15 +166,6 @@ public class User extends Thread implements UserInterface{
     public void setUsername(String username) {
         this.username = username;
     }
-
-    /*
-    private boolean isValidEmailAddress(String email) {
-        //checks if the email follows the basic pattern
-        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    }
-
-     */
-
     @Override
     public String toString() {
         String output = name + ",";

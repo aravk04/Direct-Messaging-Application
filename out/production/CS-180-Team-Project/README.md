@@ -72,7 +72,7 @@ Then there are the Test classes for each class to test and see if the methods ar
 
 UserTest.java
 
-testUserConstructor: Checks if constructor in User class if it initializes a user object with valid input parameters
+testConstructorWithValidInputs: Checks if constructor in User class if it initializes a user object with valid input parameters
 
 testAddFriend: Checks addFriend method and user can add another user as a friend without errors
 
@@ -80,17 +80,13 @@ testBlockUser: Checks blockUser method and if you can block a user, and it adds 
 
 testRemoveFriend: Checks removeFriend method and when they remove a friend it removes them from the friend list
 
-testEqual: Checks equals method and sees if two users are the same by checking name, email, address, username, and password
+testEquals: Checks equals method and sees if two users are the same by checking name, email, address, username, and password
 
-testToString: Checks toString method and makes sure it is the right information for the user object
+testConstructorWithInvalidUsername: Checks whether the username field is empty
 
-testUpdateName: Checks updateName method and if the username is updated when it has been changed
+testConstructorWithInvalidPassword: Checks if password is less than 8 characters if it is it throws an exception
 
-testSetEmailAddress: Checks setEmailAddress and makes sure it can be updated when it has been changed
-
-testSetPassword: Checks setPassword method and see if the user's password can be updated and properly set
-
-testSetUsername: Checks setUsername method and if the username can be updated and it is changed in the user object
+testUnblockUser: First block user then checks if user is blocked then unblocks the user and checks if they are no longer on the unblocked list
 
 MessageTest.java
 
