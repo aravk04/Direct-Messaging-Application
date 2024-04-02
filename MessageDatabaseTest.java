@@ -25,16 +25,16 @@ public class MessageDatabaseTest {
             Message message = new Message(sender, receivers, "Hello Jane!");
             MessageDatabase database = new MessageDatabase();
             assertTrue(database.addMessage(fileName, message));
-            BufferedReader reader = new BufferedReader(new FileReader(tempFile));
-            String line = reader.readLine();
+            BufferedReader br = new BufferedReader(new FileReader(tempFile));
+            String line = br.readLine();
             assertNotNull(line);
             String[] parts = line.split(",");
             assertEquals(sender.getUsername(), parts[0]);
             assertEquals("", parts[1].trim());
             assertEquals(message.getContent(), parts[2]);
             assertNotNull(parts[3]);
-            assertNull(reader.readLine());
-            reader.close();
+            assertNull(br.readLine());
+            br.close();
             tempFile.delete();
         } catch (IOException | BadInputException e) {
             fail("Exception occurred: " + e.getMessage());
