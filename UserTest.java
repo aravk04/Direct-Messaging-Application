@@ -9,7 +9,9 @@
  */
 import static org.junit.Assert.*;
 import org.junit.Test;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 public class UserTest {
 
     @Test
@@ -82,6 +84,19 @@ public class UserTest {
         assertTrue(user1.getBlocked().contains(user2));
         assertTrue(user1.unblockUser(user2));
         assertFalse(user1.getBlocked().contains(user2));
+    }
+    @Test
+    public void testSendMessage() throws IOException, BadInputException {
+        User sender = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
+        ArrayList<User> receivers = new ArrayList<>();
+        receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com"));
+        Message message = new Message(sender, receivers, "Hello, Jane!");
+        User user = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
+        user.sendMessage(message);
+        String fileName = "janesmith,johndoe.csv";
+        File messageFile = new File(fileName);
+        assertTrue(messageFile.exists());
+        messageFile.delete();
     }
 
     @Test
