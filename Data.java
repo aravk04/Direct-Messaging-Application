@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 /**
  * An interface of data
  *
@@ -12,9 +13,8 @@ public interface Data {
 
     void setUsers(ArrayList<User> users);
 
-    void readFile() throws BadInputException;
+    void readFile() throws BadInputException, IncorrectInfoException;
 
-    //void writeFile();
     boolean searchUser(String username);
 
     boolean addUser(String info);

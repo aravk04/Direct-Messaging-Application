@@ -1,13 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
+
 /**
  * A Database that implements Data -- Project5——Phase1
  *
  * <p>Purdue University -- CS18000 -- Spring 2024</p>
  *
- * @author Harshil, Zonglin, Arav, Eesha, Benjamin
+ * @author Harshil, Zonglin
  * @version April 1st, 2024
  */
+
 public class Database implements Data {
     private String file;
     private ArrayList<User> users;
@@ -17,7 +19,7 @@ public class Database implements Data {
         this.users = new ArrayList<>();
         try {
             readFile();
-        } catch (BadInputException e) {
+        } catch (IncorrectInfoException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -30,7 +32,7 @@ public class Database implements Data {
         this.users = users;
     }
 
-    public void readFile() throws BadInputException {
+    public void readFile() throws IncorrectInfoException {
         ArrayList<User> userList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(this.file))) {
             String line;
@@ -61,7 +63,7 @@ public class Database implements Data {
             }
             this.users = userList;
         } catch (IOException e) {
-            throw new BadInputException("Invalid Data in the constructor");
+            throw new IncorrectInfoException("Invalid Data in the constructor");
         } catch (BadInputException e) {
             throw new RuntimeException(e);
         }
@@ -69,20 +71,32 @@ public class Database implements Data {
 
     public void rewriteFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
-            for (User u : users) {
 
-                bw.write(u.toString());
-                bw.newLine();
+            boolean LineIsBlank = false;
+            for (User u : users) {
+                String userData = u.toString();
+                if (!userData.isEmpty()) {
+                    if (LineIsBlank) {
+                        bw.newLine();
+                        LineIsBlank = false;
+                    }
+                    bw.write(userData);
+                } else {
+                    LineIsBlank = true;
+                }
+
 
             }
+
         } catch (IOException e) {
             try {
-                throw new BadInputException("Invalid Data");
-            } catch (BadInputException ex) {
+                throw new IncorrectInfoException("Invalid Data");
+            } catch (IncorrectInfoException ex) {
                 ex.printStackTrace();
             }
         }
     }
+
 
     public boolean addUser(String info) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
@@ -120,8 +134,8 @@ public class Database implements Data {
             }
         } catch (IOException e) {
             try {
-                throw new BadInputException("Invalid Data");
-            } catch (BadInputException ex) {
+                throw new IncorrectInfoException("Invalid Data");
+            } catch (IncorrectInfoException ex) {
                 ex.printStackTrace();
             }
         } catch (BadInputException e) {
@@ -132,54 +146,10 @@ public class Database implements Data {
 
     public boolean editUser(String oldInfo, String newInfo) throws BadInputException {
         for (int i = 0; i < users.size(); i++) {
-            //Assume there is this user
-            String[] oldUserData = oldInfo.split(",");
-            User newUser;
-            if (oldUserData.length == 6) {
-                String name = oldUserData[0].trim();
-                String[] friendNames = oldUserData[1].split(";");
-                String[] blockedNames = oldUserData[2].split(";");
-                String password = oldUserData[3].trim();
-                String emailAddress = oldUserData[4].trim();
-                String username = oldUserData[5].trim();
-                newUser = new User(name, username, password, emailAddress);
-                for (String friendName : friendNames) {
-                    User friend = new User(friendName, "none",
-                            "00000000", "default.email@outlook.com");
-                    newUser.addFriend(friend);
-                }
-                for (String blockedName : blockedNames) {
-                    User blockedUser = new User(blockedName, "none1",
-                            "00000000", "default.email@outlook.com");
-                    newUser.blockUser(blockedUser);
-                }
-            } else {
-                System.out.println("Invalid newInfo");
-                return false;
-            }
-            //User initialization stop
+            User oldUser = storeUserString(oldInfo);
+            User newUser = storeUserString(newInfo);
 
-            if (users.get(i).toString().equals(newUser.toString())) {
-
-                String[] userData = newInfo.split(",");
-                String name = userData[0].trim();
-                String[] friendNames = userData[1].split(";");
-                String[] blockedNames = userData[2].split(";");
-                String password = userData[3].trim();
-                String emailAddress = userData[4].trim();
-                String username = userData[5].trim();
-                newUser = new User(name, username, password, emailAddress);
-                for (String friendName : friendNames) {
-                    User friend = new User(friendName, "none",
-                            "00000000", "default.email@outlook.com");
-                    newUser.addFriend(friend);
-                }
-                for (String blockedName : blockedNames) {
-                    User blockedUser = new User(blockedName, "none1",
-                            "00000000", "default.email@outlook.com");
-                    newUser.blockUser(blockedUser);
-                }
-
+            if (users.get(i).toString().equals(oldUser.toString())) {
                 users.set(i, newUser);
                 rewriteFile();
                 return true;
@@ -187,6 +157,32 @@ public class Database implements Data {
         }
         return false;
     }
+
+    private User storeUserString(String userInfo) throws BadInputException {
+        String[] userData = userInfo.split(",");
+        if (userData.length == 6) {
+            String name = userData[0].trim();
+            String[] friendNames = userData[1].split(";");
+            String[] blockedNames = userData[2].split(";");
+            String password = userData[3].trim();
+            String emailAddress = userData[4].trim();
+            String username = userData[5].trim();
+            User user = new User(name, username, password, emailAddress);
+            for (String friendName : friendNames) {
+                User friend = new User(friendName, "none", "00000000",
+                        "default.email@outlook.com");
+                user.addFriend(friend);
+            }
+            for (String blockedName : blockedNames) {
+                User blockedUser = new User(blockedName, "none1", "00000000",
+                        "default.email@outlook.com");
+                user.blockUser(blockedUser);
+            }
+            return user;
+        }
+        return null;
+    }
+
 
     public boolean searchUser(String username) {
         for (User u : users) {
@@ -200,7 +196,6 @@ public class Database implements Data {
     public String viewUser(String username) {
         for (User u : users) {
 
-            //System.out.println("getUsername" + u.getUsername());
             if (u.getUsername().equals(username)) {
                 return u.toString();
             }
