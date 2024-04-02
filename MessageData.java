@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 /**
  * MessageData
  *
@@ -7,8 +9,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version April 1, 2024
  */
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public interface MessageData {
     boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException;

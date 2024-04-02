@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-
 /**
  * A Database that implements Data -- Project5——Phase1
  *
@@ -9,7 +8,6 @@ import java.util.ArrayList;
  * @author Harshil, Zonglin, Arav, Eesha, Benjamin
  * @version April 1st, 2024
  */
-
 public class Database implements Data {
     private String file;
     private ArrayList<User> users;

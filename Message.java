@@ -1,3 +1,6 @@
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 /**
  * Message
  *
@@ -8,9 +11,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version March 31, 2024
  */
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class Message implements MessageInterface {
     private User sender;

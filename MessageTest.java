@@ -1,3 +1,6 @@
+import static org.junit.Assert.*;
+import org.junit.Test;
+import java.util.ArrayList;
 /**
  * MessageTest
  *
@@ -7,9 +10,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version April 1st, 2024
  */
-import static org.junit.Assert.*;
-import org.junit.Test;
-import java.util.ArrayList;
 
 public class MessageTest {
 

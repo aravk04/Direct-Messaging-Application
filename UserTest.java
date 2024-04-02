@@ -1,3 +1,8 @@
+import static org.junit.Assert.*;
+import org.junit.Test;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 /**
  * UserTest
  *
@@ -7,11 +12,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version March 31, 2024
  */
-import static org.junit.Assert.*;
-import org.junit.Test;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 public class UserTest {
 
     @Test

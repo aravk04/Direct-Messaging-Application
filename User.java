@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.io.*;
+import java.io.File;
+import java.util.Collections;
 /**
  * User
  *
@@ -8,10 +12,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version March 31, 2024
  */
-import java.util.ArrayList;
-import java.io.*;
-import java.io.File;
-import java.util.Collections;
 public class User extends Thread implements UserInterface{
     // Variables
     private String name;

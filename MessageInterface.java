@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  * MessageInterface
  *
@@ -7,8 +8,6 @@
  * Harshil Shah, Benjamin Ascano
  * @version March 31, 2024
  */
-import java.util.ArrayList;
-
 public interface MessageInterface {
     User getSender();
     ArrayList<User> getReceivers();

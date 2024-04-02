@@ -4,9 +4,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
-
 import static org.junit.Assert.*;
-
 /**
  * A framework to run public test cases for Database.java -- Project5——Phase1
  *
