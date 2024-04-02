@@ -4,7 +4,9 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+
 import static org.junit.Assert.*;
+
 /**
  * A framework to run public test cases for Database.java -- Project5——Phase1
  *
@@ -64,14 +66,32 @@ public class DatabaseTest {
         }
 
 
-
         @Test(timeout = 1000)
         public void testRemoveUser() {
             try {
                 Database database = new Database(INFILE);
-                database.removeUser("zj133");
+                database.removeUser("Daniel123");
 
-                assertNull(database.viewUser("zj133"));
+                assertNull(database.viewUser("Daniel123"));
+
+            } catch (Exception e) {
+                fail("There should be no exception thrown for valid input");
+            }
+        }
+
+        @Test(timeout = 1000)
+        public void testEditUser() {
+            try {
+
+                Database database = new Database(INFILE);
+                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678," +
+                        "zonglin.2017@outlook.com,zj133";
+                String newInfo = "Zonglin Wang,fri1;,block2;,00000000," +
+                        "zonglin.2017@outlook.com@example.com,zj133";
+
+                database.editUser(oldInfo, newInfo);
+                assertEquals(newInfo, database.viewUser("zj133"));
+                database.editUser(newInfo, oldInfo); //set the input.txt to default
 
             } catch (Exception e) {
                 fail("There should be no exception thrown for valid input");
