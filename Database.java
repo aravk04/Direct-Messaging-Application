@@ -14,14 +14,10 @@ public class Database implements Data {
     private String file;
     private ArrayList<User> users;
 
-    public Database(String file) {
+    public Database(String file) throws BadInputException {
         this.file = file;
         this.users = new ArrayList<>();
-        try {
-            readFile();
-        } catch (IncorrectInfoException e) {
-            System.out.println(e.getMessage());
-        }
+        readFile();
     }
 
     public ArrayList<User> getUsers() {
@@ -32,7 +28,7 @@ public class Database implements Data {
         this.users = users;
     }
 
-    public void readFile() throws IncorrectInfoException {
+    public void readFile() throws BadInputException {
         ArrayList<User> userList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(this.file))) {
             String line;
@@ -63,7 +59,7 @@ public class Database implements Data {
             }
             this.users = userList;
         } catch (IOException e) {
-            throw new IncorrectInfoException("Invalid Data in the constructor");
+            throw new BadInputException("Invalid Data in the constructor");
         } catch (BadInputException e) {
             throw new RuntimeException(e);
         }
@@ -90,8 +86,8 @@ public class Database implements Data {
 
         } catch (IOException e) {
             try {
-                throw new IncorrectInfoException("Invalid Data");
-            } catch (IncorrectInfoException ex) {
+                throw new BadInputException("Invalid Data");
+            } catch (BadInputException ex) {
                 ex.printStackTrace();
             }
         }
@@ -134,8 +130,8 @@ public class Database implements Data {
             }
         } catch (IOException e) {
             try {
-                throw new IncorrectInfoException("Invalid Data");
-            } catch (IncorrectInfoException ex) {
+                throw new BadInputException("Invalid Data");
+            } catch (BadInputException ex) {
                 ex.printStackTrace();
             }
         } catch (BadInputException e) {

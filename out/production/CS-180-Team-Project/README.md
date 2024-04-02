@@ -88,6 +88,8 @@ testConstructorWithInvalidPassword: Checks if password is less than 8 characters
 
 testUnblockUser: First block user then checks if user is blocked then unblocks the user and checks if they are no longer on the unblocked list
 
+testSendMessage: Creates sample data then calls method then deletes that from the file making sure it works properly
+
 MessageTest.java
 
 testMessageConstructor: This test checks if the constructor in the message class properly initializes a message object with valid parameters, and it is created without error

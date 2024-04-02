@@ -22,7 +22,7 @@ public class MessageDatabaseTest {
             User sender = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
             ArrayList<User> receivers = new ArrayList<>();
             receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com"));
-            Message message = new Message(sender, receivers, "Hello, Jane!");
+            Message message = new Message(sender, receivers, "Hello Jane!");
             MessageDatabase database = new MessageDatabase();
             assertTrue(database.addMessage(fileName, message));
             BufferedReader reader = new BufferedReader(new FileReader(tempFile));

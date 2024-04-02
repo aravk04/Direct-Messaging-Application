@@ -13,7 +13,7 @@ public interface Data {
 
     void setUsers(ArrayList<User> users);
 
-    void readFile() throws BadInputException, IncorrectInfoException;
+    void readFile() throws BadInputException;
 
     boolean searchUser(String username);
 
