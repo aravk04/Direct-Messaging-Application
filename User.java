@@ -12,19 +12,19 @@ import java.util.Collections;
  * Harshil Shah, Benjamin Ascano
  * @version March 31, 2024
  */
-public class User extends Thread implements UserInterface{
+public class User extends Thread implements UserInterface {
     // Variables
-    private String name;
+    private String realName;
     private ArrayList<User> friends;
     private ArrayList<User> blocked;
     private String password;
     private String emailAddress;
-    private String username;
+    private String userName;
 
     // Constructor
-    public User(String name, String username, String password, String emailAddress) throws BadInputException {
+    public User(String realName, String userName, String password, String emailAddress) throws BadInputException {
         // Validate username
-        if (username == null || username.isEmpty()) {
+        if (userName == null || userName.isEmpty()) {
             throw new BadInputException("Username cannot be empty");
         }
         //check password
@@ -32,15 +32,17 @@ public class User extends Thread implements UserInterface{
             throw new BadInputException("Password must be at least 8 characters long");
         }
 
-        this.name = name;
-        this.username = username;
+        this.realName = realName;
+        this.userName = userName;
         this.password = password;
         this.emailAddress = emailAddress;
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
     }
-
-    public void sendMessage(Message m) throws FileNotFoundException, IOException {
+    
+    public void sendMessage(ArrayList<User> receivers, String content) throws FileNotFoundException, IOException {
+        Message m = new Message(this, receivers, content);
+        
         ArrayList<String> usernames = new ArrayList<>();
         String fileName = "";
         usernames.add(m.getSender().getUsername());
@@ -143,16 +145,16 @@ public class User extends Thread implements UserInterface{
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
     public String retrieveName() {
-        return name;
+        return realName;
     }
 
     // Setters
 
     public void updateName(String name) {
-        this.name = name;
+        this.realName = name;
     }
 
     public void setEmailAddress(String emailAddress) {
@@ -164,22 +166,22 @@ public class User extends Thread implements UserInterface{
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
     @Override
     public String toString() {
-        String output = name + ",";
+        String output = realName + ",";
         for (int i = 0; i < friends.size(); i++) {
-            output = output + friends.get(i).retrieveName() + ";";
+            output = output + friends.get(i).getUsername() + ";";
         }
         output += ",";
 
         for (int i = 0; i < blocked.size(); i++) {
             System.out.println();
-            output = output + blocked.get(i).retrieveName() + ";";
+            output = output + blocked.get(i).getUsername() + ";";
         }
 
-        output = output + "," + password + "," + emailAddress + "," + username;
+        output = output + "," + password + "," + emailAddress + "," + userName;
 
         return  output;
     }
