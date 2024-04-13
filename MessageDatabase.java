@@ -18,9 +18,12 @@ public class MessageDatabase implements MessageData {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             String receivers = "";
             for (User r : m.getReceivers()) {
-                receivers += r.getUsername() + ",";
+                receivers += r.getUsername() + ";";
             }
-            writer.write(m.getSender().getUsername() + "," +  "," + m.getContent() + "," + m.getTimestamp());
+
+
+            writer.write(m.getSender().getUsername() + "," + receivers + "," +
+                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
             writer.newLine();
             return true;
         } catch (IOException e) {
