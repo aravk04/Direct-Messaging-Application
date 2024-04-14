@@ -63,6 +63,7 @@ public class User extends Thread implements UserInterface{
         }
 
     }
+    /*
     public void deleteMessage(Message m) throws FileNotFoundException, IOException {
         ArrayList<String> usernames = new ArrayList<>();
         String fileName = "";
@@ -83,7 +84,11 @@ public class User extends Thread implements UserInterface{
             db.deleteMessage(fileName, m);
         }
 
+
+
     }
+    */
+
     // Add friend to list
 
     public boolean addFriend(User u) {
