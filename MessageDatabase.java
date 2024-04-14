@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.io.*;
 /**
  * MessageDatabase
  *
@@ -7,9 +9,9 @@
  * Harshil Shah, Benjamin Ascano
  * @version April 1, 2024
  */
-import java.util.ArrayList;
-import java.io.*;
 public class MessageDatabase implements MessageData {
+
+    private ArrayList<String> fileList = new ArrayList<>();
     public MessageDatabase() {
 
     }
@@ -21,6 +23,9 @@ public class MessageDatabase implements MessageData {
                 receivers += r.getUsername() + ";";
             }
 
+            if (!fileList.contains(fileName)) {
+                fileList.add(fileName);
+            }
 
             writer.write(m.getSender().getUsername() + "," + receivers + "," +
                     m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
@@ -29,5 +34,17 @@ public class MessageDatabase implements MessageData {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public ArrayList<String> getChats(String username) {
+        ArrayList<String> chats = new ArrayList<>();
+
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).contains(username)) {
+                chats.add(fileList.get(i).substring(0, fileList.get(i).length() - 4));
+            }
+        }
+
+        return chats;
     }
 }
