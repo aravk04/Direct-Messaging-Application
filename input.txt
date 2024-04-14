@@ -1,1 +1,9 @@
-Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133
+Zonglin Jia,Chenfeng Lyu;Er Yue;,yeslol;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133
+Chenfeng Lyu,Zonglin Jia;Er Yue;,yeslol;MajiaQi;,12345678,chenfeng.2018@outlook.com,cl47
+Er Yue,Chenfeng Lyu;Zonglin Jia;,yeslol;MajiaQi;,12345678,er.2019@outlook.com,ey533
+yeslol,MajiaQi;,block1;,12345678,yeslol.2020@outlool.com,yl13
+MajiaQi,yeslol;,block1;,12345678,majiaqi.2024@gmail.com,mq05
+fri1,fri2;,block1;,12345678,default.2017@outlook.com,defaultFriend1
+fri2,fri1;,block1;,12345678,default.2018@outlook.com,defaultFriend2
+block1,block2;,fri1;fri2;,12345678,default.2019@outlook.com,defaultBlock1
+block2,block1;,fri1;fri2;,12345678,default.2020@outlook.com,defaultBlock2
