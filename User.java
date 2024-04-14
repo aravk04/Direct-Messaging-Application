@@ -39,10 +39,10 @@ public class User extends Thread implements UserInterface {
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
     }
-    
+
     public void sendMessage(ArrayList<User> receivers, String content) throws FileNotFoundException, IOException {
         Message m = new Message(this, receivers, content);
-        
+
         ArrayList<String> usernames = new ArrayList<>();
         String fileName = "";
         usernames.add(m.getSender().getUsername());
@@ -69,8 +69,13 @@ public class User extends Thread implements UserInterface {
 
     public boolean addFriend(User u) {
 
+        //System.out.println("u == null = " + u == null);
+        //System.out.println("friends.contains(u) " + friends.contains(u));
+        //System.out.println("blocked.contains(u) " + blocked.contains(u));
+
         if ((u != null && !friends.contains(u)) && (!blocked.contains(u))) {
             friends.add(u);
+            //System.out.println("friend " + u.retrieveName() + "is successfully added");
             return true;
         }
         return false;
@@ -79,9 +84,9 @@ public class User extends Thread implements UserInterface {
     // Block a user
     public boolean blockUser(User u) {
 
-
         if ((u != null && !blocked.contains(u))) {
             blocked.add(u);
+            System.out.println("blocked " + u.retrieveName() + "is successfully blocked");
             this.removeFriend(u);
             return true;
         }
@@ -165,6 +170,14 @@ public class User extends Thread implements UserInterface {
         this.password = password;
     }
 
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
+
+    public void setBlocked(ArrayList<User> blocked) {
+        this.blocked = blocked;
+    }
+
     public void setUsername(String username) {
         this.userName = username;
     }
@@ -172,13 +185,13 @@ public class User extends Thread implements UserInterface {
     public String toString() {
         String output = realName + ",";
         for (int i = 0; i < friends.size(); i++) {
-            output = output + friends.get(i).getUsername() + ";";
+            output = output + friends.get(i).retrieveName() + ";";
         }
         output += ",";
 
         for (int i = 0; i < blocked.size(); i++) {
             System.out.println();
-            output = output + blocked.get(i).getUsername() + ";";
+            output = output + blocked.get(i).retrieveName() + ";";
         }
 
         output = output + "," + password + "," + emailAddress + "," + userName;
