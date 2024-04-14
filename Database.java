@@ -47,30 +47,55 @@ public class Database implements Data {
                     friends.add(friendNames);
                     blocked.add(blockedNames);
                     userList.add(user);
+
                 } else {
                     System.out.println("Invalid data format: " + line);
                 }
             }
+            //test userlist
+            for (User u : userList) {
+                //System.out.print("name in userlist: " + u.getRealName() + ";");
+            }
 
             for (int i = 0; i < userList.size(); i++) {
                 for (int j = 0; j < friends.get(i).length; j++) {
-                    if (searchUser(friends.get(i)[j])) {
+
+                    //test
+                    //System.out.println("friends.get(" + i + ")[" + j + "]= " + friends.get(i)[j]);
+                    //System.out.println(searchUser(friends.get(i)[j]));
+                    boolean validFriends = false;
+                    for (User u : userList) {
+                        if (u.retrieveName().equals(friends.get(i)[j])) {
+                            validFriends = true;
+                        }
+                    }
+
+                    if (validFriends) {
                         for (int k = 0; k < userList.size(); k++) {
-                            if (userList.get(k).getUsername().equals(friends.get(i)[j])) {
+                            if (userList.get(k).retrieveName().equals(friends.get(i)[j])) {
                                 userList.get(i).addFriend(userList.get(k));
                             }
                         }
                     } else {
                         throw new BadInputException("Invalid Data: " + friends.get(i)[j] + " not found");
                     }
+
                 }
             }
 
             for (int i = 0; i < userList.size(); i++) {
                 for (int j = 0; j < blocked.get(i).length; j++) {
-                    if (searchUser(blocked.get(i)[j])) {
+
+                    boolean validBlocked = false;
+                    for (User u : userList) {
+                        if (u.retrieveName().equals(blocked.get(i)[j])) {
+                            validBlocked = true;
+                        }
+                    }
+
+                    if (validBlocked) {
                         for (int k = 0; k < userList.size(); k++) {
-                            if (userList.get(k).getUsername().equals(blocked.get(i)[j])) {
+                            if (userList.get(k).retrieveName().equals(blocked.get(i)[j])) {
                                 userList.get(i).blockUser(userList.get(k));
                             }
                         }
@@ -81,6 +106,7 @@ public class Database implements Data {
             }
 
             this.users = userList;
+
         } catch (IOException e) {
             throw new BadInputException("Invalid Data in the constructor");
         } catch (BadInputException e) {
@@ -185,9 +211,15 @@ public class Database implements Data {
     }
 
 
-    public boolean searchUser(String username) {
+    public boolean searchUser(String realName) {
+
+        //System.out.println(users.size());
+
         for (User u : users) {
-            if (u.getUsername().equals(username)) {
+            //System.out.println("realname: " + realName);
+            //System.out.println("u.getRealName" + u.getRealName());
+
+            if (u.retrieveName().equals(realName)) {
                 return true;
             }
         }
@@ -196,7 +228,6 @@ public class Database implements Data {
 
     public String viewUser(String username) {
         for (User u : users) {
-
             if (u.getUsername().equals(username)) {
                 return u.toString();
             }
