@@ -12,4 +12,5 @@ import java.io.IOException;
 
 public interface MessageData {
     boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException;
+    boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException;
 }
