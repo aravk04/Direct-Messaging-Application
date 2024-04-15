@@ -40,42 +40,12 @@ public class User extends Thread implements UserInterface {
         this.blocked = new ArrayList<User>();
     }
 
-    public void sendMessage(ArrayList<User> receivers, String content) throws FileNotFoundException, IOException {
-        Message m = new Message(this, receivers, content);
-
-        ArrayList<String> usernames = new ArrayList<>();
-        String fileName = "";
-        usernames.add(m.getSender().getUsername());
-        for (User u : m.getReceivers()) {
-            usernames.add(u.getUsername());
-        }
-        Collections.sort(usernames);
-        for (String username : usernames) {
-            fileName += username + ",";
-        }
-        fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
-        File file = new File(fileName);
-        if (!file.exists()) {
-            file.createNewFile();
-            MessageDatabase db = new MessageDatabase();
-            db.addMessage(fileName, m);
-        } else {
-            MessageDatabase db = new MessageDatabase();
-            db.addMessage(fileName, m);
-        }
-
-    }
     // Add friend to list
 
     public boolean addFriend(User u) {
 
-        //System.out.println("u == null = " + u == null);
-        //System.out.println("friends.contains(u) " + friends.contains(u));
-        //System.out.println("blocked.contains(u) " + blocked.contains(u));
-
         if ((u != null && !friends.contains(u)) && (!blocked.contains(u))) {
             friends.add(u);
-            //System.out.println("friend " + u.retrieveName() + "is successfully added");
             return true;
         }
         return false;
@@ -84,9 +54,9 @@ public class User extends Thread implements UserInterface {
     // Block a user
     public boolean blockUser(User u) {
 
+
         if ((u != null && !blocked.contains(u))) {
             blocked.add(u);
-            //System.out.println("blocked " + u.retrieveName() + "is successfully blocked");
             this.removeFriend(u);
             return true;
         }
@@ -170,14 +140,6 @@ public class User extends Thread implements UserInterface {
         this.password = password;
     }
 
-    public void setFriends(ArrayList<User> friends) {
-        this.friends = friends;
-    }
-
-    public void setBlocked(ArrayList<User> blocked) {
-        this.blocked = blocked;
-    }
-
     public void setUsername(String username) {
         this.userName = username;
     }
@@ -185,13 +147,13 @@ public class User extends Thread implements UserInterface {
     public String toString() {
         String output = realName + ",";
         for (int i = 0; i < friends.size(); i++) {
-            output = output + friends.get(i).retrieveName() + ";";
+            output = output + friends.get(i).getUsername() + ";";
         }
         output += ",";
 
         for (int i = 0; i < blocked.size(); i++) {
             System.out.println();
-            output = output + blocked.get(i).retrieveName() + ";";
+            output = output + blocked.get(i).getUsername() + ";";
         }
 
         output = output + "," + password + "," + emailAddress + "," + userName;
