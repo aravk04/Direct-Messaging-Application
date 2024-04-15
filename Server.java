@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.*;
 /**
  * Server
  *
@@ -11,85 +10,63 @@ import java.util.*;
  * @version April 13th, 2024
  */
 public class Server {
-    private static final int PORT = 12345;
-    private static final Map<String, ObjectOutputStream> clients = new HashMap<>();
-    private static final Object lock = new Object();
-
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server started");
+        Server server = new Server();
+        server.start();
+    }
+
+    public void start() {
+        try {
+            ServerSocket serverSocket = new ServerSocket(12345);
+            System.out.println("Server started. Waiting for clients...");
+
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New client connected");
-                new ClientHandler(clientSocket).start();
+                System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
+
+                // Create a new thread to handle the client
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                Thread clientThread = new Thread(clientHandler);
+                clientThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void addClient(String username, ObjectOutputStream out) {
-        synchronized (lock) {
-            clients.put(username, out);
+    private static class ClientHandler implements Runnable {
+        private Socket clientSocket;
+
+        public ClientHandler(Socket clientSocket) {
+            this.clientSocket = clientSocket;
         }
-    }
 
-    public static void removeClient(String username) {
-        synchronized (lock) {
-            clients.remove(username);
-        }
-    }
-
-    public static void sendMessage(String sender, String receiver, String message) {
-        synchronized (lock) {
-            ObjectOutputStream out = clients.get(receiver);
-            if (out != null) {
-                try {
-                    out.writeObject(sender + ": " + message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("User " + receiver + " not found.");
-            }
-        }
-    }
-}
-
-class ClientHandler extends Thread {
-    private Socket clientSocket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private String username;
-
-    public ClientHandler(Socket socket) {
-        this.clientSocket = socket;
-    }
-
-    public void run() {
-        try {
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new ObjectInputStream(clientSocket.getInputStream());
-            username = (String) in.readObject();
-            Server.addClient(username, out);
-            System.out.println("User " + username + " connected");
-
-            String message;
-            while ((message = (String) in.readObject()) != null) {
-                String[] parts = message.split(" ", 2);
-                Server.sendMessage(username, parts[0], parts[1]);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            Server.removeClient(username);
+        @Override
+        public void run() {
             try {
+                BufferedReader bfr = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                while (true) {
+                    String clientMessage = bfr.readLine();
+                    if (clientMessage == null) {
+                        break;
+                    }
+
+                    // Handle client message
+                    System.out.println("Received from client: " + clientMessage);
+
+                    // Example: echo the message back to the client
+                    pw.println("Server received: " + clientMessage);
+                }
+
+                // Close resources
+                bfr.close();
+                pw.close();
                 clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("User " + username + " disconnected");
         }
     }
 }
-
