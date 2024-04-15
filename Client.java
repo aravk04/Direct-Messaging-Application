@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Client implements Runnable, ClientInterface {
+public class Client implements Runnable {
     public Client() {
 
     }
@@ -73,7 +73,8 @@ public class Client implements Runnable, ClientInterface {
                                         } while (!add.toUpperCase().equals("N"));
                                         System.out.println("What message do you want to send");
                                         String message = scanner.nextLine();
-                                        String sendMessage = "msg" + username + recievers + message;
+                                        String sendMessage = "msg" + username + "," + recievers + message;
+                                        System.out.println("sendMessage: " + sendMessage);
                                         pw.write(sendMessage);
                                         pw.println();
                                         pw.flush();
@@ -340,7 +341,7 @@ public class Client implements Runnable, ClientInterface {
                                         } while (!add.toUpperCase().equals("N"));
                                         System.out.println("What message do you want to send");
                                         String message = scanner.nextLine();
-                                        String sendMessage = "msg" + username + recievers + message;
+                                        String sendMessage = "msg" + username + "," + recievers + message;
                                         pw.write(sendMessage);
                                         pw.println();
                                         pw.flush();
