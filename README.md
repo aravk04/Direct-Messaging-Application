@@ -11,6 +11,9 @@ Looks for incoming client connections using server socket then accepts the conne
 
 Server class Methods: All of the following methods are private. createUser(String payload) creates new user account and extracts information. login(String payload) checks if username exists and if the password matches it. sendMessage(String payload) send message to receiver and creates a chat also checks and makes sure they are not blocked. viewChats(String payload) gets username and checks which chats the user is in. sendMessageInChat(String payload) sends message within a chat. deleteMessage(String payload) deletes username in specific chat and check username and line number of message to delete. addFriend(String payload) add friend to the user friend list if they are friends. removeFriend(String payload) remove friend from user list if they exist. blockUser(String payload) block user parses through the usernames and checks if they exist and adds them to the blocked list. unblockUser(String payload) unblocks user and removes them from the blocked list if they are there. deleteUser(String payload) parses usernames and deletes the user and any chats they were part of. createChat(String user1, String user2) creates unique chat between users. getChatIdForUser(String username) iterates through the chats to find the chat with the given username. writeToChat(String chatId, String message) writes a message and adds it to the chat if it exists.
 
+Server Interface
+This is where the server class is run through
+
 For this phase of the Team Project, create 5 classes total to serve as the basis of your Social Media Platform. The classes are as follows: BadInputException Is thrown whenever the input data is incorrect either due to parse error or just incorrect format
 
 User The User class stores data about the user and allows for the user data to be interacted with
