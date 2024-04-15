@@ -35,7 +35,7 @@ public class Client implements Runnable {
                             System.out.println("What is your email address?");
                             String emailAddress = scanner.nextLine();
                             String info = String.format("sig%s,,,%s,%s,%s", name, password, emailAddress, username);
-                            pw.write(info);
+                            pw.write("cre" + info);
                             pw.println();
                             pw.flush();
 
@@ -132,7 +132,7 @@ public class Client implements Runnable {
                                                             System.out.println("Enter your message:");
                                                             String msg = scanner.nextLine();
 
-                                                            pw.write("msg" + chat + "," + msg);
+                                                            pw.write("msv" + chat + "," + msg);
                                                             pw.println();
                                                             pw.flush();
                                                         } else if (vChoice == 2) {
@@ -147,7 +147,7 @@ public class Client implements Runnable {
                                                                 }
                                                             } while (!isNum);
 
-                                                            String out = username + "," + lineNum;
+                                                            String out = "dms" + username + "," + lineNum;
                                                             pw.write(out);
                                                             pw.println();
                                                             pw.flush();
@@ -383,7 +383,7 @@ public class Client implements Runnable {
                                                             System.out.println("Enter your message:");
                                                             String msg = scanner.nextLine();
 
-                                                            pw.write("msg" + chat + "," + msg);
+                                                            pw.write("msv" + chat + "," + msg);
                                                             pw.println();
                                                             pw.flush();
                                                         } else if (vChoice == 2) {
@@ -398,7 +398,7 @@ public class Client implements Runnable {
                                                                 }
                                                             } while (!isNum);
 
-                                                            String out = username + "," + lineNum;
+                                                            String out = "dms" + username + "," + lineNum;
                                                             pw.write(out);
                                                             pw.println();
                                                             pw.flush();
