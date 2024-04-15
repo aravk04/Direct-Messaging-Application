@@ -59,13 +59,18 @@ public class Client implements Runnable {
                                 if (userOption == 1) {
                                     do {
                                         String recievers = "";
-                                        String add;
+                                        String add = "";
                                         do {
                                             System.out.println("What user do you want to send the message to? (username)");
                                             recievers += scanner.nextLine() + ";";
-                                            System.out.println("Do you want to add more users (Y/N) ?");
-                                            add = scanner.nextLine();
-                                        } while (add.toUpperCase().contains("Y"));
+                                            while ((!add.toUpperCase().equals("Y")) && (!add.toUpperCase().equals("N"))) {
+                                                System.out.println("Do you want to add more users (Y/N) ?");
+                                                add = scanner.nextLine();
+                                                if ((!add.toUpperCase().equals("Y")) && (!add.toUpperCase().equals("N"))) {
+                                                    System.out.println("Please select Y or N");
+                                                }
+                                            }
+                                        } while (!add.toUpperCase().equals("N"));
                                         System.out.println("What message do you want to send");
                                         String message = scanner.nextLine();
                                         String sendMessage = "msg" + username + recievers + message;
@@ -250,11 +255,22 @@ public class Client implements Runnable {
                                         }
                                     } while (!valid);
                                 } else if (userOption == 7) {
-                                    String delete = "del" + username;
-                                    pw.write(delete);
-                                    pw.println();
-                                    pw.flush();
-                                    break;
+                                    String choice = "";
+                                    while ((!choice.toUpperCase().equals("Y")) && (!choice.toUpperCase().equals("N"))) {
+                                        System.out.println("Are you sure you want to delete your account (Y/N)?");
+                                        choice = scanner.nextLine();
+                                        if ((!choice.toUpperCase().equals("Y")) && (!choice.toUpperCase().equals("N"))) {
+                                            System.out.println("Please select Y or N");
+                                        }
+                                    }
+                                    
+                                    if (choice.equals("Y")) {
+                                        String delete = "del" + username;
+                                        pw.write(delete);
+                                        pw.println();
+                                        pw.flush();
+                                        break;
+                                    }
                                 } else if (userOption == 8) {
                                     break;
                                 } else {
@@ -310,13 +326,18 @@ public class Client implements Runnable {
                                 if (userOption == 1) {
                                     do {
                                         String recievers = "";
-                                        String add;
+                                        String add = "";
                                         do {
                                             System.out.println("What user do you want to send the message to? (username)");
                                             recievers += scanner.nextLine() + ";";
-                                            System.out.println("Do you want to add more users (Y/N) ?");
-                                            add = scanner.nextLine();
-                                        } while (add.toUpperCase().contains("Y"));
+                                            while ((!add.toUpperCase().equals("Y")) && (!add.toUpperCase().equals("N"))) {
+                                                System.out.println("Do you want to add more users (Y/N) ?");
+                                                add = scanner.nextLine();
+                                                if ((!add.toUpperCase().equals("Y")) && (!add.toUpperCase().equals("N"))) {
+                                                    System.out.println("Please select Y or N");
+                                                }
+                                            }
+                                        } while (!add.toUpperCase().equals("N"));
                                         System.out.println("What message do you want to send");
                                         String message = scanner.nextLine();
                                         String sendMessage = "msg" + username + recievers + message;
@@ -501,11 +522,22 @@ public class Client implements Runnable {
                                         }
                                     } while (!valid);
                                 } else if (userOption == 7) {
-                                    String delete = "del" + username;
-                                    pw.write(delete);
-                                    pw.println();
-                                    pw.flush();
-                                    break;
+                                    String choice = "";
+                                    while ((!choice.toUpperCase().equals("Y")) && (!choice.toUpperCase().equals("N"))) {
+                                        System.out.println("Are you sure you want to delete your account (Y/N)?");
+                                        choice = scanner.nextLine();
+                                        if ((!choice.toUpperCase().equals("Y")) && (!choice.toUpperCase().equals("N"))) {
+                                            System.out.println("Please select Y or N");
+                                        }
+                                    }
+
+                                    if (choice.equals("Y")) {
+                                        String delete = "del" + username;
+                                        pw.write(delete);
+                                        pw.println();
+                                        pw.flush();
+                                        break;
+                                    }
                                 } else if (userOption == 8) {
                                     break;
                                 } else {
