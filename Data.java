@@ -17,7 +17,7 @@ public interface Data {
 
     boolean searchUser(String username);
 
-    boolean addUser(String info);
+    boolean addUser(String info) throws BadInputException;
 
     String viewUser(String username);
 

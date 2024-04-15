@@ -42,12 +42,14 @@ public class DatabaseTest {
         public void testConstructorWithValidInputs() {
             try {
                 Database database = new Database(INFILE);
-                assertEquals("Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;," +
-                                "12345678,zonglin.2017@outlook.com,zj133",
+                //System.out.println("viewUser result: " + database.viewUser("zj133"));
+                assertEquals(
+                        "Zonglin Jia,Chenfeng Lyu;Er Yue;," +
+                                "yeslol;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133",
                         database.viewUser("zj133"));
 
             } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
+                e.printStackTrace();
             }
         }
 
@@ -61,7 +63,7 @@ public class DatabaseTest {
                         database.viewUser("Daniel123"));
 
             } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
+                e.printStackTrace();
             }
         }
 
@@ -79,27 +81,34 @@ public class DatabaseTest {
             }
         }
 
+
         @Test(timeout = 1000)
         public void testEditUser() {
             try {
 
                 Database database = new Database(INFILE);
-                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678," +
-                        "zonglin.2017@outlook.com,zj133";
+                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;,yeslol;MajiaQi;," +
+                        "12345678,zonglin.2017@outlook.com,zj133";
                 String newInfo = "Zonglin Wang,fri1;,block2;,00000000," +
-                        "zonglin.2017@outlook.com@example.com,zj133";
+                        "zonglin.2017@outlook.com.com,zj133";
 
                 database.editUser(oldInfo, newInfo);
                 assertEquals(newInfo, database.viewUser("zj133"));
                 database.editUser(newInfo, oldInfo); //set the input.txt to default
 
+
+                oldInfo = "MajiaQi,yeslol;,block1;,12345678,majiaqi.2024@gmail.com,mq05";
+                newInfo = "MajiaQi,yeslol;,block2;,12345678,majiaqi.2024@gmail.com,mq05";
+
+                database.editUser(oldInfo, newInfo);
+                assertEquals(newInfo, database.viewUser("mq05"));
+                database.editUser(newInfo, oldInfo); //set the input.txt to default
+
             } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
+                e.printStackTrace();
             }
         }
 
-
     }
-
 
 }

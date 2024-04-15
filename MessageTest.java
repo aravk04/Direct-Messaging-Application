@@ -63,9 +63,11 @@ public class MessageTest {
         ArrayList<User> receivers = new ArrayList<>();
         receivers.add(receiver);
 
-        Message message = new Message(sender, receivers, content);
 
-        String expectedString = "Message{sender=johndoe, receivers=[janesmith], content='Hello, Jane!', timestamp='" + message.getTimestamp() + "', exactTime=" + message.getExactTime() + '}';
+        Message message = new Message(sender, receivers, content);
+        System.out.println(message.toString());
+        String expectedString = "Message{sender=johndoe, receivers=[janesmith], timestamp='"
+                + message.getTimestamp() + "', exactTime=" + message.getExactTime() + ", content='Hello, Jane!'" + '}';
         assertEquals(expectedString, message.toString());
     }
 }
