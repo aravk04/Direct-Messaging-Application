@@ -1,7 +1,7 @@
 Phase 2
 
 Client Class
-Establishes connection by crreating socket connection to server it uses "localhost" as the address and "12345" as the port number. Theen it chekcs user input and sends it to the server for it to process and do whatever command the user tells it to do. It keeps running until the client stops it and allows multiple clients in a server.
+Establishes connection by crreating socket connection to server it uses "localhost" as the address and "12345" as the port number. Then it chekcs user input and sends it to the server for it to process and do whatever command the user tells it to do. It keeps running until the client stops it and allows multiple clients in a server. The client class is one big menu that allows the user to choose what they want to do. For example if they want to sign up, log in, add or block friends, remove or unblock friends, and being able to send and delete messages. 
 
 Server Class
 Looks for incoming client connections using server socket then accepts the connection and creates new client handler to communicate with the client and manages there requests. The client handler allows for it to work with multiple clients at once. Maintains data structures to store information about the users and interactions with the server. Uses multi-threading so that it can work with multiple clients without blocking.
