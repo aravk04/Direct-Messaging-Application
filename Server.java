@@ -21,13 +21,13 @@ public class Server implements Runnable {
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             System.out.println("Server started on port 12345");
+
+            //read user's data from database
             database = new Database(INFILE);
             Map<String, User> usersList = new HashMap<>();
-
             for (User u : database.getUsers()) {
                 usersList.put(u.getUsername(), u);
             }
-
             users = usersList;
 
             while (true) {
@@ -173,7 +173,7 @@ public class Server implements Runnable {
                     break;
                 }
             }
-            if(!randomString) {
+            if (!randomString) {
                 out.println("S");
             }
         }
@@ -181,22 +181,28 @@ public class Server implements Runnable {
         // send message to receiver and creates a chat also checks and makes sure they are not blocked
         private void sendMessage(String payload) {
             String sender = payload.substring(0, payload.indexOf(","));
-            String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(","));
-            String message = payload.substring(payload.lastIndexOf(",") + 1);
+            String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
+            String message = payload.substring(payload.lastIndexOf(";") + 1);
+
+            System.out.println("sender:" + sender);
+            System.out.println("receivers:" + receivers);
+            System.out.println("message:" + message);
 
             String[] receiverList = receivers.split(";");
-            boolean success = true;
+            boolean success = false;
 
             for (String receiver : receiverList) {
                 if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
                     String chatId = createChat(sender, receiver);
                     writeToChat(chatId, sender + ": " + message);
-                } else {
-                    success = false;
+                    out.println("True");
+                    System.out.println("message is successfully sent");
+                    success = true;
                 }
             }
-
-            out.println(success);
+            if (!success) {
+                out.println("S");
+            }
         }
 
         //gets username and checks which chats the user is in
@@ -259,7 +265,7 @@ public class Server implements Runnable {
                     break;
                 }
             }
-            if(!randomString) {
+            if (!randomString) {
                 out.println("S");
             }
 
@@ -283,7 +289,7 @@ public class Server implements Runnable {
                 }
 
             }
-            if(!randomString) {
+            if (!randomString) {
                 out.println("S");
             }
         }
@@ -305,7 +311,7 @@ public class Server implements Runnable {
                     break;
                 }
             }
-            if(!randomString) {
+            if (!randomString) {
                 out.println("S");
             }
         }
