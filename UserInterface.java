@@ -9,12 +9,12 @@ import java.util.ArrayList;
  * @version March 31, 2024
  */
 public interface UserInterface {
-    boolean addFriend(User u);
-    boolean blockUser(User u);
-    boolean removeFriend(User u);
+    boolean addFriend(String u);
+    boolean blockUser(String u);
+    boolean removeFriend(String u);
     String getName();
-    ArrayList<User> getFriends();
-    ArrayList<User> getBlocked();
+    ArrayList<String> getFriends();
+    ArrayList<String> getBlocked();
     String getPassword();
     String getEmailAddress();
     String getUsername();
