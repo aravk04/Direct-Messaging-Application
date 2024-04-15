@@ -1,3 +1,10 @@
+Phase 2:
+Client Class
+Establishes connection by crreating socket connection to server it uses "localhost" as the address and "12345" as the port number. Theen it chekcs user input and sends it to the server for it to process and do whatever command the user tells it to do. It keeps running until the client stops it and allows multiple clients in a server.
+
+Server Class
+Looks for incoming client connections using server socket then accepts the connection and creates new client handler to communicate with the client and manages there requests. The client handler allows for it to work with multiple clients at once. Maintains data structures to store information about the users and interactions with the server. Uses multi-threading so that it can work with multiple clients without blocking.
+
 For this phase of the Team Project, create 5 classes total to serve as the basis of your Social Media Platform. The classes are as follows: BadInputException Is thrown whenever the input data is incorrect either due to parse error or just incorrect format
 
 User The User class stores data about the user and allows for the user data to be interacted with
