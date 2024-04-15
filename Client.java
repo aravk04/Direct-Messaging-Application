@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Client implements Runnable {
+public class Client implements Runnable, ClientInterface {
     public Client() {
 
     }
