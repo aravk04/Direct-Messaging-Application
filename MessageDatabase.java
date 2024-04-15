@@ -51,9 +51,12 @@ public class MessageDatabase implements MessageData {
                 // read next line
 
                 String[] data = line.split(",");
-                if (lineNum == currLineNum && data[0].equals(username)) {
+                if (lineNum == currLineNum) {
+                    if (!data[0].equals(username)) {
+                        // user cannot delete someone else's message
+                        return false;
+                    }
                     removed = true;
-                    continue;
                 } else {
                     rewriteLines.add(line);
                 }
@@ -92,5 +95,21 @@ public class MessageDatabase implements MessageData {
         }
 
         return chats;
+    }
+    public static void main(String[] args) throws BadInputException, IOException {
+        User u = new User("eesha", "efaruqi", "efaruqi4955", "efaruqi@gmail.com");
+        User u1 = new User("mahad", "mfaruqi", "mfaruqi4955", "mfaruqi@gmail.com");
+        ArrayList<String> rec = new ArrayList<>();
+        rec.add(u1.getUsername());
+        Message m = new Message(u.getUsername(), rec, "hello1");
+        Message m1 = new Message(u.getUsername(), rec, "hello2");
+        Message m2 = new Message(u.getUsername(), rec, "hello3");
+        String fileName = m.createFile(u.getUsername(), rec);
+        System.out.println(fileName);
+        MessageDatabase db = new MessageDatabase();
+        db.addMessage(fileName, m);
+        db.addMessage(fileName, m1);
+        db.addMessage(fileName, m2);
+        db.deleteMessage(fileName, u.getUsername(), 2);
     }
 }
