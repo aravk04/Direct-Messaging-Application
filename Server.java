@@ -154,22 +154,28 @@ public class Server implements Runnable {
             String[] parts = payload.split(",");
             String username = parts[0];
             String password = parts[1];
-
+            //System.out.println("Key=" + key + ", Value=" + value);
+            //System.out.println("user's password=" + value.getPassword());
+            boolean randomString = false;
 
             //test
-            //System.out.println("users.containsKey(username)" + users.containsKey(username));
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
 
                 if (key.equals(username) && value.getPassword().equals(password)) {
                     this.username = username;
-                    out.println("True");
+                    out.write("True");
+                    out.println();
+                    out.flush();
+                    randomString = true;
+                    System.out.println("user successfully logged in!");
+                    break;
                 }
             }
-
-            out.println("false");
+            if(!randomString) {
+                out.println("S");
+            }
         }
 
         // send message to receiver and creates a chat also checks and makes sure they are not blocked
@@ -195,7 +201,7 @@ public class Server implements Runnable {
 
         //gets username and checks which chats the user is in
         private void viewChats(String payload) {
-            String username = payload.substring(3);
+            String username = payload;
             Set<String> chatIds = new HashSet<>();
 
             for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
@@ -239,51 +245,92 @@ public class Server implements Runnable {
 
         //add friend to the user friend list if they are friends
         private void addFriend(String payload) {
-            String username = payload.substring(3);
-            if (users.containsKey(username)) {
-                users.get(this.username).addFriend(username);
-                out.println("True");
-            } else {
-                out.println("False");
+            String username = payload;
+            boolean randomString = false;
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(username)) {
+                    users.get(this.username).addFriend(username);
+                    database.rewriteFile();
+                    out.println("True");
+                    randomString = true;
+                    break;
+                }
             }
+            if(!randomString) {
+                out.println("S");
+            }
+
         }
 
         // remove friend from user list if they exist
         private void removeFriend(String payload) {
-            String username = payload.substring(3);
-            if (users.containsKey(username)) {
-                users.get(this.username).removeFriend(username);
-                out.println("True");
-            } else {
-                out.println("False");
+            String username = payload;
+            boolean randomString = false;
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+
+                if (key.equals(username)) {
+                    users.get(this.username).removeFriend(username);
+                    database.rewriteFile();
+                    out.println("True");
+                    randomString = true;
+                    break;
+                }
+
+            }
+            if(!randomString) {
+                out.println("S");
             }
         }
 
         // block user parses through the usernames and checks if they exist and adds them to the blocked list
         private void blockUser(String payload) {
-            String username = payload.substring(3);
-            if (users.containsKey(username)) {
-                users.get(this.username).blockUser(username);
-                out.println("True");
-            } else {
-                out.println("False");
+            String username = payload;
+            boolean randomString = true;
+
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(username)) {
+                    users.get(this.username).blockUser(username);
+                    database.rewriteFile();
+                    out.println("True");
+                    randomString = true;
+                    break;
+                }
+            }
+            if(!randomString) {
+                out.println("S");
             }
         }
 
         // unblocks user and removes them from the blocked list if they are there
         private void unblockUser(String payload) {
-            String username = payload.substring(3);
-            if (users.containsKey(username)) {
-                users.get(this.username).unblockUser(username);
-                out.println("True");
-            } else {
-                out.println("False");
+            String username = payload;
+            boolean randomString = true;
+
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(username)) {
+                    users.get(this.username).unblockUser(username);
+                    database.rewriteFile();
+                    out.println("True");
+                    break;
+                }
             }
         }
 
         // parses usernames and deletes the user and any chats they were part of
         private void deleteUser(String payload) {
-            String username = payload.substring(3);
+            String username = payload.substring(0);
             if (users.containsKey(username)) {
                 users.remove(username);
                 // Remove the user from all chats
@@ -291,6 +338,7 @@ public class Server implements Runnable {
                     entry.getValue().remove(username);
                 }
             }
+
         }
 
         // creates unique chat between users
