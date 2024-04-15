@@ -86,7 +86,7 @@ public class User extends Thread implements UserInterface {
 
         if ((u != null && !blocked.contains(u))) {
             blocked.add(u);
-            System.out.println("blocked " + u.retrieveName() + "is successfully blocked");
+            //System.out.println("blocked " + u.retrieveName() + "is successfully blocked");
             this.removeFriend(u);
             return true;
         }

@@ -114,18 +114,22 @@ public class Database implements Data {
         }
     }
 
+
     public void rewriteFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
 
             boolean lineIsBlank = false;
             for (User u : users) {
                 String userData = u.toString();
+                //System.out.println("userData: " + userData);
                 if (!userData.isEmpty()) {
                     if (lineIsBlank) {
                         bw.newLine();
                         lineIsBlank = false;
                     }
-                    bw.write(userData);
+                    bw.write(userData + "\n");
+                    //test
+                    //System.out.println("userData of " + userData.split(",")[0] + " is successfully added");
                 } else {
                     lineIsBlank = true;
                 }
@@ -147,7 +151,7 @@ public class Database implements Data {
         try {
             User user = createUser(info);
 
-            if (searchUser(user.getUsername())) {
+            if (searchUser(user.retrieveName())) {
                 return false;
             } else {
                 users.add(user);
@@ -160,16 +164,53 @@ public class Database implements Data {
     }
 
     public boolean editUser(String oldInfo, String newInfo) throws BadInputException {
-        for (int i = 0; i < users.size(); i++) {
-            User newUser = createUser(newInfo);
+        User newUser = createUser(newInfo);
+        System.out.println("editing... the users size is " + users.size());
+        System.out.println("the newUser data is: " + newUser.toString());
+        boolean isEdited = false;
+        int index = -1;
 
+        for (int i = 0; i < users.size(); i++) {
+
+            //Edit the line of the user himself/herself
             if (users.get(i).toString().equals(oldInfo)) {
+
+                index = i;
+                /*
                 users.set(i, newUser);
                 rewriteFile();
-                return true;
+                System.out.println("userData of " + newInfo.split(",")[0] + " is successfully added");
+                isEdited = true;
+                 */
+            } else {
+                throw new BadInputException("There is no user that found to be matching the input");
             }
+
+            //Edit the line of every line that contains the old user's name
+            //If the name is in the friendList
+            for (User u : users.get(i).getFriends()) {
+                if (u.retrieveName().contains(oldInfo.split(",")[0])) {
+                    users.get(i).removeFriend(users.get(index));
+                    users.get(i).addFriend(newUser);
+                    rewriteFile();
+                    System.out.println("friends data of " + users.get(i).retrieveName() + " is successfully updated");
+
+                }
+            }
+
+            //Edit the line of every line that contains the old user's name
+            //If the name is in the blocked
+            if (users.get(i).retrieveName().contains(oldInfo.split(",")[0])) {
+                users.get(i).unblockUser(newUser);
+                users.get(i).blockUser(newUser);
+                rewriteFile();
+                System.out.println("blocked data of " + users.get(i).retrieveName() + " is successfully updated");
+            }
+
         }
-        return false;
+
+        return isEdited;
+
     }
 
     private User createUser(String userInfo) throws BadInputException {
@@ -185,7 +226,7 @@ public class Database implements Data {
             for (int j = 0; j < friendNames.length; j++) {
                 if (searchUser(friendNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
-                        if (users.get(k).getUsername().equals(friendNames[j])) {
+                        if (users.get(k).retrieveName().equals(friendNames[j])) {
                             user.addFriend(users.get(k));
                         }
                     }
@@ -196,7 +237,7 @@ public class Database implements Data {
             for (int j = 0; j < blockedNames.length; j++) {
                 if (searchUser(blockedNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
-                        if (users.get(k).getUsername().equals(blockedNames[j])) {
+                        if (users.get(k).retrieveName().equals(blockedNames[j])) {
                             user.blockUser(users.get(k));
                         }
                     }

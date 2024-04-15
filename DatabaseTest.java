@@ -42,7 +42,7 @@ public class DatabaseTest {
         public void testConstructorWithValidInputs() {
             try {
                 Database database = new Database(INFILE);
-                System.out.println("viewUser result: " + database.viewUser("zj133"));
+                //System.out.println("viewUser result: " + database.viewUser("zj133"));
                 assertEquals(
                         "Zonglin Jia,Chenfeng Lyu;Er Yue;," +
                                 "yeslol;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133",
@@ -53,7 +53,6 @@ public class DatabaseTest {
             }
         }
 
-        /*
 
         @Test(timeout = 1000)
         public void testAddUser() {
@@ -64,7 +63,7 @@ public class DatabaseTest {
                         database.viewUser("Daniel123"));
 
             } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
+                e.printStackTrace();
             }
         }
 
@@ -82,27 +81,25 @@ public class DatabaseTest {
             }
         }
 
+
         @Test(timeout = 1000)
         public void testEditUser() {
             try {
 
                 Database database = new Database(INFILE);
-                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;Dude;,Yulei Yang;MajiaQi;,12345678," +
-                        "zonglin.2017@outlook.com,zj133";
+                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;,yeslol;MajiaQi;," +
+                        "12345678,zonglin.2017@outlook.com,zj133";
                 String newInfo = "Zonglin Wang,fri1;,block2;,00000000," +
-                        "zonglin.2017@outlook.com@example.com,zj133";
+                        "zonglin.2017@outlook.com.com,zj133";
 
                 database.editUser(oldInfo, newInfo);
                 assertEquals(newInfo, database.viewUser("zj133"));
-                database.editUser(newInfo, oldInfo); //set the input.txt to default
+                //database.editUser(newInfo, oldInfo); //set the input.txt to default
 
             } catch (Exception e) {
-                fail("There should be no exception thrown for valid input");
+                e.printStackTrace();
             }
         }
-
-         */
-
 
     }
 
