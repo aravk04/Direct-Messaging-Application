@@ -34,7 +34,7 @@ public class Client implements Runnable {
                             String password = scanner.nextLine();
                             System.out.println("What is your email address?");
                             String emailAddress = scanner.nextLine();
-                            String info = String.format("sig%s,,,%s,%s,%s", name, password, emailAddress, username);
+                            String info = String.format("%s,,,%s,%s,%s", name, password, emailAddress, username);
                             pw.write("cre" + info);
                             pw.println();
                             pw.flush();
@@ -263,7 +263,7 @@ public class Client implements Runnable {
                                             System.out.println("Please select Y or N");
                                         }
                                     }
-                                    
+
                                     if (choice.equals("Y")) {
                                         String delete = "del" + username;
                                         pw.write(delete);
