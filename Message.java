@@ -1,6 +1,11 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * Message
  *
@@ -13,13 +18,13 @@ import java.util.ArrayList;
  */
 
 public class Message implements MessageInterface {
-    private User sender;
-    private ArrayList<User> receivers;
+    private String sender;
+    private ArrayList<String> receivers;
     private String content;
     private String timestamp;
     private long exactTime;
 
-    public Message(User sender, ArrayList<User> receivers, String content) {
+    public Message(String sender, ArrayList<String> receivers, String content) {
         this.sender = sender;
         this.receivers = receivers;
         this.content = content;
@@ -29,11 +34,11 @@ public class Message implements MessageInterface {
     }
 
     // Getters
-    public User getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public ArrayList<User> getReceivers() {
+    public ArrayList<String> getReceivers() {
         return receivers;
     }
 
@@ -49,40 +54,33 @@ public class Message implements MessageInterface {
         return exactTime;
     }
 
-    @Override
-    public boolean sameDM(MessageInterface m) {
-        return false;
-    }
-
-    public boolean sameDM(Message m) {
-        for (User receiver : m.getReceivers()) {
-            if (receiver.equals(this.getSender()) || this.receivers.contains(receiver)) {
-                for (User thisReceiver : this.receivers) {
-                    if (thisReceiver.equals(m.getSender()) || m.getReceivers().contains(thisReceiver)) {
-                        return true;
-                    }
-                }
-            }
+    public String createFile(String sender, ArrayList<String> receivers) throws FileNotFoundException, IOException {
+        String fileName = "";
+        receivers.add(sender);
+        Collections.sort(receivers);
+        for (String username : receivers) {
+            fileName += username + ",";
         }
-        return false;
+        fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
+
+        return fileName;
     }
 
     @Override
     public String toString() {
+        String out = sender + ",";
+
         String receiversString = "";
         if (!receivers.isEmpty()) {
-            receiversString = receivers.get(0).getUsername();
+            receiversString = receivers.get(0);
             for (int i = 1; i < receivers.size(); i++) {
-                receiversString += ", " + receivers.get(i).getUsername();
+                receiversString += ";" + receivers.get(i);
             }
         }
 
-        return "Message{" +
-                "sender=" + sender.getUsername() +
-                ", receivers=[" + receiversString + "]" +
-                ", content='" + content + '\'' +
-                ", timestamp='" + timestamp + '\'' +
-                ", exactTime=" + exactTime +
-                '}';
+        out += receiversString;
+        out = out + "," +  timestamp + "," + exactTime + "," + content;
+
+        return out;
     }
 }
