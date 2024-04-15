@@ -165,49 +165,69 @@ public class Database implements Data {
 
     public boolean editUser(String oldInfo, String newInfo) throws BadInputException {
         User newUser = createUser(newInfo);
-        System.out.println("editing... the users size is " + users.size());
-        System.out.println("the newUser data is: " + newUser.toString());
+        //System.out.println("editing... the users size is " + users.size());
+        //System.out.println("the newUser data is: " + newUser.toString());
         boolean isEdited = false;
         int index = -1;
 
         for (int i = 0; i < users.size(); i++) {
+            //System.out.println("print each line =" + users.get(i).toString());
+            //System.out.println("oldInfo =" + oldInfo);
 
-            //Edit the line of the user himself/herself
             if (users.get(i).toString().equals(oldInfo)) {
 
                 index = i;
-                /*
-                users.set(i, newUser);
-                rewriteFile();
-                System.out.println("userData of " + newInfo.split(",")[0] + " is successfully added");
-                isEdited = true;
-                 */
-            } else {
-                throw new BadInputException("There is no user that found to be matching the input");
+                break;
+
             }
+
+        }
+        if (index == -1) {
+            System.out.println("There is no user that found to be matching the input");
+            return isEdited;
+        }
+
+
+        //System.out.println("the name of the user you want to modified is: " + oldInfo.split(",")[0]);
+
+        for (int i = 0; i < users.size(); i++) {
 
             //Edit the line of every line that contains the old user's name
             //If the name is in the friendList
-            for (User u : users.get(i).getFriends()) {
-                if (u.retrieveName().contains(oldInfo.split(",")[0])) {
+            for (int j = 0; j < users.get(i).getFriends().size(); j++) {
+
+                User friend = users.get(i).getFriends().get(j);
+                //System.out.println("friend name=" + friend.retrieveName());
+
+                if (friend.retrieveName().contains(oldInfo.split(",")[0])) {
                     users.get(i).removeFriend(users.get(index));
                     users.get(i).addFriend(newUser);
                     rewriteFile();
-                    System.out.println("friends data of " + users.get(i).retrieveName() + " is successfully updated");
+                    //System.out.println("friends data of " + users.get(i).retrieveName() + " is successfully updated");
 
                 }
             }
 
             //Edit the line of every line that contains the old user's name
             //If the name is in the blocked
-            if (users.get(i).retrieveName().contains(oldInfo.split(",")[0])) {
-                users.get(i).unblockUser(newUser);
-                users.get(i).blockUser(newUser);
-                rewriteFile();
-                System.out.println("blocked data of " + users.get(i).retrieveName() + " is successfully updated");
-            }
+            for (int j = 0; j < users.get(i).getBlocked().size(); j++) {
 
+                User block = users.get(i).getBlocked().get(j);
+                //System.out.println("blocked name=" + block.retrieveName());
+
+                if (block.retrieveName().contains(oldInfo.split(",")[0])) {
+                    users.get(i).unblockUser(users.get(index));
+                    users.get(i).blockUser(newUser);
+                    rewriteFile();
+                    //System.out.println("blocked data of " + users.get(i).retrieveName() + " is successfully updated");
+                }
+            }
         }
+        //Edit the line of the user himself/herself
+        users.set(index, newUser);
+        rewriteFile();
+        System.out.println("userData of " + newInfo.split(",")[0] + " is successfully updated");
+        isEdited = true;
 
         return isEdited;
 
