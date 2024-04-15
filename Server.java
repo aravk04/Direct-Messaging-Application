@@ -1,21 +1,21 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 /**
- * Server
- * <p>
- * Handles client connections and requests
- *
- * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
- * Harshil Shah, Benjamin Ascano
- * @version April 14th, 2024
- */
+* Server
+*
+* Handles client connections and requests
+*
+* @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+* Harshil Shah, Benjamin Ascano
+* @version April 14th, 2024
+*/
 public class Server implements Runnable {
-    private static Map<String, User> users = new HashMap<>();
-    private static Map<String, ArrayList<String>> chats = new HashMap<>();
-    private static final String INFILE = "input.txt";
-    private static Database database;
+   private static Map<String, User> users = new HashMap<>();
+   private static Map<String, ArrayList<String>> chats = new HashMap<>();
+   private static final String INFILE = "input.txt";
+   private static Database database;
+
 
     public static void main(String[] args) {
         try {
@@ -42,51 +42,49 @@ public class Server implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
+   @Override
+   public void run() {
 
-    }
+   }
 
-    private static class ClientHandler extends Thread {
-        private Socket clientSocket;
-        private BufferedReader in;
-        private PrintWriter out;
-        private String username;
+   private static class ClientHandler extends Thread {
+       private Socket clientSocket;
+       private BufferedReader in;
+       private PrintWriter out;
+       private String username;
 
-        public ClientHandler(Socket socket) {
-            this.clientSocket = socket;
-            try {
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+       public ClientHandler(Socket socket) {
+           this.clientSocket = socket;
+           try {
+               in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+               out = new PrintWriter(socket.getOutputStream(), true);
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
 
-        @Override
-        public void run() {
-            try {
-                String request;
-                while ((request = in.readLine()) != null) {
-                    System.out.println(request);
-                    handleRequest(request);
-                }
-            } catch (IOException | BadInputException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+       @Override
+       public void run() {
+           try {
+               String request;
+               while ((request = in.readLine()) != null) {
+                   handleRequest(request);
+               }
+           } catch (IOException | BadInputException e) {
+               e.printStackTrace();
+           } finally {
+               try {
+                   clientSocket.close();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
 
-        private void handleRequest(String request) throws BadInputException {
-            String command = request.substring(0, 3);
-            String payload = request.substring(3);
-            System.out.println("command: " + command);
-            System.out.println("payload: " + payload);
+       private void handleRequest(String request) throws BadInputException {
+           String command = request.substring(0, 3);
+           System.out.println("This is the command: " + command);
+           String payload = request.substring(3);
 
             switch (command) {
                 case "cre":
@@ -210,30 +208,28 @@ public class Server implements Runnable {
             String username = payload;
             Set<String> chatIds = new HashSet<>();
 
-            for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-                if (entry.getValue().contains(username)) {
-                    chatIds.add(entry.getKey());
-                }
-            }
+           for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+               if (entry.getValue().contains(username)) {
+                   chatIds.add(entry.getKey());
+               }
+           }
 
-            out.println(String.join(",", chatIds));
-            out.println("stop");
-        }
+           out.println(String.join(",", chatIds));
+           out.println("stop");
+       }
+       // sends message within a chat
+       private void sendMessageInChat(String payload) {
+           String[] parts = payload.split(",");
+           String chatId = parts[0].substring(3);
+           String message = parts[1];
 
-        // sends message within a chat
-        private void sendMessageInChat(String payload) {
-            String[] parts = payload.split(",");
-            String chatId = parts[0].substring(3);
-            String message = parts[1];
-
-            writeToChat(chatId, username + ": " + message);
-        }
-
-        //deletes username in specific chat and check username and line number of message to delete
-        private void deleteMessage(String payload) {
-            String[] parts = payload.split(",");
-            String username = parts[0].substring(3);
-            int lineNumber = Integer.parseInt(parts[1]);
+           writeToChat(chatId, username + ": " + message);
+       }
+       //deletes username in specific chat and check username and line number of message to delete
+       private void deleteMessage(String payload) {
+           String[] parts = payload.split(",");
+           String username = parts[0].substring(3);
+           int lineNumber = Integer.parseInt(parts[1]);
 
             String chatId = getChatIdForUser(username);
             if (chatId != null) {
