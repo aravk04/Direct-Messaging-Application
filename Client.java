@@ -104,7 +104,7 @@ public class Client implements Runnable {
                                         System.out.println("You are not in any chats yet");
                                     } else {
                                         System.out.println("Please select one of the following chats to view:");
-                                        for (int i = 0; i < list.size(); i ++) {
+                                        for (int i = 0; i < list.size(); i++) {
                                             int j = i + 1;
                                             System.out.println(j + list.get(i));
                                         }
@@ -371,7 +371,7 @@ public class Client implements Runnable {
                                         System.out.println("You are not in any chats yet");
                                     } else {
                                         System.out.println("Please select one of the following chats to view:");
-                                        for (int i = 0; i < list.size(); i ++) {
+                                        for (int i = 0; i < list.size(); i++) {
                                             int j = i + 1;
                                             System.out.println(j + list.get(i));
                                         }
