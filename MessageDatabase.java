@@ -19,12 +19,16 @@ public class MessageDatabase implements MessageData {
     }
 
     public boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             String receivers = "";
             for (String r : m.getReceivers()) {
                 receivers += r + ";";
             }
-
+            receivers = receivers.substring(0,receivers.length()-1);
             if (!fileList.contains(fileName)) {
                 fileList.add(fileName);
             }
