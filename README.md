@@ -1,4 +1,4 @@
-Phase 2
+Phase 2 implementing Server and Client classes
 
 Client Class
 Establishes connection by crreating socket connection to server it uses "localhost" as the address and "12345" as the port number. Then it chekcs user input and sends it to the server for it to process and do whatever command the user tells it to do. It keeps running until the client stops it and allows multiple clients in a server. The client class is one big menu that allows the user to choose what they want to do using a loop with if-else statements and more loops that take in user inputs and send them to the server class. For example if they want to sign up, log in, add or block friends, remove or unblock friends, and being able to send and delete messages. There are also other command sthe user can choose to do. This client class also handles invalid inputs by throwing exceptions and allowing the user to try again.
