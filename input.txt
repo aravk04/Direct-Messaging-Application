@@ -1,9 +1,9 @@
-Zonglin Jia,Chenfeng Lyu;Er Yue;,yeslol;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133
-Chenfeng Lyu,Er Yue;Zonglin Jia;,yeslol;MajiaQi;,12345678,chenfeng.2018@outlook.com,cl47
-Er Yue,Chenfeng Lyu;Zonglin Jia;,yeslol;MajiaQi;,12345678,er.2019@outlook.com,ey533
-yeslol,MajiaQi;,block1;,12345678,yeslol.2020@outlool.com,yl13
-MajiaQi,yeslol;,block1;,12345678,majiaqi.2024@gmail.com,mq05
-fri1,fri2;,block1;,12345678,default.2017@outlook.com,defaultFriend1
-fri2,fri1;,block1;,12345678,default.2018@outlook.com,defaultFriend2
-block1,block2;,fri1;fri2;,12345678,default.2019@outlook.com,defaultBlock1
-block2,block1;,fri1;fri2;,12345678,default.2020@outlook.com,defaultBlock2
+Zonglin Jia,cl47;ey533;,yl13;mq05;,12345678,zonglin.2017@outlook.com,zj133
+Chenfeng Lyu,ey533;zj133;,yl13;mq05;,12345678,chenfeng.2018@outlook.com,cl47
+Er Yue,cl47;zj133;,yl13;mq05;,12345678,er.2019@outlook.com,ey533
+yeslol,mq05;,defaultBlock1;,12345678,yeslol.2020@outlool.com,yl13
+MajiaQi,yl13;,defaultBlock1;,12345678,majiaqi.2024@gmail.com,mq05
+fri1,defaultFriend2;,defaultBlock1;,12345678,default.2017@outlook.com,defaultFriend1
+fri2,defaultFriend1;,defaultBlock1;,12345678,default.2018@outlook.com,defaultFriend2
+block1,defaultBlock2;,defaultFriend1;defaultFriend2;,12345678,default.2019@outlook.com,defaultBlock1
+block2,defaultBlock1;,defaultFriend1;defaultFriend2;,12345678,default.2020@outlook.com,defaultBlock2
