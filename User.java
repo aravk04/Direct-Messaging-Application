@@ -39,7 +39,7 @@ public class User extends Thread implements UserInterface {
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
     }
-
+  
     // Add friend to list
 
     public boolean addFriend(User u) {
