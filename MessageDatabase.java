@@ -96,7 +96,8 @@ public class MessageDatabase implements MessageData {
 
         return chats;
     }
-//     public static void main(String[] args) throws BadInputException, IOException {
+}
+//    public static void main(String[] args) throws BadInputException, IOException {
 //         User u = new User("eesha", "efaruqi", "efaruqi4955", "efaruqi@gmail.com");
 //         User u1 = new User("mahad", "mfaruqi", "mfaruqi4955", "mfaruqi@gmail.com");
 //         ArrayList<String> rec = new ArrayList<>();
