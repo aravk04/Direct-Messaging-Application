@@ -9,11 +9,10 @@ import java.util.ArrayList;
  * @version March 31, 2024
  */
 public interface MessageInterface {
-    User getSender();
-    ArrayList<User> getReceivers();
+    String getSender();
+    ArrayList<String> getReceivers();
     String getContent();
     String getTimestamp();
     long getExactTime();
-    boolean sameDM(MessageInterface m);
     String toString();
 }
