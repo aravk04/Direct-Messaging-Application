@@ -1,4 +1,5 @@
 Phase 2
+
 Client Class
 Establishes connection by crreating socket connection to server it uses "localhost" as the address and "12345" as the port number. Theen it chekcs user input and sends it to the server for it to process and do whatever command the user tells it to do. It keeps running until the client stops it and allows multiple clients in a server.
 
