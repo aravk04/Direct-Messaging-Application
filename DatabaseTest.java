@@ -94,7 +94,15 @@ public class DatabaseTest {
 
                 database.editUser(oldInfo, newInfo);
                 assertEquals(newInfo, database.viewUser("zj133"));
-                //database.editUser(newInfo, oldInfo); //set the input.txt to default
+                database.editUser(newInfo, oldInfo); //set the input.txt to default
+
+
+                oldInfo = "MajiaQi,yeslol;,block1;,12345678,majiaqi.2024@gmail.com,mq05";
+                newInfo = "MajiaQi,yeslol;,block2;,12345678,majiaqi.2024@gmail.com,mq05";
+
+                database.editUser(oldInfo, newInfo);
+                assertEquals(newInfo, database.viewUser("mq05"));
+                database.editUser(newInfo, oldInfo); //set the input.txt to default
 
             } catch (Exception e) {
                 e.printStackTrace();
