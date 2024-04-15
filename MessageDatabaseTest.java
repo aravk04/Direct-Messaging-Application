@@ -19,9 +19,10 @@ public class MessageDatabaseTest {
             // temp file for test
             File tempFile = File.createTempFile("temp", ".txt");
             String fileName = tempFile.getAbsolutePath();
-            User sender = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
-            ArrayList<User> receivers = new ArrayList<>();
-            receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com"));
+            User u = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
+            String sender = u.getUsername();
+            ArrayList<String> receivers = new ArrayList<>();
+            receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com").getUsername());
             Message message = new Message(sender, receivers, "Hello Jane!");
             MessageDatabase database = new MessageDatabase();
             assertTrue(database.addMessage(fileName, message));
@@ -29,7 +30,7 @@ public class MessageDatabaseTest {
             String line = br.readLine();
             assertNotNull(line);
             String[] parts = line.split(",");
-            assertEquals(sender.getUsername(), parts[0]);
+            assertEquals(sender, parts[0]);
             assertEquals("", parts[1].trim());
             assertEquals(message.getContent(), parts[2]);
             assertNotNull(parts[3]);

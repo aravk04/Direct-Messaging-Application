@@ -62,6 +62,7 @@ public class Message implements MessageInterface {
             fileName += username + ",";
         }
         fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
+        receivers.remove(sender);
 
         return fileName;
     }

@@ -47,31 +47,59 @@ public class Database implements Data {
                     friends.add(friendNames);
                     blocked.add(blockedNames);
                     userList.add(user);
+
                 } else {
                     System.out.println("Invalid data format: " + line);
                 }
             }
+            //test userlist
+            System.out.print("username in userlist: ");
+
+            for (User u : userList) {
+                System.out.print(u.getUsername() + ";");
+            }
 
             for (int i = 0; i < userList.size(); i++) {
                 for (int j = 0; j < friends.get(i).length; j++) {
-                    if (searchUser(friends.get(i)[j])) {
+
+                    //test
+                    System.out.println("friends.get(" + i + ")[" + j + "]= " + friends.get(i)[j]);
+                    System.out.println(searchUser(friends.get(i)[j]));
+
+                    boolean validFriends = false;
+                    for (User u : userList) {
+                        if (u.getUsername().equals(friends.get(i)[j])) {
+                            validFriends = true;
+                        }
+                    }
+
+                    if (validFriends) {
                         for (int k = 0; k < userList.size(); k++) {
                             if (userList.get(k).getUsername().equals(friends.get(i)[j])) {
-                                userList.get(i).addFriend(userList.get(k));
+                                userList.get(i).addFriend(userList.get(k).getUsername());
                             }
                         }
                     } else {
                         throw new BadInputException("Invalid Data: " + friends.get(i)[j] + " not found");
                     }
+
                 }
             }
 
             for (int i = 0; i < userList.size(); i++) {
                 for (int j = 0; j < blocked.get(i).length; j++) {
-                    if (searchUser(blocked.get(i)[j])) {
+
+                    boolean validBlocked = false;
+                    for (User u : userList) {
+                        if (u.getUsername().equals(blocked.get(i)[j])) {
+                            validBlocked = true;
+                        }
+                    }
+
+                    if (validBlocked) {
                         for (int k = 0; k < userList.size(); k++) {
                             if (userList.get(k).getUsername().equals(blocked.get(i)[j])) {
-                                userList.get(i).blockUser(userList.get(k));
+                                userList.get(i).blockUser(userList.get(k).getUsername());
                             }
                         }
                     } else {
@@ -81,6 +109,7 @@ public class Database implements Data {
             }
 
             this.users = userList;
+
         } catch (IOException e) {
             throw new BadInputException("Invalid Data in the constructor");
         } catch (BadInputException e) {
@@ -88,18 +117,22 @@ public class Database implements Data {
         }
     }
 
+
     public void rewriteFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
 
             boolean lineIsBlank = false;
             for (User u : users) {
                 String userData = u.toString();
+                //System.out.println("userData: " + userData);
                 if (!userData.isEmpty()) {
                     if (lineIsBlank) {
                         bw.newLine();
                         lineIsBlank = false;
                     }
-                    bw.write(userData);
+                    bw.write(userData + "\n");
+                    //test
+                    //System.out.println("userData of " + userData.split(",")[0] + " is successfully added");
                 } else {
                     lineIsBlank = true;
                 }
@@ -134,16 +167,73 @@ public class Database implements Data {
     }
 
     public boolean editUser(String oldInfo, String newInfo) throws BadInputException {
+        User newUser = createUser(newInfo);
+        //System.out.println("editing... the users size is " + users.size());
+        //System.out.println("the newUser data is: " + newUser.toString());
+        boolean isEdited = false;
+        int index = -1;
+
         for (int i = 0; i < users.size(); i++) {
-            User newUser = createUser(newInfo);
+            //System.out.println("print each line =" + users.get(i).toString());
+            //System.out.println("oldInfo =" + oldInfo);
 
             if (users.get(i).toString().equals(oldInfo)) {
-                users.set(i, newUser);
-                rewriteFile();
-                return true;
+
+                index = i;
+                break;
+
+            }
+
+        }
+        if (index == -1) {
+            System.out.println("There is no user that found to be matching the input");
+            return isEdited;
+        }
+
+
+        //System.out.println("the name of the user you want to modified is: " + oldInfo.split(",")[0]);
+
+        for (int i = 0; i < users.size(); i++) {
+
+            //Edit the line of every line that contains the old user's name
+            //If the name is in the friendList
+            for (int j = 0; j < users.get(i).getFriends().size(); j++) {
+
+                String friend = users.get(i).getFriends().get(j);
+                //System.out.println("friend name=" + friend.retrieveName());
+
+                if (friend.contains(oldInfo.split(",")[0])) {
+                    users.get(i).removeFriend(users.get(index).getUsername());
+                    users.get(i).addFriend(newUser.getUsername());
+                    rewriteFile();
+                    //System.out.println("friends data of " + users.get(i).retrieveName() + " is successfully updated");
+
+                }
+            }
+
+            //Edit the line of every line that contains the old user's name
+            //If the name is in the blocked
+            for (int j = 0; j < users.get(i).getBlocked().size(); j++) {
+
+                String block = users.get(i).getBlocked().get(j);
+                //System.out.println("blocked name=" + block.retrieveName());
+
+                if (block.contains(oldInfo.split(",")[0])) {
+                    users.get(i).unblockUser(users.get(index).getUsername());
+                    users.get(i).blockUser(newUser.getUsername());
+                    rewriteFile();
+                    //System.out.println("blocked data of " + users.get(i).retrieveName() + " is successfully updated");
+                }
             }
         }
-        return false;
+        //Edit the line of the user himself/herself
+        users.set(index, newUser);
+        rewriteFile();
+        System.out.println("userData of " + newInfo.split(",")[0] + " is successfully updated");
+        isEdited = true;
+
+        return isEdited;
+
     }
 
     private User createUser(String userInfo) throws BadInputException {
@@ -160,7 +250,7 @@ public class Database implements Data {
                 if (searchUser(friendNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
                         if (users.get(k).getUsername().equals(friendNames[j])) {
-                            user.addFriend(users.get(k));
+                            user.addFriend(users.get(k).getUsername());
                         }
                     }
                 } else {
@@ -171,7 +261,7 @@ public class Database implements Data {
                 if (searchUser(blockedNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
                         if (users.get(k).getUsername().equals(blockedNames[j])) {
-                            user.blockUser(users.get(k));
+                            user.blockUser(users.get(k).getUsername());
                         }
                     }
                 } else {
@@ -186,7 +276,13 @@ public class Database implements Data {
 
 
     public boolean searchUser(String username) {
+
+        //System.out.println(users.size());
+
         for (User u : users) {
+            //System.out.println("realname: " + realName);
+            //System.out.println("u.getRealName" + u.getRealName());
+
             if (u.getUsername().equals(username)) {
                 return true;
             }
@@ -196,7 +292,6 @@ public class Database implements Data {
 
     public String viewUser(String username) {
         for (User u : users) {
-
             if (u.getUsername().equals(username)) {
                 return u.toString();
             }
