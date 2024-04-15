@@ -83,16 +83,105 @@ public class Client implements Runnable {
 
                                     } while (!valid);
                                 } else if (userOption == 2) {
-                                    pw.write("vie");
+                                    boolean logOut = false;
+                                    pw.write("vie" + username);
                                     pw.println();
                                     pw.flush();
 
-                                    ArrayList<String> list= new ArrayList<>();
+                                    ArrayList<String> list = new ArrayList<>();
                                     String line = bfr.readLine();
-                                    while (line != null) {
-                                        
+                                    while (!line.equals("stop")) {
+                                        list.add(line);
+                                        line = bfr.readLine();
                                     }
 
+                                    if (list.size() == 0) {
+                                        System.out.println("You are not in any chats yet");
+                                    } else {
+                                        System.out.println("Please select one of the following chats to view:");
+                                        for (int i = 0; i < list.size(); i ++) {
+                                            int j = i + 1;
+                                            System.out.println(j + list.get(i));
+                                        }
+
+                                        if (scanner.hasNextInt()) {
+                                            int choice = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            if ((choice - 1) < list.size()) {
+                                                String chat = list.get(choice - 1) + ".csv";
+                                                pw.write(chat);
+                                                pw.println();
+                                                pw.flush();
+
+                                                ArrayList<String> msgList = new ArrayList<>();
+                                                String message = bfr.readLine();
+                                                while (!message.equals("stop")) {
+                                                    list.add(message);
+                                                    System.out.println(message);
+                                                    message = bfr.readLine();
+                                                }
+
+                                                do {
+                                                    System.out.println("What would you like to do?\n1. Send Message\n2. Delete Message\n3. Go Back\n4. Log Out");
+                                                    if (scanner.hasNextInt()) {
+                                                        int vChoice = scanner.nextInt();
+                                                        scanner.nextLine();
+
+                                                        if (vChoice == 1) {
+                                                            System.out.println("Enter your message:");
+                                                            String msg = scanner.nextLine();
+
+                                                            pw.write("msg" + chat + "," + msg);
+                                                            pw.println();
+                                                            pw.flush();
+                                                        } else if (vChoice == 2) {
+                                                            boolean isNum = false;
+                                                            int lineNum = -1;
+                                                            do {
+                                                                System.out.println("Enter the line number you want to delete:");
+                                                                if (scanner.hasNextInt()) {
+                                                                    isNum = true;
+                                                                    lineNum = scanner.nextInt();
+                                                                    scanner.nextLine();
+                                                                }
+                                                            } while (!isNum);
+
+                                                            String out = username + "," + lineNum;
+                                                            pw.write(out);
+                                                            pw.println();
+                                                            pw.flush();
+
+                                                            if (bfr.readLine().equals("True")) {
+                                                                System.out.println("Successfully deleted");
+                                                            } else {
+                                                                System.out.println("Could not delete");
+                                                            }
+                                                        } else if (vChoice == 3) {
+                                                            break;
+                                                        } else if (vChoice == 4) {
+                                                            logOut = true;
+                                                            break;
+                                                        } else {
+                                                            System.out.println("Please select a valid Option");
+                                                        }
+
+                                                    } else {
+                                                        System.out.println("Please select a valid Option");
+                                                    }
+                                                } while (true);
+
+                                                if (logOut) {
+                                                    break;
+                                                }
+
+                                            } else {
+                                                System.out.println("Please select a valid Option");
+                                            }
+                                        } else {
+                                            System.out.println("Please select a valid Option");
+                                        }
+                                    }
                                 } else if (userOption == 3) {
                                     do {
                                         System.out.println("Who do you want to add? (username)");
@@ -179,9 +268,9 @@ public class Client implements Runnable {
 
                     } else if (signOption == 2) {
                         boolean valid = false;
-                        int i = 0;
+                        int attempt = 0;
                         do {
-                            i++;
+                            attempt++;
                             System.out.println("What is your username");
                             username = scanner.nextLine();
                             System.out.println("What is your password");
@@ -197,10 +286,10 @@ public class Client implements Runnable {
 
                             if (!valid) {
                                 System.out.println("Username or Password is incorrect. Please Try again!");
-                                System.out.println("" + (5 - i) + "attempts remaining...");
+                                System.out.println("" + (5 - attempt) + "attempts remaining...");
                             }
 
-                            if (i >= 5) {
+                            if (attempt >= 5) {
                                 System.out.println("Ran out of attempts. Returning to main menu.");
                                 break;
                             }
@@ -245,7 +334,105 @@ public class Client implements Runnable {
 
                                     } while (!valid);
                                 } else if (userOption == 2) {
+                                    boolean logOut = false;
+                                    pw.write("vie" + username);
+                                    pw.println();
+                                    pw.flush();
 
+                                    ArrayList<String> list = new ArrayList<>();
+                                    String line = bfr.readLine();
+                                    while (!line.equals("stop")) {
+                                        list.add(line);
+                                        line = bfr.readLine();
+                                    }
+
+                                    if (list.size() == 0) {
+                                        System.out.println("You are not in any chats yet");
+                                    } else {
+                                        System.out.println("Please select one of the following chats to view:");
+                                        for (int i = 0; i < list.size(); i ++) {
+                                            int j = i + 1;
+                                            System.out.println(j + list.get(i));
+                                        }
+
+                                        if (scanner.hasNextInt()) {
+                                            int choice = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            if ((choice - 1) < list.size()) {
+                                                String chat = list.get(choice - 1) + ".csv";
+                                                pw.write(chat);
+                                                pw.println();
+                                                pw.flush();
+
+                                                ArrayList<String> msgList = new ArrayList<>();
+                                                String message = bfr.readLine();
+                                                while (!message.equals("stop")) {
+                                                    list.add(message);
+                                                    System.out.println(message);
+                                                    message = bfr.readLine();
+                                                }
+
+                                                do {
+                                                    System.out.println("What would you like to do?\n1. Send Message\n2. Delete Message\n3. Go Back\n4. Log Out");
+                                                    if (scanner.hasNextInt()) {
+                                                        int vChoice = scanner.nextInt();
+                                                        scanner.nextLine();
+
+                                                        if (vChoice == 1) {
+                                                            System.out.println("Enter your message:");
+                                                            String msg = scanner.nextLine();
+
+                                                            pw.write("msg" + chat + "," + msg);
+                                                            pw.println();
+                                                            pw.flush();
+                                                        } else if (vChoice == 2) {
+                                                            boolean isNum = false;
+                                                            int lineNum = -1;
+                                                            do {
+                                                                System.out.println("Enter the line number you want to delete:");
+                                                                if (scanner.hasNextInt()) {
+                                                                    isNum = true;
+                                                                    lineNum = scanner.nextInt();
+                                                                    scanner.nextLine();
+                                                                }
+                                                            } while (!isNum);
+
+                                                            String out = username + "," + lineNum;
+                                                            pw.write(out);
+                                                            pw.println();
+                                                            pw.flush();
+
+                                                            if (bfr.readLine().equals("True")) {
+                                                                System.out.println("Successfully deleted");
+                                                            } else {
+                                                                System.out.println("Could not delete");
+                                                            }
+                                                        } else if (vChoice == 3) {
+                                                            break;
+                                                        } else if (vChoice == 4) {
+                                                            logOut = true;
+                                                            break;
+                                                        } else {
+                                                            System.out.println("Please select a valid Option");
+                                                        }
+
+                                                    } else {
+                                                        System.out.println("Please select a valid Option");
+                                                    }
+                                                } while (true);
+
+                                                if (logOut) {
+                                                    break;
+                                                }
+
+                                            } else {
+                                                System.out.println("Please select a valid Option");
+                                            }
+                                        } else {
+                                            System.out.println("Please select a valid Option");
+                                        }
+                                    }
                                 } else if (userOption == 3) {
                                     do {
                                         System.out.println("Who do you want to add? (username)");
