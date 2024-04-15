@@ -39,32 +39,7 @@ public class User extends Thread implements UserInterface {
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
     }
-    
-    public void sendMessage(ArrayList<User> receivers, String content) throws FileNotFoundException, IOException {
-        Message m = new Message(this, receivers, content);
-        
-        ArrayList<String> usernames = new ArrayList<>();
-        String fileName = "";
-        usernames.add(m.getSender().getUsername());
-        for (User u : m.getReceivers()) {
-            usernames.add(u.getUsername());
-        }
-        Collections.sort(usernames);
-        for (String username : usernames) {
-            fileName += username + ",";
-        }
-        fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
-        File file = new File(fileName);
-        if (!file.exists()) {
-            file.createNewFile();
-            MessageDatabase db = new MessageDatabase();
-            db.addMessage(fileName, m);
-        } else {
-            MessageDatabase db = new MessageDatabase();
-            db.addMessage(fileName, m);
-        }
 
-    }
     // Add friend to list
 
     public boolean addFriend(User u) {
