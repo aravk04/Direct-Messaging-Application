@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 /**
  * MessageData
  *
@@ -13,4 +14,6 @@ import java.io.IOException;
 public interface MessageData {
     boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException;
     boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException;
+    String getChat(String filename) throws IOException;
+    public ArrayList<String> getChats(String username);
 }

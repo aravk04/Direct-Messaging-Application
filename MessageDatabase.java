@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.*;
 import java.util.Collections;
 
@@ -80,8 +81,30 @@ public class MessageDatabase implements MessageData {
         } catch (IOException e) {
             return false;
         }
+    }
 
-
+    public String getChat(String filename) throws IOException {
+        String fileContent = "";
+        // alphabatize file name
+        String[] users = filename.split(",");
+        Arrays.sort(users);
+        filename = "";
+        for (int i = 0; i < users.length; i++) {
+            filename += users[i] + ",";
+        }
+        // remove last comma
+        filename = filename.substring(0, filename.length() - 1);
+        filename += ".csv";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line = reader.readLine();
+            while (line != null) {
+                fileContent = fileContent + line + "\n";
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileContent;
     }
 
 
@@ -93,25 +116,6 @@ public class MessageDatabase implements MessageData {
                 chats.add(fileList.get(i).substring(0, fileList.get(i).length() - 4));
             }
         }
-
         return chats;
     }
-}
-//    public static void main(String[] args) throws BadInputException, IOException {
-//         User u = new User("eesha", "efaruqi", "efaruqi4955", "efaruqi@gmail.com");
-//         User u1 = new User("mahad", "mfaruqi", "mfaruqi4955", "mfaruqi@gmail.com");
-//         ArrayList<String> rec = new ArrayList<>();
-//         rec.add(u1.getUsername());
-//         Message m = new Message(u.getUsername(), rec, "hello1");
-//         Message m1 = new Message(u.getUsername(), rec, "hello2");
-//         Message m2 = new Message(u.getUsername(), rec, "hello3");
-//         String fileName = m.createFile(u.getUsername(), rec);
-//         System.out.println(fileName);
-//         MessageDatabase db = new MessageDatabase();
-//         db.addMessage(fileName, m);
-//         db.addMessage(fileName, m1);
-//         db.addMessage(fileName, m2);
-//         db.deleteMessage(fileName, u.getUsername(), 2);
-//     }
-// 
 }

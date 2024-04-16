@@ -15,6 +15,8 @@ public class Server implements Runnable {
    private static Map<String, ArrayList<String>> chats = new HashMap<>();
    private static final String INFILE = "input.txt";
    private static Database database;
+   private static MessageDatabase messsageDatabase;
+   private static final String chatsFile = "chats.csv";
 
 
     public static void main(String[] args) {
@@ -24,10 +26,30 @@ public class Server implements Runnable {
 
             //read user's data from database
             database = new Database(INFILE);
+            messsageDatabase = new MessageDatabase();
             Map<String, User> usersList = new HashMap<>();
             for (User u : database.getUsers()) {
                 usersList.put(u.getUsername(), u);
             }
+            // read chats from message database
+            try (BufferedReader reader = new BufferedReader(new FileReader(chatsFile))) {
+                String line = reader.readLine();
+                String chatId = "";
+                ArrayList<String> participants = new ArrayList<String>();
+                while (line != null) {
+                    chatId = line;
+                    String[] users = line.split("-");
+                    for (String s: users) {
+                        participants.add(s);
+                    }
+                    chats.put(chatId, participants);
+                }
+                
+            } catch (IOException e) {
+                // file has not been created yet or some other error
+                e.printStackTrace();
+            }
+            System.out.println("Chats intialized: " + chats);
             users = usersList;
 
             while (true) {
@@ -81,10 +103,11 @@ public class Server implements Runnable {
            }
        }
 
-       private void handleRequest(String request) throws BadInputException {
+       private void handleRequest(String request) throws BadInputException, FileNotFoundException, IOException {
            String command = request.substring(0, 3);
            System.out.println("This is the command: " + command);
            String payload = request.substring(3);
+           System.out.println(payload);
 
             switch (command) {
                 case "cre":
@@ -119,6 +142,9 @@ public class Server implements Runnable {
                     break;
                 case "del":
                     deleteUser(payload);
+                    break;
+                case "vcl":
+                    viewChatLog(payload);
                     break;
                 default:
                     out.println("Invalid command");
@@ -163,11 +189,11 @@ public class Server implements Runnable {
 
                 if (key.equals(username) && value.getPassword().equals(password)) {
                     this.username = username;
-                    out.write("True");
-                    out.println();
-                    out.flush();
                     randomString = true;
                     System.out.println("user successfully logged in!");
+                    out.println("True");
+                    //out.println();
+                    //out.flush();
                     break;
                 }
             }
@@ -177,7 +203,7 @@ public class Server implements Runnable {
         }
 
         // send message to receiver and creates a chat also checks and makes sure they are not blocked
-        private void sendMessage(String payload) {
+        private void sendMessage(String payload) throws FileNotFoundException, IOException {
             String sender = payload.substring(0, payload.indexOf(","));
             String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
             String message = payload.substring(payload.lastIndexOf(";") + 1);
@@ -188,7 +214,10 @@ public class Server implements Runnable {
 
             String[] receiverList = receivers.split(";");
             boolean success = false;
-
+            ArrayList<String> receiveArrayList = new ArrayList<>(Arrays.asList(receiverList));
+            Message m = new Message(sender, receiveArrayList, message);
+            // add message to files
+            messsageDatabase.addMessage(m.createFile(sender, receiveArrayList), m);
             for (String receiver : receiverList) {
                 if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
                     String chatId = createChat(sender, receiver);
@@ -217,7 +246,21 @@ public class Server implements Runnable {
            out.println(String.join(",", chatIds));
            out.println("stop");
        }
+
+        private void viewChatLog(String payload) throws IOException {
+            String chat = messsageDatabase.getChat(payload);
+            System.out.println(chat);
+            if (chat == null) {
+                out.println("error");
+            }
+            else {
+                out.println(chat);
+                out.println("stop");
+            }
+
+        }
        // sends message within a chat
+       //String sendMessage = "msg" + username + "," + recievers + message;
        private void sendMessageInChat(String payload) {
            String[] parts = payload.split(",");
            String chatId = parts[0].substring(3);
@@ -346,7 +389,15 @@ public class Server implements Runnable {
         // creates unique chat between users
         private String createChat(String user1, String user2) {
             String chatId = user1 + "-" + user2;
+            
             if (!chats.containsKey(chatId)) {
+                // add new unique chat to a file to save after server dies
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(chatsFile, true))) {
+                   writer.write(chatId);
+                   writer.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 ArrayList<String> participants = new ArrayList<>();
                 participants.add(user1);
                 participants.add(user2);

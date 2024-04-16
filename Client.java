@@ -38,9 +38,17 @@ public class Client implements Runnable {
                             pw.write("cre" + info);
                             pw.println();
                             pw.flush();
+                            String response = null;
 
-                            if (bfr.readLine().equals("True")) {
+                            while ((response = bfr.readLine()) != null) {
+                                // wait for response
+                            }
+                            
+                            if (response.equals("True")) {
                                 valid = true;
+                            }
+                            else {
+                                valid = false;
                             }
 
                             if (!valid) {
@@ -107,7 +115,7 @@ public class Client implements Runnable {
                                         System.out.println("Please select one of the following chats to view:");
                                         for (int i = 0; i < list.size(); i ++) {
                                             int j = i + 1;
-                                            System.out.println(j + list.get(i));
+                                            System.out.println(j + ". " + list.get(i));
                                         }
 
                                         if (scanner.hasNextInt()) {
@@ -296,8 +304,9 @@ public class Client implements Runnable {
                             pw.write(info);
                             pw.println();
                             pw.flush();
-
-                            if (bfr.readLine().equals("True")) {
+                            String response = bfr.readLine();
+                           
+                            if (response.equals("True")) {
                                 valid = true;
                             }
 
@@ -374,7 +383,7 @@ public class Client implements Runnable {
                                         System.out.println("Please select one of the following chats to view:");
                                         for (int i = 0; i < list.size(); i ++) {
                                             int j = i + 1;
-                                            System.out.println(j + list.get(i));
+                                            System.out.println(j + ". " + list.get(i));
                                         }
 
                                         if (scanner.hasNextInt()) {
@@ -382,18 +391,26 @@ public class Client implements Runnable {
                                             scanner.nextLine();
 
                                             if ((choice - 1) < list.size()) {
-                                                String chat = list.get(choice - 1) + ".csv";
-                                                pw.write(chat);
+                                                String chat = list.get(choice - 1);
+                                                chat = chat.replaceAll("-", ",");
+                                                System.out.println(chat);
+                                                pw.write("vcl" + chat);
                                                 pw.println();
                                                 pw.flush();
 
-                                                ArrayList<String> msgList = new ArrayList<>();
-                                                String message = bfr.readLine();
-                                                while (!message.equals("stop")) {
-                                                    list.add(message);
-                                                    System.out.println(message);
-                                                    message = bfr.readLine();
+                                                // ArrayList<String> msgList = new ArrayList<>();
+                                                // String message = bfr.readLine();
+                                                // while (!message.equals("stop")) {
+                                                //     list.add(message);
+                                                //     System.out.println(message);
+                                                //     message = bfr.readLine();
+                                                // }
+                                                String response = bfr.readLine();
+                                                while (!response.equals("stop")) {
+                                                    System.out.println(response);
+                                                    response = bfr.readLine();
                                                 }
+                                                
 
                                                 do {
                                                     System.out.println("What would you like to do?\n1. Send Message\n2. Delete Message\n3. Go Back\n4. Log Out");
