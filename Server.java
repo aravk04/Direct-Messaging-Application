@@ -35,14 +35,30 @@ public class Server implements Runnable {
             try (BufferedReader reader = new BufferedReader(new FileReader(chatsFile))) {
                 String line = reader.readLine();
                 String chatId = "";
-                ArrayList<String> participants = new ArrayList<String>();
+                ArrayList<String> participantChats = new ArrayList<String>();
                 while (line != null) {
                     chatId = line;
-                    String[] users = line.split("-");
-                    for (String s: users) {
-                        participants.add(s);
+                    // now add each message to chats
+                    String chatFilename = chatId.replaceAll("-", ",");
+                    String[] chatUsers = chatFilename.split(",");
+                    Arrays.sort(chatUsers);
+                    chatFilename = "";
+                    for (int i = 0; i < chatUsers.length; i++) {
+                        chatFilename += chatUsers[i] + ",";
                     }
-                    chats.put(chatId, participants);
+                    chatFilename = chatFilename.substring(0, chatFilename.length() - 1);
+                    chatFilename += ".csv";
+                    try (BufferedReader reader1 = new BufferedReader(new FileReader(chatFilename))) {
+                        String message = reader1.readLine();
+                        while (message != null) {
+                            participantChats.add(message);
+                            message = reader1.readLine();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    chats.put(chatId, participantChats);
+                    line = reader.readLine();
                 }
                 
             } catch (IOException e) {
@@ -143,6 +159,7 @@ public class Server implements Runnable {
                 case "del":
                     deleteUser(payload);
                     break;
+                // view chat log
                 case "vcl":
                     viewChatLog(payload);
                     break;
@@ -221,7 +238,8 @@ public class Server implements Runnable {
             for (String receiver : receiverList) {
                 if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
                     String chatId = createChat(sender, receiver);
-                    writeToChat(chatId, sender + ": " + message);
+                    writeToChat(chatId, m.getSender() + "," + receivers + "," +
+                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
                     out.println("True");
                     System.out.println("message is successfully sent");
                     success = true;
@@ -237,11 +255,16 @@ public class Server implements Runnable {
             String username = payload;
             Set<String> chatIds = new HashSet<>();
 
-           for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-               if (entry.getValue().contains(username)) {
-                   chatIds.add(entry.getKey());
-               }
-           }
+        //    for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+        //        if (entry.getValue().contains(username)) {
+        //            chatIds.add(entry.getKey());
+        //        }
+        //    }
+        for (String key : chats.keySet()) {
+            if (key.contains(payload)) {
+                chatIds.add(key);
+            }
+        }
 
            out.println(String.join(",", chatIds));
            out.println("stop");
@@ -263,22 +286,43 @@ public class Server implements Runnable {
        //String sendMessage = "msg" + username + "," + recievers + message;
        private void sendMessageInChat(String payload) {
            String[] parts = payload.split(",");
-           String chatId = parts[0].substring(3);
-           String message = parts[1];
+           String chatId;
+           if (parts[0].compareTo(parts[1]) < 0) {
+            chatId = parts[0] + "-" + parts[1];
+           }
+           else {
+            chatId = parts[1] + "-" + parts[0];
+           }
+           ArrayList<String> receiveArrayList = new ArrayList<>();
+           receiveArrayList.add(parts[1]);
+           String message = parts[2];
+           Message m = new Message(parts[0], receiveArrayList, message);
+          System.out.println("msv chatid: " + chatId);
 
-           writeToChat(chatId, username + ": " + message);
+           writeToChat(chatId, m.getSender() + "," + parts[1] + "," +
+                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+            List<String> messages = chats.get(chatId);
+            System.out.println(messages);
+            messsageDatabase.updateChatLog(chatId, messages);
        }
        //deletes username in specific chat and check username and line number of message to delete
        private void deleteMessage(String payload) {
+        System.out.println(payload);
            String[] parts = payload.split(",");
-           String username = parts[0].substring(3);
+           String username = parts[0];
            int lineNumber = Integer.parseInt(parts[1]);
-
+            
             String chatId = getChatIdForUser(username);
+            System.out.println("Chat id after dms " + chatId);
             if (chatId != null) {
                 List<String> messages = chats.get(chatId);
-                if (lineNumber >= 0 && lineNumber < messages.size()) {
-                    messages.remove(lineNumber);
+                System.out.println(messages);
+                System.out.println(lineNumber);
+                System.out.println(messages.size());
+                // line numbers are from 1 - messages.size()
+                if (lineNumber >= 1 && lineNumber <= messages.size()) {
+                    messages.remove(lineNumber - 1);
+                    messsageDatabase.updateChatLog(chatId, messages);
                     out.println("True");
                 } else {
                     out.println("False");
@@ -388,8 +432,15 @@ public class Server implements Runnable {
 
         // creates unique chat between users
         private String createChat(String user1, String user2) {
-            String chatId = user1 + "-" + user2;
+            // needs to be alphabetized to check for uniqueness
+            String chatId;
+            if (user1.compareTo(user2) < 0) {
+                chatId = user1 + "-" + user2;
+            } else {
+                chatId = user2 + "-" + user1;
+            }
             
+            System.out.println(chatId);
             if (!chats.containsKey(chatId)) {
                 // add new unique chat to a file to save after server dies
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(chatsFile, true))) {
@@ -399,8 +450,8 @@ public class Server implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<String> participants = new ArrayList<>();
-                participants.add(user1);
-                participants.add(user2);
+                // participants.add(user1);
+                // participants.add(user2);
                 chats.put(chatId, participants);
             }
             return chatId;
@@ -408,9 +459,14 @@ public class Server implements Runnable {
 
         // iterates through the chats to find the chat with the given username
         private String getChatIdForUser(String username) {
-            for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-                if (entry.getValue().contains(username)) {
-                    return entry.getKey();
+            // for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+            //     if (entry.getValue().contains(username)) {
+            //         return entry.getKey();
+            //     }
+            // }
+            for (String key : chats.keySet()) {
+                if (key.contains(username)) {
+                    return key;
                 }
             }
             return null;

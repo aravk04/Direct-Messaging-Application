@@ -10,13 +10,14 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
+        String recievers = "";
         try {
             Scanner scanner = new Scanner(System.in);
             Socket socket = new Socket("localhost", 12345);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
             String username;
-
+            
             do {
                 System.out.println("What would you like to do?\n1. Sign up\n2. Log in\n3. Quit Program");
                 if (scanner.hasNextInt()) {
@@ -66,7 +67,6 @@ public class Client implements Runnable {
                                 scanner.nextLine();
                                 if (userOption == 1) {
                                     do {
-                                        String recievers = "";
                                         String add = "";
                                         do {
                                             System.out.println("What user do you want to send the message to? (username)");
@@ -149,11 +149,34 @@ public class Client implements Runnable {
                                                             pw.write("msv" + chat + "," + msg);
                                                             pw.println();
                                                             pw.flush();
+                                                           
                                                         } else if (vChoice == 2) {
+                                                            // first view the chat and print out all the current file contents
+                                                            chat = list.get(choice - 1);
+                                                            chat = chat.replaceAll("-", ",");
+                                                            System.out.println(chat);
+                                                            pw.write("vcl" + chat);
+                                                            pw.println();
+                                                            pw.flush();
+
+                                                            // ArrayList<String> msgList = new ArrayList<>();
+                                                            // String message = bfr.readLine();
+                                                            // while (!message.equals("stop")) {
+                                                            //     list.add(message);
+                                                            //     System.out.println(message);
+                                                            //     message = bfr.readLine();
+                                                            // }
+                                                            String response = bfr.readLine();
+                                                            int lineNum = 1;
+                                                            while (!response.equals("stop")) {
+                                                                System.out.println("(" + lineNum + ") " + response);
+                                                                response = bfr.readLine();
+                                                                lineNum ++;
+                                                            }
                                                             boolean isNum = false;
-                                                            int lineNum = -1;
+                                                            lineNum = -1;
                                                             do {
-                                                                System.out.println("Enter the line number you want to delete:");
+                                                                System.out.println("Enter the line number you want to delete1:");
                                                                 if (scanner.hasNextInt()) {
                                                                     isNum = true;
                                                                     lineNum = scanner.nextInt();
@@ -335,7 +358,6 @@ public class Client implements Runnable {
                                 scanner.nextLine();
                                 if (userOption == 1) {
                                     do {
-                                        String recievers = "";
                                         String add = "";
                                         do {
                                             System.out.println("What user do you want to send the message to? (username)");
@@ -393,7 +415,6 @@ public class Client implements Runnable {
                                             if ((choice - 1) < list.size()) {
                                                 String chat = list.get(choice - 1);
                                                 chat = chat.replaceAll("-", ",");
-                                                System.out.println(chat);
                                                 pw.write("vcl" + chat);
                                                 pw.println();
                                                 pw.flush();
@@ -425,11 +446,36 @@ public class Client implements Runnable {
                                                             pw.write("msv" + chat + "," + msg);
                                                             pw.println();
                                                             pw.flush();
+                                                        
                                                         } else if (vChoice == 2) {
+                                                            // first view the chat and print out all the current file contents
+                                                            chat = list.get(choice - 1);
+                                                            chat = chat.replaceAll("-", ",");
+                                                            
+                                                            pw.write("vcl" + chat);
+                                                            pw.println();
+                                                            pw.flush();
+
+                                                            // ArrayList<String> msgList = new ArrayList<>();
+                                                            // String message = bfr.readLine();
+                                                            // while (!message.equals("stop")) {
+                                                            //     list.add(message);
+                                                            //     System.out.println(message);
+                                                            //     message = bfr.readLine();
+                                                            // }
+                                                            response = bfr.readLine();
+                                                            int lineNum = 1;
+                                                            while (!response.equals("stop") && !response.equals("")) {
+                                                                System.out.println("(" + lineNum + ") " + response);
+                                                                response = bfr.readLine();
+                                                                lineNum ++;
+                                                            }
+                                                            // read stop line
+                                                            bfr.readLine();
                                                             boolean isNum = false;
-                                                            int lineNum = -1;
+                                                            lineNum = -1;
                                                             do {
-                                                                System.out.println("Enter the line number you want to delete:");
+                                                                System.out.println("Enter the line number you want to delete2:");
                                                                 if (scanner.hasNextInt()) {
                                                                     isNum = true;
                                                                     lineNum = scanner.nextInt();
@@ -441,8 +487,9 @@ public class Client implements Runnable {
                                                             pw.write(out);
                                                             pw.println();
                                                             pw.flush();
-
-                                                            if (bfr.readLine().equals("True")) {
+                                                            response = bfr.readLine();
+                                                            System.out.println(response);
+                                                            if (response.equals("True")) {
                                                                 System.out.println("Successfully deleted");
                                                             } else {
                                                                 System.out.println("Could not delete");

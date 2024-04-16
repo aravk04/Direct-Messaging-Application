@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * MessageDatabase
@@ -33,7 +34,6 @@ public class MessageDatabase implements MessageData {
             if (!fileList.contains(fileName)) {
                 fileList.add(fileName);
             }
-
             writer.write(m.getSender() + "," + receivers + "," +
                     m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
             writer.newLine();
@@ -98,13 +98,40 @@ public class MessageDatabase implements MessageData {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line = reader.readLine();
             while (line != null) {
-                fileContent = fileContent + line + "\n";
+                String[] split = line.split(",");
+                fileContent = fileContent + split[0] + ": " + split[4] + " " + split[2] + "\n";
                 line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return fileContent;
+    }
+
+    public boolean updateChatLog(String chatId, List<String> messages) {
+        // alphabatize file name
+        String filename = chatId.replaceAll("-", ",");
+        String[] users = filename.split(",");
+        Arrays.sort(users);
+        filename = "";
+        for (int i = 0; i < users.length; i++) {
+            filename += users[i] + ",";
+        }
+        // remove last comma
+        filename = filename.substring(0, filename.length() - 1);
+        filename += ".csv";
+        System.out.println(filename);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
+            // skip user1 and user2
+            for (int i = 0; i < messages.size(); i++) {
+                writer.write(messages.get(i));
+                writer.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

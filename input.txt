@@ -7,5 +7,5 @@ fri1,defaultFriend2;,defaultBlock1;,12345678,default.2017@outlook.com,defaultFri
 fri2,defaultFriend1;,defaultBlock1;,12345678,default.2018@outlook.com,defaultFriend2
 block1,defaultBlock2;,defaultFriend1;defaultFriend2;,12345678,default.2019@outlook.com,defaultBlock1
 block2,defaultBlock1;,defaultFriend1;defaultFriend2;,12345678,default.2020@outlook.com,defaultBlock2
-eesha,defaultFriend1;,defaultBlock1;,efaruqi4955,efaruqi@gmial.com,eesha4955
-Eesha Faruqi,defaultFriend1;,defaultBlock1;,efaruqi4955,efaruqi@gmail.com,efaruqi
+eesha,defaultFriend1;,defaultBlock1;,efaruqi4955,efaruqi@gmial.com,eesha
+Eesha Faruqi,defaultFriend1;eesha;,defaultBlock1;,efaruqi4955,efaruqi@gmail.com,efaruqi
