@@ -2,21 +2,21 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 /**
-* Server
-*
-* Handles client connections and requests
-*
-* @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
-* Harshil Shah, Benjamin Ascano
-* @version April 14th, 2024
-*/
+ * Server
+ *
+ * Handles client connections and requests
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version April 14th, 2024
+ */
 public class Server implements Runnable {
-   private static Map<String, User> users = new HashMap<>();
-   private static Map<String, ArrayList<String>> chats = new HashMap<>();
-   private static final String INFILE = "input.txt";
-   private static Database database;
-   private static MessageDatabase messsageDatabase;
-   private static final String chatsFile = "chats.csv";
+    private static Map<String, User> users = new HashMap<>();
+    private static Map<String, ArrayList<String>> chats = new HashMap<>();
+    private static final String INFILE = "input.txt";
+    private static Database database;
+    private static MessageDatabase messsageDatabase;
+    private static final String chatsFile = "chats.csv";
 
 
     public static void main(String[] args) {
@@ -60,7 +60,7 @@ public class Server implements Runnable {
                     chats.put(chatId, participantChats);
                     line = reader.readLine();
                 }
-                
+
             } catch (IOException e) {
                 // file has not been created yet or some other error
                 e.printStackTrace();
@@ -80,50 +80,50 @@ public class Server implements Runnable {
         }
     }
 
-   @Override
-   public void run() {
+    @Override
+    public void run() {
 
-   }
+    }
 
-   private static class ClientHandler extends Thread {
-       private Socket clientSocket;
-       private BufferedReader in;
-       private PrintWriter out;
-       private String username;
+    private static class ClientHandler extends Thread {
+        private Socket clientSocket;
+        private BufferedReader in;
+        private PrintWriter out;
+        private String username;
 
-       public ClientHandler(Socket socket) {
-           this.clientSocket = socket;
-           try {
-               in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-               out = new PrintWriter(socket.getOutputStream(), true);
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-       }
+        public ClientHandler(Socket socket) {
+            this.clientSocket = socket;
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-       @Override
-       public void run() {
-           try {
-               String request;
-               while ((request = in.readLine()) != null) {
-                   handleRequest(request);
-               }
-           } catch (IOException | BadInputException e) {
-               e.printStackTrace();
-           } finally {
-               try {
-                   clientSocket.close();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-           }
-       }
+        @Override
+        public void run() {
+            try {
+                String request;
+                while ((request = in.readLine()) != null) {
+                    handleRequest(request);
+                }
+            } catch (IOException | BadInputException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-       private void handleRequest(String request) throws BadInputException, FileNotFoundException, IOException {
-           String command = request.substring(0, 3);
-           System.out.println("This is the command: " + command);
-           String payload = request.substring(3);
-           System.out.println(payload);
+        private void handleRequest(String request) throws BadInputException, FileNotFoundException, IOException {
+            String command = request.substring(0, 3);
+            System.out.println("This is the command: " + command);
+            String payload = request.substring(3);
+            System.out.println(payload);
 
             switch (command) {
                 case "cre":
@@ -239,7 +239,7 @@ public class Server implements Runnable {
                 if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
                     String chatId = createChat(sender, receiver);
                     writeToChat(chatId, m.getSender() + "," + receivers + "," +
-                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+                            m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
                     out.println("True");
                     System.out.println("message is successfully sent");
                     success = true;
@@ -255,20 +255,20 @@ public class Server implements Runnable {
             String username = payload;
             Set<String> chatIds = new HashSet<>();
 
-        //    for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-        //        if (entry.getValue().contains(username)) {
-        //            chatIds.add(entry.getKey());
-        //        }
-        //    }
-        for (String key : chats.keySet()) {
-            if (key.contains(payload)) {
-                chatIds.add(key);
+            //    for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+            //        if (entry.getValue().contains(username)) {
+            //            chatIds.add(entry.getKey());
+            //        }
+            //    }
+            for (String key : chats.keySet()) {
+                if (key.contains(payload)) {
+                    chatIds.add(key);
+                }
             }
-        }
 
-           out.println(String.join(",", chatIds));
-           out.println("stop");
-       }
+            out.println(String.join(",", chatIds));
+            out.println("stop");
+        }
 
         private void viewChatLog(String payload) throws IOException {
             String chat = messsageDatabase.getChat(payload);
@@ -282,36 +282,36 @@ public class Server implements Runnable {
             }
 
         }
-       // sends message within a chat
-       //String sendMessage = "msg" + username + "," + recievers + message;
-       private void sendMessageInChat(String payload) {
-           String[] parts = payload.split(",");
-           String chatId;
-           if (parts[0].compareTo(parts[1]) < 0) {
-            chatId = parts[0] + "-" + parts[1];
-           }
-           else {
-            chatId = parts[1] + "-" + parts[0];
-           }
-           ArrayList<String> receiveArrayList = new ArrayList<>();
-           receiveArrayList.add(parts[1]);
-           String message = parts[2];
-           Message m = new Message(parts[0], receiveArrayList, message);
-          System.out.println("msv chatid: " + chatId);
+        // sends message within a chat
+        //String sendMessage = "msg" + username + "," + recievers + message;
+        private void sendMessageInChat(String payload) {
+            String[] parts = payload.split(",");
+            String chatId;
+            if (parts[0].compareTo(parts[1]) < 0) {
+                chatId = parts[0] + "-" + parts[1];
+            }
+            else {
+                chatId = parts[1] + "-" + parts[0];
+            }
+            ArrayList<String> receiveArrayList = new ArrayList<>();
+            receiveArrayList.add(parts[1]);
+            String message = parts[2];
+            Message m = new Message(parts[0], receiveArrayList, message);
+            System.out.println("msv chatid: " + chatId);
 
-           writeToChat(chatId, m.getSender() + "," + parts[1] + "," +
+            writeToChat(chatId, m.getSender() + "," + parts[1] + "," +
                     m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
             List<String> messages = chats.get(chatId);
             System.out.println(messages);
             messsageDatabase.updateChatLog(chatId, messages);
-       }
-       //deletes username in specific chat and check username and line number of message to delete
-       private void deleteMessage(String payload) {
-        System.out.println(payload);
-           String[] parts = payload.split(",");
-           String username = parts[0];
-           int lineNumber = Integer.parseInt(parts[1]);
-            
+        }
+        //deletes username in specific chat and check username and line number of message to delete
+        private void deleteMessage(String payload) {
+            System.out.println(payload);
+            String[] parts = payload.split(",");
+            String username = parts[0];
+            int lineNumber = Integer.parseInt(parts[1]);
+
             String chatId = getChatIdForUser(username);
             System.out.println("Chat id after dms " + chatId);
             if (chatId != null) {
@@ -422,6 +422,7 @@ public class Server implements Runnable {
             String username = payload.substring(0);
             if (users.containsKey(username)) {
                 users.remove(username);
+                database.removeUser(username);
                 // Remove the user from all chats
                 for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
                     entry.getValue().remove(username);
@@ -439,13 +440,13 @@ public class Server implements Runnable {
             } else {
                 chatId = user2 + "-" + user1;
             }
-            
+
             System.out.println(chatId);
             if (!chats.containsKey(chatId)) {
                 // add new unique chat to a file to save after server dies
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(chatsFile, true))) {
-                   writer.write(chatId);
-                   writer.newLine();
+                    writer.write(chatId);
+                    writer.newLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -481,6 +482,5 @@ public class Server implements Runnable {
         }
     }
 }
-
 
 
