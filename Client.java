@@ -39,13 +39,8 @@ public class Client implements Runnable {
                             pw.write("cre" + info);
                             pw.println();
                             pw.flush();
-                            String response = null;
 
-                            while ((response = bfr.readLine()) != null) {
-                                // wait for response
-                            }
-
-                            if (response.equals("True")) {
+                            if (bfr.readLine().equals("True")) {
                                 valid = true;
                             }
                             else {
@@ -82,7 +77,7 @@ public class Client implements Runnable {
                                         System.out.println("What message do you want to send");
                                         String message = scanner.nextLine();
                                         String sendMessage = "msg" + username + "," + recievers + message;
-                                        System.out.println("sendMessage: " + sendMessage);
+                                        //System.out.println("sendMessage: " + sendMessage);
                                         pw.write(sendMessage);
                                         pw.println();
                                         pw.flush();
@@ -407,7 +402,7 @@ public class Client implements Runnable {
 
                                             if ((choice - 1) < list.size()) {
                                                 String chat = list.get(choice - 1);
-                                                chat = chat.replaceAll("-", ",");
+                                                //chat = chat.replaceAll("-", ",");
                                                 pw.write("vcl" + chat);
                                                 pw.println();
                                                 pw.flush();
