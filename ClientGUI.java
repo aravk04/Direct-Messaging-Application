@@ -7,7 +7,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+/**
+ * ClientGUI
+ *
+ * Graphical interface for app
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version April 22nd, 2024
+ */
 public class ClientGUI extends JFrame {
     private Client clientInstance;
     private JTextField usernameField, passwordField;
