@@ -15,7 +15,53 @@ import java.net.Socket;
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
  * @version April 22nd, 2024
+
+ import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class GUI extends JFrame implements Runnable {
+    private Container main;
+    private Container login;
+    private Container signUp;
+    private Container profile;
+    private Container newMessage;
+    private Container viewMessage;
+    private Container viewUser;
+
+
+
+
+    public void run() {
+        JFrame mainFrame = new JFrame();
+        mainFrame.setTitle("Main Menu");
+
+        JFrame loginFrame = new JFrame();
+        loginFrame.setTitle("Login");
+
+        JFrame signUpFrame = new JFrame();
+        signUpFrame.setTitle("Sign Up");
+
+        JFrame profileFrame = new JFrame();
+        profileFrame.setTitle("View Profile");
+
+        JFrame newMessageFrame = new JFrame();
+        newMessageFrame.setTitle("Create New Message");
+
+        JFrame viewMessageFrame = new JFrame();
+        viewMessageFrame.setTitle("View Messages");
+
+        JFrame viewUserFrame = new JFrame();
+        viewUserFrame.setTitle("View Profile");
+
+
+    }
+
+
+}
  */
+
+
 public class ClientGUI extends JFrame {
     private Client clientInstance;
     private JTextField usernameField, passwordField, nameField, emailField, recipientField;
