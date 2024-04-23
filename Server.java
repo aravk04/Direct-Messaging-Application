@@ -125,7 +125,7 @@ public class Server implements Runnable {
             String command = request.substring(0, 3);
             System.out.println("This is the command: " + command);
             String payload = request.substring(3);
-            System.out.println(payload);
+            System.out.println("payload:" + payload);
 
             switch (command) {
                 case "cre":
@@ -187,7 +187,7 @@ public class Server implements Runnable {
                 System.out.println(user.toString());
                 database.addUser(user.toString());
                 out.println("True");
-                System.out.println("A： ");
+                System.out.println("A: ");
             } else {
                 out.println("False");
             }
@@ -212,7 +212,7 @@ public class Server implements Runnable {
                     randomString = true;
                     System.out.println("user successfully logged in!");
                     out.println("True");
-                    System.out.println("B： ");
+                    System.out.println("B: ");
                     //out.println();
                     //out.flush();
                     break;
@@ -249,7 +249,7 @@ public class Server implements Runnable {
                     String chatId = createChat(sender, receiverInArrayList);
                     writeToChat(chatId, m.getSender() + "," + receivers + "," +
                             m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
-                    System.out.println("C： ");
+                    System.out.println("C: ");
                     //System.out.println("message is successfully sent");
                     success = true;
                 }
@@ -339,7 +339,7 @@ public class Server implements Runnable {
                     messages.remove(lineNumber - 1);
                     messsageDatabase.updateChatLog(chatId, messages);
                     out.println("True");
-                    System.out.println("D： ");
+                    System.out.println("D: ");
                 } else {
                     out.println("False");
                 }
@@ -360,7 +360,7 @@ public class Server implements Runnable {
                     users.get(this.username).addFriend(username);
                     database.rewriteFile();
                     out.println("True");
-                    System.out.println("E： ");
+                    System.out.println("E: ");
                     randomString = true;
                     break;
                 }
@@ -384,7 +384,7 @@ public class Server implements Runnable {
                     users.get(this.username).removeFriend(username);
                     database.rewriteFile();
                     out.println("True");
-                    System.out.println("F： ");
+                    System.out.println("F: ");
                     randomString = true;
                     break;
                 }
@@ -408,7 +408,7 @@ public class Server implements Runnable {
                     users.get(this.username).blockUser(username);
                     database.rewriteFile();
                     out.println("True");
-                    System.out.println("G： ");
+                    System.out.println("G: ");
                     randomString = true;
                     break;
                 }
@@ -431,7 +431,7 @@ public class Server implements Runnable {
                     users.get(this.username).unblockUser(username);
                     database.rewriteFile();
                     out.println("True");
-                    System.out.println("H： ");
+                    System.out.println("H: ");
                     break;
                 }
             }
