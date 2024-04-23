@@ -424,14 +424,14 @@ public class Client implements Runnable {
                                                             System.out.println("Enter your message:");
                                                             String msg = scanner.nextLine();
 
-                                                            pw.write("msv" + chat + "," + msg);
+                                                            pw.write("msv" + username + "," + chat + "," + msg);
                                                             pw.println();
                                                             pw.flush();
 
                                                         } else if (vChoice == 2) {
                                                             // first view the chat and print out all the current file contents
                                                             chat = list.get(choice - 1);
-                                                            chat = chat.replaceAll("-", ",");
+                                                            //chat = chat.replaceAll("-", ",");
 
                                                             pw.write("vcl" + chat);
                                                             pw.println();
