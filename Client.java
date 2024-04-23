@@ -148,7 +148,7 @@ public class Client implements Runnable {
                                                         } else if (vChoice == 2) {
                                                             // first view the chat and print out all the current file contents
                                                             chat = list.get(choice - 1);
-                                                            chat = chat.replaceAll("-", ",");
+                                                            //chat = chat.replaceAll("-", ",");
                                                             System.out.println(chat);
                                                             pw.write("vcl" + chat);
                                                             pw.println();
