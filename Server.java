@@ -1,9 +1,11 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
+
 /**
  * Server
- *
+ * <p>
  * Handles client connections and requests
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
@@ -264,23 +266,24 @@ public class Server implements Runnable {
         //gets username and checks which chats the user is in
         private void viewChats(String payload) {
             String username = payload;
-            Set<String> chatIds = new HashSet<>();
-
-            //    for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-            //        if (entry.getValue().contains(username)) {
-            //            chatIds.add(entry.getKey());
-            //        }
-            //    }
+            ArrayList<String> chatIds = new ArrayList<>();
+            /*
+            for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+                if (entry.getValue().contains(username)) {
+                    chatIds.add(entry.getKey());
+                }
+            }
+             */
             for (String key : chats.keySet()) {
                 if (key.contains(payload)) {
                     chatIds.add(key);
                 }
             }
+            //String[] listOfChatId = String.join(",", chatIds).split(",");
 
-            String[] listOfChatId = String.join(",", chatIds).split(",");
-
-            for (String s : listOfChatId) {
+            for (String s : chatIds) {
                 out.println(s);
+                System.out.println("chat ( " + s);
             }
             out.println("stop");
         }
@@ -290,36 +293,48 @@ public class Server implements Runnable {
             System.out.println(chat);
             if (chat == null) {
                 out.println("error");
-            }
-            else {
+            } else {
                 out.println(chat);
                 out.println("stop");
             }
 
         }
+
         // sends message within a chat
         //String sendMessage = "msg" + username + "," + recievers + message;
         private void sendMessageInChat(String payload) {
-            String[] parts = payload.split(",");
-            String chatId;
-            if (parts[0].compareTo(parts[1]) < 0) {
-                chatId = parts[0] + "-" + parts[1];
-            }
-            else {
-                chatId = parts[1] + "-" + parts[0];
-            }
+            String sender = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            //Chat name
+            String chatId = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            String message = payload;
+
+            //initialize the receiverList
+            String[] receiverArray = chatId.split("-");
             ArrayList<String> receiveArrayList = new ArrayList<>();
-            receiveArrayList.add(parts[1]);
-            String message = parts[2];
-            Message m = new Message(parts[0], receiveArrayList, message);
+            String receivers = "";
+            for (String s : receiverArray) {
+                if (!s.equals(sender)) {
+                    receiveArrayList.add(s);
+                    receivers = s + ";";
+                }
+            }
+
+            System.out.println("sender:" + sender);
+            System.out.println("Arrays.asList(receiveArrayList)" + Arrays.asList(receiveArrayList));
+            System.out.println("message:" + message);
+
+            Message m = new Message(sender, receiveArrayList, message);
             System.out.println("msv chatid: " + chatId);
 
-            writeToChat(chatId, m.getSender() + "," + parts[1] + "," +
+            writeToChat(chatId, m.getSender() + "," + receivers + "," +
                     m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
             List<String> messages = chats.get(chatId);
             System.out.println(messages);
             messsageDatabase.updateChatLog(chatId, messages);
         }
+
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {
             System.out.println(payload);
