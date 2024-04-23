@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 /**
- * ClientGUI
+ * ClientGUI 
  *
  * Graphical interface for app
  *
@@ -18,9 +18,13 @@ import java.net.Socket;
  */
 public class ClientGUI extends JFrame {
     private Client clientInstance;
-    private JTextField usernameField, passwordField;
+    private JTextField usernameField, passwordField, nameField, emailField, recipientField;
     private JTextArea messageArea;
     private JButton sendButton, signUpButton, logInButton;
+    private Socket socket;
+    private BufferedReader bfr;
+    private PrintWriter pw;
+    private String username;
 
     public ClientGUI() {
         setTitle("Chat Client");
@@ -31,11 +35,17 @@ public class ClientGUI extends JFrame {
         clientInstance = new Client();
 
         // Set up the GUI components
-        JPanel inputPanel = new JPanel(new GridLayout(3, 2));
+        JPanel inputPanel = new JPanel(new GridLayout(6, 2));
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
+        JLabel nameLabel = new JLabel("Name:");
+        JLabel emailLabel = new JLabel("Email:");
+        JLabel recipientLabel = new JLabel("Recipient:");
         usernameField = new JTextField();
         passwordField = new JTextField();
+        nameField = new JTextField();
+        emailField = new JTextField();
+        recipientField = new JTextField();
         signUpButton = new JButton("Sign Up");
         logInButton = new JButton("Log In");
 
@@ -43,6 +53,12 @@ public class ClientGUI extends JFrame {
         inputPanel.add(usernameField);
         inputPanel.add(passwordLabel);
         inputPanel.add(passwordField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+        inputPanel.add(emailLabel);
+        inputPanel.add(emailField);
+        inputPanel.add(recipientLabel);
+        inputPanel.add(recipientField);
         inputPanel.add(signUpButton);
         inputPanel.add(logInButton);
 
@@ -74,16 +90,56 @@ public class ClientGUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            // Add code to handle sign-up logic here
+            String name = nameField.getText();
+            String email = emailField.getText();
+
+            try {
+                socket = new Socket("localhost", 12345);
+                bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                pw = new PrintWriter(socket.getOutputStream());
+
+                String info = String.format("%s,,,%s,%s,%s", name, password, email, username);
+                pw.write("cre" + info);
+                pw.println();
+                pw.flush();
+
+                String response = bfr.readLine();
+                if (response.equals("True")) {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Sign-up successful!");
+                } else {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Username already taken. Please try again!");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     private class LogInListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String username = usernameField.getText();
+            username = usernameField.getText();
             String password = passwordField.getText();
-            // Add code to handle log-in logic here
+
+            try {
+                socket = new Socket("localhost", 12345);
+                bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                pw = new PrintWriter(socket.getOutputStream());
+
+                String info = String.format("log%s,%s", username, password);
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                String response = bfr.readLine();
+                if (response.equals("True")) {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Log-in successful!");
+                } else {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Invalid username or password.");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -97,7 +153,30 @@ public class ClientGUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             String message = messageField.getText();
-            // Add code to handle sending messages here
+            String recipient = recipientField.getText();
+
+            try {
+                if (socket == null || socket.isClosed()) {
+                    socket = new Socket("localhost", 12345);
+                    bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    pw = new PrintWriter(socket.getOutputStream());
+                }
+
+                String sendMessage = "msg" + username + "," + recipient + message;
+                pw.write(sendMessage);
+                pw.println();
+                pw.flush();
+
+                String response = bfr.readLine();
+                if (response.equals("True")) {
+                    messageArea.append("Message sent to " + recipient + ": " + message + "\n");
+                } else {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Failed to send message.");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             messageField.setText("");
         }
     }
