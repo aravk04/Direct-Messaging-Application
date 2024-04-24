@@ -602,4 +602,179 @@ public class Client implements Runnable {
             System.out.println("Could not connect");
         }
     }
+    private boolean createUser(String name, String username, String emailAddress, String password) {
+        try {
+            String info = String.format("cre%s,,,%s,%s,%s", name, password, emailAddress, username);
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in createUser");
+            return false;
+        }
+    }
+
+    private boolean login(String username, String password) {
+        try {
+            String info = String.format("log%s,%s", username, password);
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in login");
+            return false;
+        }
+    }
+
+    private boolean message(String username, String recievers, String message) {
+        try {
+            String info = "msg" + username + "," + recievers + message;
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in message(Receivers Variant)");
+            return false;
+        }
+    }
+
+    private boolean message(String chat, String message) {
+        try {
+            String info = "msv" + chat + "," + message;
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in message(Chat Variant)");
+            return false;
+        }
+    }
+
+    private boolean deleteMessage(String username, int lineNum) {
+        try {
+            String info = "dms" + username + "," + lineNum;
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in deleteMessage");
+            return false;
+        }
+    }
+
+    private boolean editFriends(boolean add, String username) {
+        try {
+            if (add) {
+                String info = "add" + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            } else {
+                String info = "rem" + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            }
+        } catch (IOException i) {
+            System.out.println("IOException in editFriends");
+            return false;
+        }
+    }
+
+    private boolean editBlocked(boolean block, String username) {
+        try {
+            if (block) {
+                String info = "blo" + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            } else {
+                String info = "unb" + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            }
+        } catch (IOException i) {
+            System. out.println("IOException in editBlocked");
+            return false;
+        }
+    }
+
+    private void deleteAccount(String username) {
+        String info = "del" + username;
+        pw.write(info);
+        pw.println();
+        pw.flush();
+    }
+
+    private ArrayList<String> viewChats(String username) {
+        try {
+            String info = "vie" + username;
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            ArrayList<String> list = new ArrayList<>();
+            String line = bfr.readLine();
+            while (!line.equals("stop")) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+
+            return list;
+
+        } catch (IOException i) {
+            System.out.println("IOException in viewChats");
+            return null;
+        }
+    }
+
+    private ArrayList<String> viewChatLog(String chat) {
+        try {
+            String info = "vcl" + chat;
+            pw.write(info);
+            pw.println();
+            pw.flush();
+
+            ArrayList<String> list = new ArrayList<>();
+            String line = bfr.readLine();
+            while (!line.equals("stop")) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+
+            return list;
+
+        } catch (IOException i) {
+            System.out.println("IOException in viewChats");
+            return null;
+        }
+    }
 }
