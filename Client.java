@@ -607,7 +607,7 @@ public class Client implements Runnable {
             System.out.println("Could not connect");
         }
     }
-    private boolean createUser(String name, String username, String emailAddress, String password) {
+    public boolean createUser(String name, String username, String emailAddress, String password) {
         try {
             String info = String.format("cre%s,,,%s,%s,%s", name, password, emailAddress, username);
             pw.write(info);
@@ -622,7 +622,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean login(String username, String password) {
+    public boolean login(String username, String password) {
         try {
             String info = String.format("log%s,%s", username, password);
             pw.write(info);
@@ -637,7 +637,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean message(String username, String recievers, String message) {
+    public boolean message(String username, String recievers, String message) {
         try {
             String info = "msg" + username + "," + recievers + message;
             pw.write(info);
@@ -652,7 +652,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean message(String chat, String message) {
+    public boolean message(String chat, String message) {
         try {
             String info = "msv" + chat + "," + message;
             pw.write(info);
@@ -667,7 +667,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean deleteMessage(String username, int lineNum) {
+    public boolean deleteMessage(String username, int lineNum) {
         try {
             String info = "dms" + username + "," + lineNum;
             pw.write(info);
@@ -682,7 +682,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean editFriends(boolean add, String username) {
+    public boolean editFriends(boolean add, String username) {
         try {
             if (add) {
                 String info = "add" + username;
@@ -707,7 +707,7 @@ public class Client implements Runnable {
         }
     }
 
-    private boolean editBlocked(boolean block, String username) {
+    public boolean editBlocked(boolean block, String username) {
         try {
             if (block) {
                 String info = "blo" + username;
@@ -732,14 +732,14 @@ public class Client implements Runnable {
         }
     }
 
-    private void deleteAccount(String username) {
+    public void deleteAccount(String username) {
         String info = "del" + username;
         pw.write(info);
         pw.println();
         pw.flush();
     }
 
-    private ArrayList<String> viewChats(String username) {
+    public ArrayList<String> viewChats(String username) {
         try {
             String info = "vie" + username;
             pw.write(info);
@@ -761,7 +761,7 @@ public class Client implements Runnable {
         }
     }
 
-    private ArrayList<String> viewChatLog(String chat) {
+    public ArrayList<String> viewChatLog(String chat) {
         try {
             String info = "vcl" + chat;
             pw.write(info);
