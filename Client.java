@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client implements Runnable {
+    private Scanner scanner;
+    private Socket socket;
+    private BufferedReader bfr;
+    private PrintWriter pw;
+
     public Client() {
 
     }
@@ -12,10 +17,10 @@ public class Client implements Runnable {
     public void run() {
         String recievers = "";
         try {
-            Scanner scanner = new Scanner(System.in);
-            Socket socket = new Socket("localhost", 12345);
-            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            scanner = new Scanner(System.in);
+            socket = new Socket("localhost", 12345);
+            bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            pw = new PrintWriter(socket.getOutputStream());
             String username;
 
             do {
