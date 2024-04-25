@@ -167,6 +167,12 @@ public class Server implements Runnable {
                 case "vcl":
                     viewChatLog(payload);
                     break;
+                case "edt":
+                    editUser(payload);
+                    break;
+                case "vUr":
+                    viewUser(payload);
+                    break;
                 default:
                     out.println("Invalid command");
             }
@@ -364,7 +370,7 @@ public class Server implements Runnable {
         }
 
         //add friend to the user friend list if they are friends
-        private void addFriend(String payload) {
+        private void addFriend(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -374,6 +380,7 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).addFriend(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
                     System.out.println("E: ");
                     randomString = true;
@@ -387,7 +394,7 @@ public class Server implements Runnable {
         }
 
         // remove friend from user list if they exist
-        private void removeFriend(String payload) {
+        private void removeFriend(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -398,6 +405,7 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).removeFriend(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
                     System.out.println("F: ");
                     randomString = true;
@@ -411,7 +419,7 @@ public class Server implements Runnable {
         }
 
         // block user parses through the usernames and checks if they exist and adds them to the blocked list
-        private void blockUser(String payload) {
+        private void blockUser(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = true;
 
@@ -422,6 +430,7 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).blockUser(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
                     System.out.println("G: ");
                     randomString = true;
@@ -434,7 +443,7 @@ public class Server implements Runnable {
         }
 
         // unblocks user and removes them from the blocked list if they are there
-        private void unblockUser(String payload) {
+        private void unblockUser(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = true;
 
@@ -445,6 +454,7 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).unblockUser(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
                     System.out.println("H: ");
                     break;
@@ -464,6 +474,60 @@ public class Server implements Runnable {
                 }
             }
 
+        }
+
+        private void editUser(String payload) { //edt + name + password + email
+
+            String[] info = payload.split(";");
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(username)) {
+                    try {
+                        String oldInfo = users.get(this.username).toString();
+                        User tempUser = users.get(this.username);
+                        tempUser.updateName(info[0]);
+                        tempUser.setPassword(info[1]);
+                        tempUser.setEmailAddress(info[2]);
+
+                        String newInfo = tempUser.toString();
+
+                        database.editUser(oldInfo, newInfo);
+                        database.rewriteFile();
+                        database = new Database(INFILE);
+                    } catch (BadInputException e) {
+                        out.println(e);
+                    }
+                    out.println("True");
+                    System.out.println("I: ");
+                    break;
+                }
+            }
+        }
+
+        private void viewUser(String payload) { //vUr + username
+
+            boolean success = false;
+            if (payload.toUpperCase().equals("EXIT")) {
+                out.println("EXIT");
+            } else {
+                for (Map.Entry<String, User> entry : users.entrySet()) {
+                    String key = entry.getKey();
+                    User value = entry.getValue();
+                    //System.out.println("Key= " + key + ", Value= " + value);
+                    if (key.equals(payload)) {
+                        out.println("True" + value.retrieveName() + ";" + value.getEmailAddress());
+                        System.out.println("J: ");
+                        success = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!success) {
+                out.println("S");
+            }
         }
 
         // creates unique chat between users
@@ -493,6 +557,7 @@ public class Server implements Runnable {
             }
             return fileName;
         }
+
 
         /*
         private String createChat(String user1, String user2) {
@@ -547,5 +612,4 @@ public class Server implements Runnable {
         }
     }
 }
-
 
