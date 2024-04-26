@@ -47,8 +47,7 @@ public class Client implements Runnable {
 
                             if (bfr.readLine().equals("True")) {
                                 valid = true;
-                            }
-                            else {
+                            } else {
                                 valid = false;
                             }
 
@@ -114,7 +113,7 @@ public class Client implements Runnable {
                                         System.out.println("You are not in any chats yet");
                                     } else {
                                         System.out.println("Please select one of the following chats to view:");
-                                        for (int i = 0; i < list.size(); i ++) {
+                                        for (int i = 0; i < list.size(); i++) {
                                             int j = i + 1;
                                             System.out.println(j + ". " + list.get(i));
                                         }
@@ -165,7 +164,7 @@ public class Client implements Runnable {
                                                             while (!response.equals("stop")) {
                                                                 System.out.println("(" + lineNum + ") " + response);
                                                                 response = bfr.readLine();
-                                                                lineNum ++;
+                                                                lineNum++;
                                                             }
                                                             boolean isNum = false;
                                                             lineNum = -1;
@@ -457,7 +456,7 @@ public class Client implements Runnable {
                                         System.out.println("You are not in any chats yet");
                                     } else {
                                         System.out.println("Please select one of the following chats to view:");
-                                        for (int i = 0; i < list.size(); i ++) {
+                                        for (int i = 0; i < list.size(); i++) {
                                             int j = i + 1;
                                             System.out.println(j + ". " + list.get(i));
                                         }
@@ -508,7 +507,7 @@ public class Client implements Runnable {
                                                             while (!response.equals("stop") && !response.equals("")) {
                                                                 System.out.println("(" + lineNum + ") " + response);
                                                                 response = bfr.readLine();
-                                                                lineNum ++;
+                                                                lineNum++;
                                                             }
                                                             // read stop line
                                                             bfr.readLine();
@@ -685,7 +684,7 @@ public class Client implements Runnable {
                                         pw.flush();
 
                                         String responseFromServer = bfr.readLine();
-                                        //System.out.println("222 = " + responseFromServer);
+                                        System.out.println("222 = " + responseFromServer);
                                         if (responseFromServer.length() < 4) {
 
                                         } else if (responseFromServer.substring(0, 4).equals("True")) {
@@ -727,6 +726,7 @@ public class Client implements Runnable {
             System.out.println("Could not connect");
         }
     }
+
     public boolean createUser(String name, String username, String emailAddress, String password) {
         try {
             String info = String.format("cre%s,,,%s,%s,%s", name, password, emailAddress, username);
@@ -847,7 +847,7 @@ public class Client implements Runnable {
 
             }
         } catch (IOException i) {
-            System. out.println("IOException in editBlocked");
+            System.out.println("IOException in editBlocked");
             return false;
         }
     }
@@ -900,6 +900,36 @@ public class Client implements Runnable {
         } catch (IOException i) {
             System.out.println("IOException in viewChats");
             return null;
+        }
+    }
+
+    public boolean editProfile(String name, String password, String email) {
+        try {
+            String newInfo = "edt" + name + ";" + password + ";" + email;
+            pw.write(newInfo);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in editProfile");
+            return false;
+        }
+    }
+
+    public boolean viewUser(String username) {
+        try {
+            String newInfo = "vUr" + username;
+            pw.write(newInfo);
+            pw.println();
+            pw.flush();
+
+            return bfr.readLine().equals("True");
+
+        } catch (IOException i) {
+            System.out.println("IOException in viewUser");
+            return false;
         }
     }
 }
