@@ -476,7 +476,7 @@ public class Server implements Runnable {
 
         }
 
-        private void editUser(String payload) { //edt + name + password + email
+        private void editUser(String payload) throws BadInputException { //edt + name + password + email
 
             String[] info = payload.split(";");
             for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -484,21 +484,19 @@ public class Server implements Runnable {
                 User value = entry.getValue();
                 //System.out.println("Key= " + key + ", Value= " + value);
                 if (key.equals(username)) {
-                    try {
-                        String oldInfo = users.get(this.username).toString();
-                        User tempUser = users.get(this.username);
-                        tempUser.updateName(info[0]);
-                        tempUser.setPassword(info[1]);
-                        tempUser.setEmailAddress(info[2]);
 
-                        String newInfo = tempUser.toString();
+                    String oldInfo = users.get(this.username).toString();
+                    User tempUser = users.get(this.username);
+                    tempUser.updateName(info[0]);
+                    tempUser.setPassword(info[1]);
+                    tempUser.setEmailAddress(info[2]);
 
-                        database.editUser(oldInfo, newInfo);
-                        database.rewriteFile();
-                        database = new Database(INFILE);
-                    } catch (BadInputException e) {
-                        out.println(e);
-                    }
+                    String newInfo = tempUser.toString();
+
+                    database.editUser(oldInfo, newInfo);
+                    database.rewriteFile();
+                    database = new Database(INFILE);
+
                     out.println("True");
                     System.out.println("I: ");
                     break;
@@ -515,16 +513,18 @@ public class Server implements Runnable {
                 for (Map.Entry<String, User> entry : users.entrySet()) {
                     String key = entry.getKey();
                     User value = entry.getValue();
-                    //System.out.println("Key= " + key + ", Value= " + value);
+                    System.out.println("Key= " + key + ", Value= " + value);
                     if (key.equals(payload)) {
-                        out.println("True" + value.retrieveName() + ";" + value.getEmailAddress());
+                        out.println("True" + value.retrieveName() +
+                                ";" + value.getEmailAddress() + ";" + value.getUsername());
                         System.out.println("J: ");
                         success = true;
                         break;
                     }
+                    System.out.println("success " + success);
                 }
             }
-
+            System.out.println("success OUT of the loop " + success);
             if (!success) {
                 out.println("S");
             }
