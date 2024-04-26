@@ -331,28 +331,29 @@ public class Client implements Runnable {
                                     do {
                                         System.out.println("Type your the username you want to view");
                                         String viewTheUser = scanner.nextLine();
-
-                                        String newInfo = "vUr" + viewTheUser;
-                                        pw.write(newInfo);
-                                        pw.println();
-                                        pw.flush();
-
-                                        String responseFromServer = bfr.readLine();
-                                        //System.out.println("222 = " + responseFromServer);
-                                        if (responseFromServer.length() < 4) {
-
-                                        } else if (responseFromServer.substring(0, 4).equals("True")) {
-                                            String[] infoFromServer = responseFromServer.substring(4).split(";");
-                                            //name + email
-                                            System.out.println("The information of the user " + viewTheUser + "'s information is as followed:");
-                                            System.out.println("name=" + infoFromServer[0] + "\nemail=" + infoFromServer[1]);
-                                            valid = true;
-                                        } else if (responseFromServer.equals("EXIT")) {
+                                        if (viewTheUser.toUpperCase().equals("EXIT")) {
                                             break;
-                                        }
+                                        } else {
+                                            String newInfo = "vUr" + viewTheUser;
+                                            pw.write(newInfo);
+                                            pw.println();
+                                            pw.flush();
 
-                                        if (!valid) {
-                                            System.out.println("Please enter a valid information or type EXIT to leave");
+                                            String responseFromServer = bfr.readLine();
+                                            System.out.println("222 = " + responseFromServer);
+                                            if (responseFromServer.length() < 4) {
+
+                                            } else if (responseFromServer.substring(0, 4).equals("True")) {
+                                                String[] infoFromServer = responseFromServer.substring(4).split(";");
+                                                //name + email
+                                                System.out.println("The information of the user " + viewTheUser + "'s information is as followed:");
+                                                System.out.println("name= " + infoFromServer[0] + "\nemail= " + infoFromServer[1] + "\nusername= " + infoFromServer[2]);
+                                                valid = true;
+                                            }
+
+                                            if (!valid) {
+                                                System.out.println("Please enter a valid information or type EXIT to leave");
+                                            }
                                         }
                                     } while (!valid);
                                 } else if (userOption == 10) {
@@ -677,28 +678,29 @@ public class Client implements Runnable {
                                     do {
                                         System.out.println("Type your the username you want to view");
                                         String viewTheUser = scanner.nextLine();
-
-                                        String newInfo = "vUr" + viewTheUser;
-                                        pw.write(newInfo);
-                                        pw.println();
-                                        pw.flush();
-
-                                        String responseFromServer = bfr.readLine();
-                                        System.out.println("222 = " + responseFromServer);
-                                        if (responseFromServer.length() < 4) {
-
-                                        } else if (responseFromServer.substring(0, 4).equals("True")) {
-                                            String[] infoFromServer = responseFromServer.substring(4).split(";");
-                                            //name + email
-                                            System.out.println("The information of the user " + viewTheUser + "'s information is as followed:");
-                                            System.out.println("name=" + infoFromServer[0] + "\nemail=" + infoFromServer[1]);
-                                            valid = true;
-                                        } else if (responseFromServer.equals("EXIT")) {
+                                        if (viewTheUser.toUpperCase().equals("EXIT")) {
                                             break;
-                                        }
+                                        } else {
+                                            String newInfo = "vUr" + viewTheUser;
+                                            pw.write(newInfo);
+                                            pw.println();
+                                            pw.flush();
 
-                                        if (!valid) {
-                                            System.out.println("Please enter a valid information or type EXIT to leave");
+                                            String responseFromServer = bfr.readLine();
+                                            System.out.println("222 = " + responseFromServer);
+                                            if (responseFromServer.length() < 4) {
+
+                                            } else if (responseFromServer.substring(0, 4).equals("True")) {
+                                                String[] infoFromServer = responseFromServer.substring(4).split(";");
+                                                //name + email
+                                                System.out.println("The information of the user " + viewTheUser + "'s information is as followed:");
+                                                System.out.println("name= " + infoFromServer[0] + "\nemail= " + infoFromServer[1] + "\nusername= " + infoFromServer[2]);
+                                                valid = true;
+                                            }
+
+                                            if (!valid) {
+                                                System.out.println("Please enter a valid information or type EXIT to leave");
+                                            }
                                         }
                                     } while (!valid);
                                 } else if (userOption == 10) {
