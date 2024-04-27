@@ -51,13 +51,16 @@ public class Server implements Runnable {
                     try (BufferedReader reader1 = new BufferedReader(new FileReader(chatFilename))) {
                         String message = reader1.readLine();
                         while (message != null) {
+                            System.out.println(message);
                             participantChats.add(message);
                             message = reader1.readLine();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    chats.put(chatId, participantChats);
+                    System.out.println("chats for " + chatId + " " + participantChats);
+                    chats.put(chatId, new ArrayList<>(participantChats));
+                    participantChats.clear();
                     line = reader.readLine();
                 }
 
@@ -163,6 +166,9 @@ public class Server implements Runnable {
                 case "vcl":
                     viewChatLog(payload);
                     break;
+                case "vlu":
+                    validUser(payload);
+                    break;
                 default:
                     out.println("Invalid command");
             }
@@ -261,23 +267,42 @@ public class Server implements Runnable {
             //        }
             //    }
             for (String key : chats.keySet()) {
+                System.out.println("Key: " + key);
                 if (key.contains(payload)) {
                     chatIds.add(key);
                 }
             }
 
-            out.println(String.join(",", chatIds));
+            //out.println(String.join(",", chatIds));
+            for (String chatId: chatIds) {
+                out.println(chatId);
+            }
             out.println("stop");
         }
 
+        private void validUser(String payload) {
+            System.out.println(users);
+            if (users.containsKey(payload)) {
+                out.println("True");
+            }
+            else {
+                out.println("False");
+            }
+        }
+
         private void viewChatLog(String payload) throws IOException {
-            String chat = messsageDatabase.getChat(payload);
-            System.out.println(chat);
-            if (chat == null) {
+            //String chat = messsageDatabase.getChat(payload);
+            ArrayList<String> chatLog = new ArrayList<String>();
+            System.out.println("CHATS:\n\n" + chats);
+            chatLog = chats.get(payload);
+            System.out.println(chatLog);
+            if (chatLog == null || chatLog.size() == 0) {
                 out.println("error");
             }
             else {
-                out.println(chat);
+                for (String chat: chatLog) {
+                    out.println(chat);
+                }
                 out.println("stop");
             }
 
@@ -304,15 +329,19 @@ public class Server implements Runnable {
             List<String> messages = chats.get(chatId);
             System.out.println(messages);
             messsageDatabase.updateChatLog(chatId, messages);
+            out.println("True");
+            
         }
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {
             System.out.println(payload);
             String[] parts = payload.split(",");
-            String username = parts[0];
+            String[] sortedStr = parts[0].split("-");
+            Arrays.sort(sortedStr);
+            String chatId = sortedStr[0] + "-" + sortedStr[1];
             int lineNumber = Integer.parseInt(parts[1]);
 
-            String chatId = getChatIdForUser(username);
+            //String chatId = getChatIdForUser(username);
             System.out.println("Chat id after dms " + chatId);
             if (chatId != null) {
                 List<String> messages = chats.get(chatId);
@@ -351,7 +380,6 @@ public class Server implements Runnable {
             if (!randomString) {
                 out.println("S");
             }
-
         }
 
         // remove friend from user list if they exist
