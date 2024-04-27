@@ -308,8 +308,10 @@ public class Client implements Runnable {
                                         String password = scanner.nextLine();
                                         System.out.println("Type your new name");
                                         String name = scanner.nextLine();
+                                        System.out.println("Type your new username");
+                                        username = scanner.nextLine();
 
-                                        String newInfo = "edt" + name + ";" + password + ";" + email;
+                                        String newInfo = "edt" + username + ";" + name + ";" + password + ";" + email;
                                         pw.write(newInfo);
                                         pw.println();
                                         pw.flush();
@@ -655,8 +657,10 @@ public class Client implements Runnable {
                                         String password = scanner.nextLine();
                                         System.out.println("Type your new name");
                                         String name = scanner.nextLine();
+                                        System.out.println("Type your new username");
+                                        username = scanner.nextLine();
 
-                                        String newInfo = "edt" + name + ";" + password + ";" + email;
+                                        String newInfo = "edt" + username + ";" + name + ";" + password + ";" + email;
                                         pw.write(newInfo);
                                         pw.println();
                                         pw.flush();
