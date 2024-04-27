@@ -1,9 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class ClientGUI extends JFrame implements Runnable {
     private Client client;
+    private String user;
+    private ArrayList<String> chats;
+    private JComboBox groupChatDropdown;
+    private ArrayList<String> chatLog;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new ClientGUI());
@@ -188,44 +193,93 @@ public class ClientGUI extends JFrame implements Runnable {
         signUpFrame.add(signPanel);
 
         JFrame mainMenuFrame = new JFrame();
-        mainMenuFrame.setTitle("Main Menu");
-
-        // Content pane for the main menu frame
-        Container mainMenuContent = mainMenuFrame.getContentPane();
-
-        // Configure main menu frame
         mainMenuFrame.setSize(400, 800);
-        mainMenuFrame.setLocationRelativeTo(null);
-        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.setMaximumSize(new Dimension(400, 800));
+        Container mainContent = mainMenuFrame.getContentPane();
 
-        // Components for the main menu
-        JTextField messageField = new JTextField();
-        JTextField recipientField = new JTextField();
+        JPanel mainMenuPanel = new JPanel(new BorderLayout());
+
+        // Input Panel
+        JPanel inputPanel1 = new JPanel();
+        inputPanel1.setLayout(new BoxLayout(inputPanel1, BoxLayout.X_AXIS));
+        JPanel inputPanel2 = new JPanel(new GridLayout(1, 2));
+        JTextField messageField = new JTextField("Enter message here");
+        JTextField recipientField = new JTextField("Enter recipient(s) like: a,b,c");
         JButton sendButton = new JButton("Send");
         JButton editProfileButton = new JButton("Edit Profile");
-        JComboBox<String> groupChatDropdown = new JComboBox<>();
+        groupChatDropdown = new JComboBox<>();
         JButton viewGroupChatButton = new JButton("View Group Chat");
-        JTextField userSearchField = new JTextField();
-        JButton searchUserButton = new JButton("Search User");
-        JButton logOutButton = new JButton("Log Out");
+        JButton logoutButton = new JButton("Log Out");
 
-        // Panel for the main menu
-        JPanel mainMenuPanel = new JPanel();
-        mainMenuPanel.setLayout(new GridLayout(4, 2));
-        mainMenuPanel.add(new JLabel("Message Text Field:"));
-        mainMenuPanel.add(messageField);
-        mainMenuPanel.add(new JLabel("Recipient Text Field:"));
-        mainMenuPanel.add(recipientField);
-        mainMenuPanel.add(sendButton);
-        mainMenuPanel.add(editProfileButton);
-        mainMenuPanel.add(groupChatDropdown);
-        mainMenuPanel.add(viewGroupChatButton);
-        mainMenuPanel.add(userSearchField);
-        mainMenuPanel.add(searchUserButton);
-        mainMenuPanel.add(logOutButton);
+        sendButton.setMaximumSize(new Dimension(400, 20));
+        sendButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add main menu panel to main menu content
-        mainMenuContent.add(mainMenuPanel);
+        inputPanel1.add(messageField);
+        inputPanel1.add(recipientField);
+        inputPanel1.setMaximumSize(new Dimension(400, 30));
+        inputPanel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        inputPanel2.add(groupChatDropdown);
+        inputPanel2.add(viewGroupChatButton);
+        inputPanel2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        inputPanel2.setMaximumSize(new Dimension(400, 30));
+
+        // Message Area
+        JTextArea messageArea = new JTextArea();
+        messageArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+
+        // Top Panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(editProfileButton);
+        topPanel.add(Box.createHorizontalStrut(175));
+        topPanel.add(logoutButton);
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        topPanel.setMaximumSize(new Dimension(400, 30));
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+        mainPanel.add(topPanel, BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(inputPanel1, BorderLayout.CENTER);
+        mainPanel.add(sendButton, BorderLayout.CENTER);
+        mainPanel.add(inputPanel2, BorderLayout.CENTER);
+
+        // Add components to the main panel
+        mainMenuPanel.add(mainPanel, BorderLayout.CENTER);
+
+        // Set up fonts and styles
+        Font defaultFont = new Font("Times New Roman", Font.PLAIN, 18);
+        sendButton.setFont(defaultFont);
+        editProfileButton.setFont(defaultFont);
+        viewGroupChatButton.setFont(defaultFont);
+        logoutButton.setFont(defaultFont);
+
+        mainContent.add(mainMenuPanel);
+
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getSource() == messageField) {
+                    messageField.setText("");
+                } else if (e.getSource() == recipientField) {
+                    recipientField.setText("");
+                } else {
+                    messageField.setText("Enter message here");
+                    recipientField.setText("Enter recipient(s) like: a,b,c");
+                }
+            }
+
+
+        };
+
+        messageField.addMouseListener(mouseListener);
+        recipientField.addMouseListener(mouseListener);
+        editProfileButton.addMouseListener(mouseListener);
+        mainMenuFrame.addMouseListener(mouseListener);
+        groupChatDropdown.addMouseListener(mouseListener);
+        messageArea.addMouseListener(mouseListener);
+        logoutButton.addMouseListener(mouseListener);
 
         ActionListener actionListener = new ActionListener() {
             @Override
@@ -244,6 +298,9 @@ public class ClientGUI extends JFrame implements Runnable {
                         userLogin.setText("");
                         passLogin.setText("");
                         mainMenuFrame.setVisible(true);
+                        user = username;
+                        chats = client.viewChats(user);
+                        groupChatDropdown = new JComboBox<>(chats.toArray());
                     } else {
                         JOptionPane.showMessageDialog(null, "Username or Password was Incorrect",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -261,6 +318,9 @@ public class ClientGUI extends JFrame implements Runnable {
                             nameText.setText("");
                             emailText.setText("");
                             mainMenuFrame.setVisible(true);
+                            user = username;
+                            chats = client.viewChats(user);
+                            groupChatDropdown = new JComboBox<>(chats.toArray());
                         } else {
                             JOptionPane.showMessageDialog(null, "Username was already taken",
                                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -275,6 +335,28 @@ public class ClientGUI extends JFrame implements Runnable {
                 } else if (e.getSource() == backSign) {
                     signUpFrame.setVisible(false);
                     startFrame.setVisible(true);
+                } else if (e.getSource() == editProfileButton) {
+                    mainMenuFrame.setVisible(false);
+                } else if (e.getSource() == logoutButton) {
+                    startFrame.setVisible(true);
+                    mainMenuFrame.setVisible(false);
+                } else if (e.getSource() == sendButton) {
+                    String message = messageField.getText();
+                    String recipients = recipientField.getText();
+
+                    if (client.message(user, recipients, message)) {
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
+                                " or has you blocked. Make sure you enter your Recipients like: a,b,c.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (e.getSource() == viewGroupChatButton) {
+                    String chat = (String) groupChatDropdown.getSelectedItem();
+                    chatLog = client.viewChatLog(chat);
+                    mainMenuFrame.setVisible(false);
+                    messageField.setText("Enter message here");
+                    recipientField.setText("Enter recipient(s) like: a,b,c");
                 }
             }
         };
