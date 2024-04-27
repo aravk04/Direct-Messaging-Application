@@ -367,5 +367,9 @@ public class ClientGUI extends JFrame implements Runnable {
         signUpEnter.addActionListener(actionListener);
         backLogin.addActionListener(actionListener);
         backSign.addActionListener(actionListener);
+        logoutButton.addActionListener(actionListener);
+        viewGroupChatButton.addActionListener(actionListener);
+        editProfileButton.addActionListener(actionListener);
+        sendButton.addActionListener(actionListener);
     }
 }
