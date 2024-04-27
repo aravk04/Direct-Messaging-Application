@@ -476,26 +476,26 @@ public class Server implements Runnable {
 
         }
 
-        private void editUser(String payload) throws BadInputException { //edt + name + password + email
+        private void editUser(String payload) throws BadInputException { //edt + username + name + password + email
 
             String[] info = payload.split(";");
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
                 //System.out.println("Key= " + key + ", Value= " + value);
-                if (key.equals(username)) {
+                if (key.equals(info[0])) {
 
-                    String oldInfo = users.get(this.username).toString();
-                    User tempUser = users.get(this.username);
-                    tempUser.updateName(info[0]);
-                    tempUser.setPassword(info[1]);
-                    tempUser.setEmailAddress(info[2]);
+                    String oldInfo = users.get(info[0]).toString();
+                    User tempUser = users.get(info[0]);
+                    tempUser.updateName(info[1]);
+                    tempUser.setPassword(info[2]);
+                    tempUser.setEmailAddress(info[3]);
 
                     String newInfo = tempUser.toString();
 
                     database.editUser(oldInfo, newInfo);
-                    database.rewriteFile();
-                    database = new Database(INFILE);
+                    //database.rewriteFile();
+                    //database = new Database(INFILE);
 
                     out.println("True");
                     System.out.println("I: ");
@@ -531,7 +531,7 @@ public class Server implements Runnable {
         }
 
         // creates unique chat between users
-        public String createChat(String sender, ArrayList<String> receivers) throws FileNotFoundException, IOException {
+        public synchronized String createChat(String sender, ArrayList<String> receivers) throws FileNotFoundException, IOException {
             String fileName = "";
             receivers.add(sender);
             Collections.sort(receivers);
