@@ -25,18 +25,6 @@ public class ClientGUI extends JFrame implements Runnable {
         programName.setFont(new Font("Times New Roman", Font.PLAIN, 36));
         programName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel startLabel1 = new JLabel(" ");
-        startLabel1.setFont(new Font("Times New Roman", Font.PLAIN, 200));
-        startLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel startLabel2 = new JLabel(" ");
-        startLabel2.setFont(new Font("Times New Roman", Font.PLAIN, 200));
-        startLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel startLabel3 = new JLabel(" ");
-        startLabel3.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        startLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         startContent.setLayout(new BorderLayout());
 
         startFrame.setSize(400, 800);
@@ -53,11 +41,11 @@ public class ClientGUI extends JFrame implements Runnable {
 
         JPanel startPanel = new JPanel();
         startPanel.setLayout(new BoxLayout(startPanel, BoxLayout.PAGE_AXIS));
-        startPanel.add(startLabel1, BorderLayout.CENTER);
+        startPanel.add(Box.createVerticalStrut(200));
         startPanel.add(programName, BorderLayout.CENTER);
-        startPanel.add(startLabel2, BorderLayout.CENTER);
+        startPanel.add(Box.createVerticalStrut(200));
         startPanel.add(loginButton, BorderLayout.CENTER);
-        startPanel.add(startLabel3, BorderLayout.CENTER);
+        startPanel.add(Box.createVerticalStrut(20));
         startPanel.add(signUpButton, BorderLayout.CENTER);
 
         startContent.add(startPanel, BorderLayout.CENTER);
@@ -84,37 +72,13 @@ public class ClientGUI extends JFrame implements Runnable {
         titleLogin.setFont(new Font("Times New Roman", Font.PLAIN, 36));
         titleLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel loginLabel1 = new JLabel("Enter your Username:");
-        loginLabel1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        loginLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel userLabel = new JLabel("Enter your Username:");
+        userLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel loginLabel2 = new JLabel(" ");
-        loginLabel2.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        loginLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel3 = new JLabel("Enter your Password:");
-        loginLabel3.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        loginLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel4 = new JLabel(" ");
-        loginLabel4.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        loginLabel4.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel5 = new JLabel(" ");
-        loginLabel5.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        loginLabel5.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel6 = new JLabel(" ");
-        loginLabel6.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        loginLabel6.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel7 = new JLabel(" ");
-        loginLabel7.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        loginLabel7.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginLabel8 = new JLabel(" ");
-        loginLabel8.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        loginLabel8.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel passLabel = new JLabel("Enter your Password:");
+        passLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        passLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField userLogin = new JTextField(10);
         userLogin.setPreferredSize(new Dimension(100, 30));
@@ -126,19 +90,19 @@ public class ClientGUI extends JFrame implements Runnable {
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.PAGE_AXIS));
-        loginPanel.add(loginLabel7, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(100));
         loginPanel.add(titleLogin, BorderLayout.CENTER);
-        loginPanel.add(loginLabel4, BorderLayout.CENTER);
-        loginPanel.add(loginLabel1, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(100));
+        loginPanel.add(userLabel, BorderLayout.CENTER);
         loginPanel.add(userLogin, BorderLayout.CENTER);
-        loginPanel.add(loginLabel2, BorderLayout.CENTER);
-        loginPanel.add(loginLabel3, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(100));
+        loginPanel.add(passLabel, BorderLayout.CENTER);
         loginPanel.add(passLogin, BorderLayout.CENTER);
-        loginPanel.add(loginLabel5, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(100));
         loginPanel.add(loginEnter, BorderLayout.CENTER);
-        loginPanel.add(loginLabel8, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(backLogin, BorderLayout.CENTER);
-        loginPanel.add(loginLabel6, BorderLayout.CENTER);
+        loginPanel.add(Box.createVerticalStrut(100));
 
         loginFrame.add(loginPanel);
 
@@ -160,53 +124,25 @@ public class ClientGUI extends JFrame implements Runnable {
         backSign.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         backSign.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel signLabel = new JLabel(" ");
-        signLabel.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        signLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JLabel signTitle = new JLabel("Sign Up");
         signTitle.setFont(new Font("Times New Roman", Font.PLAIN, 36));
         signTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel signLabel1 = new JLabel(" ");
-        signLabel1.setFont(new Font("Times New Roman", Font.PLAIN, 100));
-        signLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel nameSign = new JLabel("Enter your Name:");
         nameSign.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         nameSign.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel signLabel2 = new JLabel(" ");
-        signLabel2.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        signLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JLabel emailSign = new JLabel("Enter your Email:");
         emailSign.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         emailSign.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel signLabel3 = new JLabel(" ");
-        signLabel3.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        signLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel userSign = new JLabel("Enter your username:");
         userSign.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         userSign.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel signLabel4 = new JLabel(" ");
-        signLabel4.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        signLabel4.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JLabel passSign = new JLabel("Enter your password:");
         passSign.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         passSign.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel signLabel5 = new JLabel(" ");
-        signLabel5.setFont(new Font("Times New Roman", Font.PLAIN, 50));
-        signLabel5.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel signLabel6 = new JLabel(" ");
-        signLabel6.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        signLabel6.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField nameText = new JTextField(10);
         nameText.setPreferredSize(new Dimension(100, 30));
@@ -230,23 +166,23 @@ public class ClientGUI extends JFrame implements Runnable {
 
         JPanel signPanel = new JPanel();
         signPanel.setLayout(new BoxLayout(signPanel, BoxLayout.PAGE_AXIS));
-        signPanel.add(signLabel, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(100));
         signPanel.add(signTitle, BorderLayout.CENTER);
-        signPanel.add(signLabel1, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(100));
         signPanel.add(nameSign, BorderLayout.CENTER);
         signPanel.add(nameText, BorderLayout.CENTER);
-        signPanel.add(signLabel2, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(20));
         signPanel.add(emailSign, BorderLayout.CENTER);
         signPanel.add(emailText, BorderLayout.CENTER);
-        signPanel.add(signLabel3, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(20));
         signPanel.add(userSign, BorderLayout.CENTER);
         signPanel.add(userText, BorderLayout.CENTER);
-        signPanel.add(signLabel4, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(20));
         signPanel.add(passSign, BorderLayout.CENTER);
         signPanel.add(passText, BorderLayout.CENTER);
-        signPanel.add(signLabel5, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(50));
         signPanel.add(signUpEnter, BorderLayout.CENTER);
-        signPanel.add(signLabel6, BorderLayout.CENTER);
+        signPanel.add(Box.createVerticalStrut(20));
         signPanel.add(backSign, BorderLayout.CENTER);
 
         signUpFrame.add(signPanel);
