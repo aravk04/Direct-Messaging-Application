@@ -139,8 +139,17 @@ public class ClientGUI2 extends JFrame implements Runnable {
     private class LogoutListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Logout logic here
-            JOptionPane.showMessageDialog(ClientGUI2.this, "Logout not implemented yet.");
+            int confirm = JOptionPane.showConfirmDialog(ClientGUI2.this, "Are you sure you want to log out?", "Log Out", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                messageArea.setText("");
+                messageField.setText("");
+                recipientField.setText("");
+                userSearchField.setText("");
+                groupChatDropdown.removeAllItems();
+                JOptionPane.showMessageDialog(ClientGUI2.this, "Logged out successfully.");
+                startFrame.setVisible(true);
+                dispose();
+            }
         }
     }
 
