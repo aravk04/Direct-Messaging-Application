@@ -1,9 +1,11 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
+
 /**
  * Server
- *
+ * <p>
  * Handles client connections and requests
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
@@ -31,6 +33,7 @@ public class Server implements Runnable {
             for (User u : database.getUsers()) {
                 usersList.put(u.getUsername(), u);
             }
+
             // read chats from message database
             try (BufferedReader reader = new BufferedReader(new FileReader(chatsFile))) {
                 String line = reader.readLine();
@@ -39,28 +42,26 @@ public class Server implements Runnable {
                 while (line != null) {
                     chatId = line;
                     // now add each message to chats
-                    String chatFilename = chatId.replaceAll("-", ",");
-                    String[] chatUsers = chatFilename.split(",");
+                    //String chatFilename = chatId.replaceAll("-", ",");
+                    String[] chatUsers = chatId.split("-");
                     Arrays.sort(chatUsers);
-                    chatFilename = "";
+                    String chatFilename = "";
                     for (int i = 0; i < chatUsers.length; i++) {
-                        chatFilename += chatUsers[i] + ",";
+                        chatFilename += chatUsers[i] + "-";
                     }
                     chatFilename = chatFilename.substring(0, chatFilename.length() - 1);
                     chatFilename += ".csv";
+                    System.out.println("chatFilename in Server: " + chatFilename);
                     try (BufferedReader reader1 = new BufferedReader(new FileReader(chatFilename))) {
                         String message = reader1.readLine();
                         while (message != null) {
-                            System.out.println(message);
                             participantChats.add(message);
                             message = reader1.readLine();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("chats for " + chatId + " " + participantChats);
-                    chats.put(chatId, new ArrayList<>(participantChats));
-                    participantChats.clear();
+                    chats.put(chatId, participantChats);
                     line = reader.readLine();
                 }
 
@@ -126,7 +127,7 @@ public class Server implements Runnable {
             String command = request.substring(0, 3);
             System.out.println("This is the command: " + command);
             String payload = request.substring(3);
-            System.out.println(payload);
+            System.out.println("payload:" + payload);
 
             switch (command) {
                 case "cre":
@@ -166,8 +167,11 @@ public class Server implements Runnable {
                 case "vcl":
                     viewChatLog(payload);
                     break;
-                case "vlu":
-                    validUser(payload);
+                case "edt":
+                    editUser(payload);
+                    break;
+                case "vUr":
+                    viewUser(payload);
                     break;
                 default:
                     out.println("Invalid command");
@@ -191,6 +195,7 @@ public class Server implements Runnable {
                 System.out.println(user.toString());
                 database.addUser(user.toString());
                 out.println("True");
+                System.out.println("A: ");
             } else {
                 out.println("False");
             }
@@ -215,6 +220,7 @@ public class Server implements Runnable {
                     randomString = true;
                     System.out.println("user successfully logged in!");
                     out.println("True");
+                    System.out.println("B: ");
                     //out.println();
                     //out.flush();
                     break;
@@ -227,120 +233,138 @@ public class Server implements Runnable {
 
         // send message to receiver and creates a chat also checks and makes sure they are not blocked
         private void sendMessage(String payload) throws FileNotFoundException, IOException {
-            String sender = payload.substring(0, payload.indexOf(","));
-            String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
-            String message = payload.substring(payload.lastIndexOf(";") + 1);
+            try {
+                String sender = payload.substring(0, payload.indexOf(","));
+                String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
+                String message = payload.substring(payload.lastIndexOf(";") + 1);
 
-            System.out.println("sender:" + sender);
-            System.out.println("receivers:" + receivers);
-            System.out.println("message:" + message);
+                System.out.println("sender:" + sender);
+                System.out.println("receivers:" + receivers);
+                System.out.println("message:" + message);
 
-            String[] receiverList = receivers.split(";");
-            boolean success = false;
-            ArrayList<String> receiveArrayList = new ArrayList<>(Arrays.asList(receiverList));
-            Message m = new Message(sender, receiveArrayList, message);
-            // add message to files
-            messsageDatabase.addMessage(m.createFile(sender, receiveArrayList), m);
-            for (String receiver : receiverList) {
-                if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
-                    String chatId = createChat(sender, receiver);
+                String[] receiverList = receivers.split(";");
+
+                ArrayList<String> receiverInArrayList = new ArrayList<>(Arrays.asList(receiverList));
+
+                boolean success = true;
+                ArrayList<String> receiveArrayList = new ArrayList<>(Arrays.asList(receiverList));
+                System.out.println("Arrays.asList(receiverList)" + Arrays.asList(receiverList));
+                Message m = new Message(sender, receiveArrayList, message);
+
+                for (String receiver : receiverList) {
+                    if (!users.containsKey(receiver) || users.get(receiver).isBlocked(sender)) {
+
+                        System.out.println("C: ");
+                        //System.out.println("message is successfully sent");
+                        success = false;
+                        break;
+                    }
+                }
+                if (success) {
+                    String chatId = createChat(sender, receiverInArrayList);
                     writeToChat(chatId, m.getSender() + "," + receivers + "," +
                             m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+                    // add message to files
+                    messsageDatabase.addMessage(m.createFile(sender, receiveArrayList), m);
                     out.println("True");
-                    System.out.println("message is successfully sent");
-                    success = true;
+                } else {
+                    out.println("S");
                 }
-            }
-            if (!success) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 out.println("S");
             }
+        }
+
+        private void sendMessageInChat(String payload) throws IOException {
+
+            String sender = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            //Chat name
+
+            String chatId = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            String message = payload;
+
+            //initialize the receiverList
+            String[] receiverArray = chatId.split("-");
+            ArrayList<String> receiveArrayList = new ArrayList<>();
+            String receivers = "";
+            for (String s : receiverArray) {
+                if (!s.equals(sender)) {
+                    receiveArrayList.add(s);
+                    receivers = s + ";";
+                }
+            }
+
+            System.out.println("sender:" + sender);
+            System.out.println("Arrays.asList(receiveArrayList)" + Arrays.asList(receiveArrayList));
+            System.out.println("message:" + message);
+
+            payload = sender + "," + receivers + message;
+            sendMessage(payload);
+
+            /*
+            Message m = new Message(sender, receiveArrayList, message);
+            System.out.println("msv chatid: " + chatId);
+
+            writeToChat(chatId, m.getSender() + "," + receivers + "," +
+                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+            //List<String> messages = chats.get(chatId);
+            //System.out.println(messages);
+            messsageDatabase.addMessage(chatId, m);
+             */
         }
 
         //gets username and checks which chats the user is in
         private void viewChats(String payload) {
             String username = payload;
-            Set<String> chatIds = new HashSet<>();
-
-            //    for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-            //        if (entry.getValue().contains(username)) {
-            //            chatIds.add(entry.getKey());
-            //        }
-            //    }
+            ArrayList<String> chatIds = new ArrayList<>();
+            /*
+            for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
+                if (entry.getValue().contains(username)) {
+                    chatIds.add(entry.getKey());
+                }
+            }
+             */
             for (String key : chats.keySet()) {
-                System.out.println("Key: " + key);
                 if (key.contains(payload)) {
                     chatIds.add(key);
                 }
             }
+            //String[] listOfChatId = String.join(",", chatIds).split(",");
 
-            //out.println(String.join(",", chatIds));
-            for (String chatId: chatIds) {
-                out.println(chatId);
+            for (String s : chatIds) {
+                out.println(s);
+                System.out.println("chat ( " + s);
             }
             out.println("stop");
         }
 
-        private void validUser(String payload) {
-            System.out.println(users);
-            if (users.containsKey(payload)) {
-                out.println("True");
-            }
-            else {
-                out.println("False");
-            }
-        }
-
         private void viewChatLog(String payload) throws IOException {
-            //String chat = messsageDatabase.getChat(payload);
-            ArrayList<String> chatLog = new ArrayList<String>();
-            System.out.println("CHATS:\n\n" + chats);
-            chatLog = chats.get(payload);
-            System.out.println(chatLog);
-            if (chatLog == null || chatLog.size() == 0) {
+            String chat = messsageDatabase.getChat(payload);
+            System.out.println(chat);
+            if (chat == null) {
                 out.println("error");
-            }
-            else {
-                for (String chat: chatLog) {
-                    out.println(chat);
-                }
+            } else {
+                out.println(chat);
                 out.println("stop");
             }
 
         }
+
         // sends message within a chat
         //String sendMessage = "msg" + username + "," + recievers + message;
-        private void sendMessageInChat(String payload) {
-            String[] parts = payload.split(",");
-            String chatId;
-            if (parts[0].compareTo(parts[1]) < 0) {
-                chatId = parts[0] + "-" + parts[1];
-            }
-            else {
-                chatId = parts[1] + "-" + parts[0];
-            }
-            ArrayList<String> receiveArrayList = new ArrayList<>();
-            receiveArrayList.add(parts[1]);
-            String message = parts[2];
-            Message m = new Message(parts[0], receiveArrayList, message);
-            System.out.println("msv chatid: " + chatId);
 
-            writeToChat(chatId, m.getSender() + "," + parts[1] + "," +
-                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
-            List<String> messages = chats.get(chatId);
-            System.out.println(messages);
-            messsageDatabase.updateChatLog(chatId, messages);
-            out.println("True");
-        }
+
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {
             System.out.println(payload);
             String[] parts = payload.split(",");
-            String[] sortedStr = parts[0].split("-");
-            Arrays.sort(sortedStr);
-            String chatId = sortedStr[0] + "-" + sortedStr[1];
+            String username = parts[0];
             int lineNumber = Integer.parseInt(parts[1]);
 
-            //String chatId = getChatIdForUser(username);
+            String chatId = getChatIdForUser(username);
             System.out.println("Chat id after dms " + chatId);
             if (chatId != null) {
                 List<String> messages = chats.get(chatId);
@@ -352,6 +376,7 @@ public class Server implements Runnable {
                     messages.remove(lineNumber - 1);
                     messsageDatabase.updateChatLog(chatId, messages);
                     out.println("True");
+                    System.out.println("D: ");
                 } else {
                     out.println("False");
                 }
@@ -361,7 +386,7 @@ public class Server implements Runnable {
         }
 
         //add friend to the user friend list if they are friends
-        private void addFriend(String payload) {
+        private void addFriend(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -371,7 +396,9 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).addFriend(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
+                    System.out.println("E: ");
                     randomString = true;
                     break;
                 }
@@ -379,10 +406,11 @@ public class Server implements Runnable {
             if (!randomString) {
                 out.println("S");
             }
+
         }
 
         // remove friend from user list if they exist
-        private void removeFriend(String payload) {
+        private void removeFriend(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -393,7 +421,9 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).removeFriend(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
+                    System.out.println("F: ");
                     randomString = true;
                     break;
                 }
@@ -405,7 +435,7 @@ public class Server implements Runnable {
         }
 
         // block user parses through the usernames and checks if they exist and adds them to the blocked list
-        private void blockUser(String payload) {
+        private void blockUser(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = true;
 
@@ -416,7 +446,9 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).blockUser(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
+                    System.out.println("G: ");
                     randomString = true;
                     break;
                 }
@@ -427,7 +459,7 @@ public class Server implements Runnable {
         }
 
         // unblocks user and removes them from the blocked list if they are there
-        private void unblockUser(String payload) {
+        private void unblockUser(String payload) throws BadInputException {
             String username = payload;
             boolean randomString = true;
 
@@ -438,7 +470,9 @@ public class Server implements Runnable {
                 if (key.equals(username)) {
                     users.get(this.username).unblockUser(username);
                     database.rewriteFile();
+                    database = new Database(INFILE);
                     out.println("True");
+                    System.out.println("H: ");
                     break;
                 }
             }
@@ -458,7 +492,90 @@ public class Server implements Runnable {
 
         }
 
+        private void editUser(String payload) throws BadInputException { //edt + username + name + password + email
+
+            String[] info = payload.split(";");
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                //System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(info[0])) {
+
+                    String oldInfo = users.get(info[0]).toString();
+                    User tempUser = users.get(info[0]);
+                    tempUser.updateName(info[1]);
+                    tempUser.setPassword(info[2]);
+                    tempUser.setEmailAddress(info[3]);
+
+                    String newInfo = tempUser.toString();
+
+                    database.editUser(oldInfo, newInfo);
+                    //database.rewriteFile();
+                    //database = new Database(INFILE);
+
+                    out.println("True");
+                    System.out.println("I: ");
+                    break;
+                }
+            }
+        }
+
+        private void viewUser(String payload) { //vUr + username
+
+            boolean success = false;
+            if (payload.toUpperCase().equals("EXIT")) {
+                out.println("EXIT");
+            } else {
+                for (Map.Entry<String, User> entry : users.entrySet()) {
+                    String key = entry.getKey();
+                    User value = entry.getValue();
+                    System.out.println("Key= " + key + ", Value= " + value);
+                    if (key.equals(payload)) {
+                        out.println("True" + value.retrieveName() +
+                                ";" + value.getEmailAddress() + ";" + value.getUsername());
+                        System.out.println("J: ");
+                        success = true;
+                        break;
+                    }
+                    System.out.println("success " + success);
+                }
+            }
+            System.out.println("success OUT of the loop " + success);
+            if (!success) {
+                out.println("S");
+            }
+        }
+
         // creates unique chat between users
+        public synchronized String createChat(String sender, ArrayList<String> receivers) throws FileNotFoundException, IOException {
+            String fileName = "";
+            receivers.add(sender);
+            Collections.sort(receivers);
+            for (String username : receivers) {
+                fileName += username + "-";
+            }
+            fileName = fileName.substring(0, fileName.length() - 1);
+            System.out.println("filename in message: " + fileName);
+            receivers.remove(sender);
+
+            if (!chats.containsKey(fileName)) {
+                // add new unique chat to a file to save after server dies
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(chatsFile, true))) {
+                    writer.newLine();
+                    writer.write(fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<String> participants = new ArrayList<>();
+                // participants.add(user1);
+                // participants.add(user2);
+                chats.put(fileName, participants);
+            }
+            return fileName;
+        }
+
+
+        /*
         private String createChat(String user1, String user2) {
             // needs to be alphabetized to check for uniqueness
             String chatId;
@@ -485,6 +602,8 @@ public class Server implements Runnable {
             return chatId;
         }
 
+         */
+
         // iterates through the chats to find the chat with the given username
         private String getChatIdForUser(String username) {
             // for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
@@ -509,5 +628,3 @@ public class Server implements Runnable {
         }
     }
 }
-
-
