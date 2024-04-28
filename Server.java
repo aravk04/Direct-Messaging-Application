@@ -233,40 +233,86 @@ public class Server implements Runnable {
 
         // send message to receiver and creates a chat also checks and makes sure they are not blocked
         private void sendMessage(String payload) throws FileNotFoundException, IOException {
-            String sender = payload.substring(0, payload.indexOf(","));
-            String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
-            String message = payload.substring(payload.lastIndexOf(";") + 1);
+            try {
+                String sender = payload.substring(0, payload.indexOf(","));
+                String receivers = payload.substring(payload.indexOf(",") + 1, payload.lastIndexOf(";"));
+                String message = payload.substring(payload.lastIndexOf(";") + 1);
 
-            System.out.println("sender:" + sender);
-            System.out.println("receivers:" + receivers);
-            System.out.println("message:" + message);
+                System.out.println("sender:" + sender);
+                System.out.println("receivers:" + receivers);
+                System.out.println("message:" + message);
 
-            String[] receiverList = receivers.split(";");
+                String[] receiverList = receivers.split(";");
 
-            ArrayList<String> receiverInArrayList = new ArrayList<>(Arrays.asList(receiverList));
+                ArrayList<String> receiverInArrayList = new ArrayList<>(Arrays.asList(receiverList));
 
-            boolean success = false;
-            ArrayList<String> receiveArrayList = new ArrayList<>(Arrays.asList(receiverList));
-            System.out.println("Arrays.asList(receiverList)" + Arrays.asList(receiverList));
-            Message m = new Message(sender, receiveArrayList, message);
-            // add message to files
-            messsageDatabase.addMessage(m.createFile(sender, receiveArrayList), m);
+                boolean success = false;
+                ArrayList<String> receiveArrayList = new ArrayList<>(Arrays.asList(receiverList));
+                System.out.println("Arrays.asList(receiverList)" + Arrays.asList(receiverList));
+                Message m = new Message(sender, receiveArrayList, message);
+                // add message to files
+                messsageDatabase.addMessage(m.createFile(sender, receiveArrayList), m);
 
-            for (String receiver : receiverList) {
-                if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
-                    String chatId = createChat(sender, receiverInArrayList);
-                    writeToChat(chatId, m.getSender() + "," + receivers + "," +
-                            m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
-                    System.out.println("C: ");
-                    //System.out.println("message is successfully sent");
-                    success = true;
+                for (String receiver : receiverList) {
+                    if (users.containsKey(receiver) && !users.get(receiver).isBlocked(sender)) {
+                        String chatId = createChat(sender, receiverInArrayList);
+                        writeToChat(chatId, m.getSender() + "," + receivers + "," +
+                                m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+                        System.out.println("C: ");
+                        //System.out.println("message is successfully sent");
+                        success = true;
+                    }
                 }
-            }
-            if (success) {
-                out.println("True");
-            } else {
+                if (success) {
+                    out.println("True");
+                } else {
+                    out.println("S");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 out.println("S");
             }
+        }
+
+        private void sendMessageInChat(String payload) throws IOException {
+
+            String sender = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            //Chat name
+
+            String chatId = payload.substring(0, payload.indexOf(","));
+            payload = payload.substring(payload.indexOf(",") + 1);
+            String message = payload;
+
+            //initialize the receiverList
+            String[] receiverArray = chatId.split("-");
+            ArrayList<String> receiveArrayList = new ArrayList<>();
+            String receivers = "";
+            for (String s : receiverArray) {
+                if (!s.equals(sender)) {
+                    receiveArrayList.add(s);
+                    receivers = s + ";";
+                }
+            }
+
+
+            System.out.println("sender:" + sender);
+            System.out.println("Arrays.asList(receiveArrayList)" + Arrays.asList(receiveArrayList));
+            System.out.println("message:" + message);
+
+            payload = sender + "," + receivers + message;
+            sendMessage(payload);
+
+            /*
+            Message m = new Message(sender, receiveArrayList, message);
+            System.out.println("msv chatid: " + chatId);
+
+            writeToChat(chatId, m.getSender() + "," + receivers + "," +
+                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
+            //List<String> messages = chats.get(chatId);
+            //System.out.println(messages);
+            messsageDatabase.addMessage(chatId, m);
+             */
         }
 
         //gets username and checks which chats the user is in
@@ -308,38 +354,7 @@ public class Server implements Runnable {
 
         // sends message within a chat
         //String sendMessage = "msg" + username + "," + recievers + message;
-        private void sendMessageInChat(String payload) {
-            String sender = payload.substring(0, payload.indexOf(","));
-            payload = payload.substring(payload.indexOf(",") + 1);
-            //Chat name
-            String chatId = payload.substring(0, payload.indexOf(","));
-            payload = payload.substring(payload.indexOf(",") + 1);
-            String message = payload;
 
-            //initialize the receiverList
-            String[] receiverArray = chatId.split("-");
-            ArrayList<String> receiveArrayList = new ArrayList<>();
-            String receivers = "";
-            for (String s : receiverArray) {
-                if (!s.equals(sender)) {
-                    receiveArrayList.add(s);
-                    receivers = s + ";";
-                }
-            }
-
-            System.out.println("sender:" + sender);
-            System.out.println("Arrays.asList(receiveArrayList)" + Arrays.asList(receiveArrayList));
-            System.out.println("message:" + message);
-
-            Message m = new Message(sender, receiveArrayList, message);
-            System.out.println("msv chatid: " + chatId);
-
-            writeToChat(chatId, m.getSender() + "," + receivers + "," +
-                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
-            List<String> messages = chats.get(chatId);
-            System.out.println(messages);
-            messsageDatabase.updateChatLog(chatId, messages);
-        }
 
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {
@@ -612,4 +627,3 @@ public class Server implements Runnable {
         }
     }
 }
-
