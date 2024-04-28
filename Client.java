@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Client implements Runnable {
     private Socket socket;
@@ -18,12 +17,12 @@ public class Client implements Runnable {
             socket = new Socket("localhost", 12345);
             bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             pw = new PrintWriter(socket.getOutputStream());
-            System.out.println("INITIALZING PW\n\n\n");
-            
+
         } catch (IOException i) {
             System.out.println("Could not connect");
         }
     }
+
     public boolean createUser(String name, String username, String emailAddress, String password) {
         try {
             String info = String.format("cre%s,,,%s,%s,%s", name, password, emailAddress, username);
@@ -39,20 +38,13 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean validUser(String username) throws IOException {
-        String info = "vlu" + username;
-        pw.write(info);
-        pw.println();
-        pw.flush();
-        
-        return bfr.readLine().equals("True");
-    }
     public boolean login(String username, String password) {
         try {
             String info = String.format("log%s,%s", username, password);
             pw.write(info);
             pw.println();
             pw.flush();
+
             return bfr.readLine().equals("True");
 
         } catch (IOException i) {
@@ -76,11 +68,9 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean message(String chat, String message) {
+    public boolean message1(String chat, String username, String message) {
         try {
-            chat = chat.replace("-", ",");
-            String info = "msv" + chat + "," + message;
-            info = info.replace("\n", "");
+            String info = "msv" + username + "," + chat + "," + message;
             pw.write(info);
             pw.println();
             pw.flush();
@@ -88,14 +78,14 @@ public class Client implements Runnable {
             return bfr.readLine().equals("True");
 
         } catch (IOException i) {
-            System.out.println("IOException in message(Chat Variant)");
+            System.out.println("IOException in message(Receivers Variant)");
             return false;
         }
     }
 
-    public boolean deleteMessage(String chatId, int lineNum) {
+    public boolean deleteMessage(String username, int lineNum) {
         try {
-            String info = "dms" + chatId + "," + lineNum;
+            String info = "dms" + username + "," + lineNum;
             pw.write(info);
             pw.println();
             pw.flush();
@@ -189,23 +179,14 @@ public class Client implements Runnable {
 
     public ArrayList<String> viewChatLog(String chat) {
         try {
-            
-            String[] split = chat.split("-");
-            Arrays.sort(split);
-            String info = "vcl" + split[0] + "-" + split[1];
+            String info = "vcl" + chat;
             pw.write(info);
             pw.println();
             pw.flush();
 
             ArrayList<String> list = new ArrayList<>();
             String line = bfr.readLine();
-            if (line.equals("error")) {
-                // return empty list
-                return list;
-            }
             while (!line.equals("stop")) {
-                split = line.split(",");
-                line =  split[0] + ": " + split[4] + " " + split[2] + "\n";
                 list.add(line);
                 line = bfr.readLine();
             }
