@@ -22,7 +22,6 @@ public class ClientGUI extends JFrame implements Runnable {
     @Override
     public void run() {
         client = new Client();
-        client.run();
 
         JFrame startFrame = new JFrame();
         startFrame.setTitle("Welcome to Our Social Media Platform");
@@ -245,6 +244,7 @@ public class ClientGUI extends JFrame implements Runnable {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(inputPanel1, BorderLayout.CENTER);
         mainPanel.add(sendButton, BorderLayout.CENTER);
+        mainPanel.add(chatsScrollPane, BorderLayout.CENTER);
 
         // Add components to the main panel
         mainMenuPanel.add(mainPanel, BorderLayout.CENTER);
@@ -306,12 +306,11 @@ public class ClientGUI extends JFrame implements Runnable {
                         //groupChatDropdown = new JComboBox<>(chats.toArray());
                         for (String chat : chats) {
                             JPanel messagePanel = new JPanel();
+                            messagePanel.setPreferredSize(new Dimension(300, 200));
                             JButton chatButton = new JButton(chat);
-                            System.out.println("chat " + chat);
                             chatButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    System.out.println("chat when clicked " + chat);
                                     displayChatWindow(chat, true);
                                     messagePanel.repaint();
                                 }
@@ -322,8 +321,6 @@ public class ClientGUI extends JFrame implements Runnable {
                         }
                         chatsScrollPane = new JScrollPane(chatPanel);
                         chatsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                        mainPanel.add(chatsScrollPane, BorderLayout.CENTER);
-
                     } else {
                         JOptionPane.showMessageDialog(null, "Username or Password was Incorrect",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -360,8 +357,6 @@ public class ClientGUI extends JFrame implements Runnable {
                             }
                             chatsScrollPane = new JScrollPane(chatPanel);
                             chatsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                            mainPanel.add(chatsScrollPane, BorderLayout.CENTER);
-
                         } else {
                             JOptionPane.showMessageDialog(null, "Username was already taken",
                                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -389,7 +384,7 @@ public class ClientGUI extends JFrame implements Runnable {
                         messageArea.append("Successfully sent: " + message + " to " + recipients + "\n");
                     } else {
                         JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
-                                        " or has you blocked. Make sure you enter your Recipients like: a,b,c.", "Error",
+                                " or has you blocked. Make sure you enter your Recipients like: a,b,c.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (e.getSource() == viewGroupChatButton) {
@@ -415,11 +410,9 @@ public class ClientGUI extends JFrame implements Runnable {
     }
 
     private void displayChatWindow(String chat, boolean inChat) {
-        System.out.println("chat in displaychatWindow " + chat);
         chatLog = client.viewChatLog(chat);
         JFrame chatFrame = new JFrame(chat);
         chatFrame.setSize(400, 800);
-        chatFrame.setMinimumSize(new Dimension(400, 800));
         chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         chatFrame.setLayout(new BorderLayout());
 
@@ -477,8 +470,7 @@ public class ClientGUI extends JFrame implements Runnable {
                 message = message.replace("\n", "");
                 if (inChat) {
                     // send messageInChat function from server
-                    System.out.println("chat in GUI: \n" + chat);
-                    client.message1(chat, user, message); //msv
+                    client.message(chat, message);
                 }
                 else {
                     String info = chat.replace("-", ",");
@@ -486,6 +478,7 @@ public class ClientGUI extends JFrame implements Runnable {
                     client.message(split[0], split[1], message);
                 }
                 chatLog = client.viewChatLog(chat);
+                message = chatLog.get(chatLog.size() - 1);
                 //messageArea.setText("");
                 JPanel messageContainer = new JPanel(new BorderLayout());
                 JLabel messageLabel = new JLabel(message);
@@ -508,6 +501,9 @@ public class ClientGUI extends JFrame implements Runnable {
                     }
                 });
                 messageContainer.add(deleteButton, BorderLayout.EAST);
+                messagePanel.add(messageContainer);
+                messagePanel.add(Box.createVerticalGlue());
+                messagePanel.revalidate();
                 messagePanel.repaint();
                 messageField.setText("");
                 messagePanel.repaint();
