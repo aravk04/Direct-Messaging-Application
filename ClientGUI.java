@@ -9,6 +9,10 @@ public class ClientGUI extends JFrame implements Runnable {
     private ArrayList<String> chats;
     private JComboBox groupChatDropdown;
     private ArrayList<String> chatLog;
+    private JScrollPane chatsScrollPane;
+
+    private JPanel mainPanel = new JPanel();
+    private JPanel chatPanel = new JPanel();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new ClientGUI());
@@ -21,6 +25,7 @@ public class ClientGUI extends JFrame implements Runnable {
     @Override
     public void run() {
         client = new Client();
+        client.run();
 
         JFrame startFrame = new JFrame();
         startFrame.setTitle("Welcome to Our Social Media Platform");
@@ -204,7 +209,7 @@ public class ClientGUI extends JFrame implements Runnable {
         inputPanel1.setLayout(new BoxLayout(inputPanel1, BoxLayout.X_AXIS));
         JPanel inputPanel2 = new JPanel(new GridLayout(1, 2));
         JTextField messageField = new JTextField("Enter message here");
-        JTextField recipientField = new JTextField("Enter recipient(s) like: a,b,c");
+        JTextField recipientField = new JTextField("Enter recipient(s) like: a;b;c");
         JButton sendButton = new JButton("Send");
         JButton editProfileButton = new JButton("Edit Profile");
         groupChatDropdown = new JComboBox<>();
@@ -237,13 +242,12 @@ public class ClientGUI extends JFrame implements Runnable {
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         topPanel.setMaximumSize(new Dimension(400, 30));
 
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         mainPanel.add(topPanel, BorderLayout.CENTER);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(inputPanel1, BorderLayout.CENTER);
         mainPanel.add(sendButton, BorderLayout.CENTER);
-        mainPanel.add(inputPanel2, BorderLayout.CENTER);
 
         // Add components to the main panel
         mainMenuPanel.add(mainPanel, BorderLayout.CENTER);
@@ -266,7 +270,7 @@ public class ClientGUI extends JFrame implements Runnable {
                     recipientField.setText("");
                 } else {
                     messageField.setText("Enter message here");
-                    recipientField.setText("Enter recipient(s) like: a,b,c");
+                    recipientField.setText("Enter recipient(s) like: a;b;c");
                 }
             }
 
@@ -277,9 +281,10 @@ public class ClientGUI extends JFrame implements Runnable {
         recipientField.addMouseListener(mouseListener);
         editProfileButton.addMouseListener(mouseListener);
         mainMenuFrame.addMouseListener(mouseListener);
-        groupChatDropdown.addMouseListener(mouseListener);
+        //groupChatDropdown.addMouseListener(mouseListener);
         messageArea.addMouseListener(mouseListener);
         logoutButton.addMouseListener(mouseListener);
+
 
         ActionListener actionListener = new ActionListener() {
             @Override
@@ -300,7 +305,10 @@ public class ClientGUI extends JFrame implements Runnable {
                         mainMenuFrame.setVisible(true);
                         user = username;
                         chats = client.viewChats(user);
-                        groupChatDropdown = new JComboBox<>(chats.toArray());
+                        //groupChatDropdown = new JComboBox<>(chats.toArray());
+
+                        mainPanel.add(refresh(), BorderLayout.CENTER);
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Username or Password was Incorrect",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -320,7 +328,9 @@ public class ClientGUI extends JFrame implements Runnable {
                             mainMenuFrame.setVisible(true);
                             user = username;
                             chats = client.viewChats(user);
-                            groupChatDropdown = new JComboBox<>(chats.toArray());
+                            //groupChatDropdown = new JComboBox<>(chats.toArray());
+                            mainPanel.add(refresh(), BorderLayout.CENTER);
+
                         } else {
                             JOptionPane.showMessageDialog(null, "Username was already taken",
                                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -344,11 +354,35 @@ public class ClientGUI extends JFrame implements Runnable {
                     String message = messageField.getText();
                     String recipients = recipientField.getText();
 
-                    if (client.message(user, recipients, message)) {
+                    if (!message.equals("")) {
+                        if (client.message(user, recipients, message)) {
+                            messageArea.append("Successfully sent: " + message + " to " + recipients + "\n");
 
+
+                            chats = client.viewChats(user);
+
+                            mainPanel.validate();
+                            mainMenuPanel.validate();
+                            mainContent.validate();
+                            mainMenuFrame.validate();
+                            /*
+                            //mainPanel.remove(chatsScrollPane);
+                            mainPanel.add(refresh(), BorderLayout.CENTER);
+                            //mainPanel.repaint();
+                            //mainPanel.revalidate();
+                            mainMenuPanel.add(mainPanel, BorderLayout.CENTER);
+                            mainContent.add(mainMenuPanel);
+
+                             */
+
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
+                                            " or has you blocked. Make sure you enter your Recipients like: a;b;c.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
-                                " or has you blocked. Make sure you enter your Recipients like: a,b,c.", "Error",
+                        JOptionPane.showMessageDialog(null, "Please enter a message", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (e.getSource() == viewGroupChatButton) {
@@ -356,7 +390,7 @@ public class ClientGUI extends JFrame implements Runnable {
                     chatLog = client.viewChatLog(chat);
                     mainMenuFrame.setVisible(false);
                     messageField.setText("Enter message here");
-                    recipientField.setText("Enter recipient(s) like: a,b,c");
+                    recipientField.setText("Enter recipient(s) like: a;b;c");
                 }
             }
         };
@@ -372,4 +406,150 @@ public class ClientGUI extends JFrame implements Runnable {
         editProfileButton.addActionListener(actionListener);
         sendButton.addActionListener(actionListener);
     }
+
+    private void displayChatWindow(String chat, boolean inChat) {
+        System.out.println("chat in displaychatWindow " + chat);
+        chatLog = client.viewChatLog(chat);
+        JFrame chatFrame = new JFrame(chat);
+        chatFrame.setSize(400, 800);
+        chatFrame.setMinimumSize(new Dimension(400, 800));
+        chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        chatFrame.setLayout(new BorderLayout());
+
+        //JTextArea messageArea = new JTextArea();
+        //messageArea.setEditable(false);
+        JPanel messagePanel = new JPanel();
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(messagePanel);
+        chatFrame.add(scrollPane, BorderLayout.CENTER);
+
+
+        for (int i = 0; i < chatLog.size(); i++) {
+            String message = chatLog.get(i);
+            JPanel messageContainer = new JPanel(new BorderLayout());
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setPreferredSize(new Dimension(300, 50));
+            messageContainer.add(messageLabel, BorderLayout.WEST);
+            messageLabel.setName(Integer.toString(i + 1));
+
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int buttonIndex = Integer.parseInt(messageLabel.getName());
+                    System.out.println("Deleting in backend...");
+                    client.deleteMessage(chat, buttonIndex);
+                    // remove the message from the chat
+                    System.out.println("Removing from the chat");
+                    messagePanel.remove(messageContainer);
+                    messagePanel.revalidate();
+                    messagePanel.repaint();
+                }
+            });
+            messageContainer.add(deleteButton, BorderLayout.EAST);
+            messagePanel.add(messageContainer);
+            messagePanel.add(Box.createVerticalStrut(5));
+
+
+            // JPanel messageButtonPanel = new JPanel(new BorderLayout());
+            // messageButtonPanel.add(messageButton, BorderLayout.CENTER);
+            // messageButtonPanel.add(deleteButton, BorderLayout.EAST);
+            // messagePanel.add(messageButtonPanel);
+            // messagePanel.add(Box.createVerticalStrut(5));
+
+            //messageArea.append(message + "\n");
+        }
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+
+        JTextField messageField = new JTextField();
+        bottomPanel.add(messageField, BorderLayout.CENTER);
+        JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = messageField.getText();
+                message = message.replace("\n", "");
+
+                if (!message.equals("")) {
+                    if (inChat) {
+                        // send messageInChat function from server
+                        System.out.println("chat in GUI: \n" + chat);
+                        client.message1(chat, user, message); //msv
+                    } else {
+                        String info = chat.replace("-", ",");
+                        String[] split = info.split(",");
+                        client.message(split[0], split[1], message);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter a message", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                chatLog = client.viewChatLog(chat);
+                //messageArea.setText("");
+                JPanel messageContainer = new JPanel(new BorderLayout());
+                JLabel messageLabel = new JLabel(message);
+                messageLabel.setPreferredSize(new Dimension(300, 50));
+                messageLabel.setName(Integer.toString(chatLog.size()) + 1);
+                messageContainer.add(messageLabel, BorderLayout.WEST);
+
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int buttonIndex = Integer.parseInt(messageLabel.getName());
+                        System.out.println("Deleting in backend...");
+                        client.deleteMessage(chat, buttonIndex);
+                        // remove the message from the chat
+                        System.out.println("Removing from the chat");
+                        messagePanel.remove(messageContainer);
+                        messagePanel.revalidate();
+                        messagePanel.repaint();
+                    }
+                });
+                messageContainer.add(deleteButton, BorderLayout.EAST);
+                messagePanel.repaint();
+
+                messageField.setText("");
+                messagePanel.repaint();
+               displayChatWindow(chat, inChat);
+               chatFrame.setVisible(false);
+            }
+        });
+        bottomPanel.add(sendButton, BorderLayout.EAST);
+        //messagePanel.add(messageContainer);
+        //messagePanel.add(Box.createVerticalGlue());
+        //messagePanel.revalidate();
+
+        chatFrame.add(bottomPanel, BorderLayout.SOUTH);
+        chatFrame.pack();
+        chatFrame.setLocationRelativeTo(null);
+        chatFrame.setVisible(true);
+
+
+    }
+
+    public JScrollPane refresh() {
+        for (String chat : chats) {
+            JPanel messagePanel = new JPanel();
+            JButton chatButton = new JButton(chat);
+            chatButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    displayChatWindow(chat, true);
+                    messagePanel.repaint();
+                }
+            });
+            chatPanel.add(chatButton);
+            chatPanel.add(Box.createVerticalStrut(10));
+            chatPanel.setVisible(true);
+        }
+        chatsScrollPane = new JScrollPane(chatPanel);
+        chatsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        //mainPanel.add(chatsScrollPane, BorderLayout.CENTER);
+
+        return chatsScrollPane;
+    }
+
+
 }
