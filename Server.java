@@ -330,7 +330,6 @@ public class Server implements Runnable {
             System.out.println(messages);
             messsageDatabase.updateChatLog(chatId, messages);
             out.println("True");
-            
         }
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {

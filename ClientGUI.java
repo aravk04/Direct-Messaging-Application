@@ -21,7 +21,6 @@ public class ClientGUI extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("RUNNING CLIENT\n\n");
         client = new Client();
         Thread clientThread = new Thread(client);
         clientThread.start();
@@ -338,6 +337,7 @@ public class ClientGUI extends JFrame implements Runnable {
                         System.out.println("CHATS: \n\n" + chats);
                         for (String chat : chats) {
                             JPanel messagePanel = new JPanel();
+                            messagePanel.setPreferredSize(new Dimension(300, 200));
                             JButton chatButton = new JButton(chat);
                             chatButton.addActionListener(new ActionListener() {
                                 @Override
@@ -502,6 +502,7 @@ public class ClientGUI extends JFrame implements Runnable {
                     client.message(split[0], split[1], message);
                 }
                 chatLog = client.viewChatLog(chat);
+                message = chatLog.get(chatLog.size() - 1);
                 //messageArea.setText("");
                 JPanel messageContainer = new JPanel(new BorderLayout());
                 JLabel messageLabel = new JLabel(message);
@@ -524,6 +525,9 @@ public class ClientGUI extends JFrame implements Runnable {
                     }
                 });
                 messageContainer.add(deleteButton, BorderLayout.EAST);
+                messagePanel.add(messageContainer);
+                messagePanel.add(Box.createVerticalGlue());
+                messagePanel.revalidate();
                 messagePanel.repaint();
                 messageField.setText("");
                 messagePanel.repaint();

@@ -10,3 +10,4 @@ block2,defaultBlock1;,defaultFriend1;defaultFriend2;,12345678,default.2020@outlo
 eesha,defaultFriend1;,defaultBlock1;,efaruqi4955,efaruqi@gmial.com,eesha
 Eesha Faruqi,defaultFriend1;eesha;,defaultBlock1;,efaruqi4955,efaruqi@gmail.com,efaruqi
 Keya,defaultFriend1;,defaultBlock1;,keya1234,keya@gmail.com,keya123
+nicole,defaultFriend1;,defaultBlock1;,nicole1234,nicole@gmail.com,nicole123
