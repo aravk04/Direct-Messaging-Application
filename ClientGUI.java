@@ -10,6 +10,7 @@ public class ClientGUI extends JFrame implements Runnable {
     private JComboBox groupChatDropdown;
     private JTextArea messageArea = new JTextArea();
     private ArrayList<String> chatLog;
+    private JScrollPane scrollPane = new JScrollPane(messageArea);
     private JScrollPane chatsScrollPane = new JScrollPane();
     private JFrame mainMenuFrame = new JFrame();
     private JPanel mainPanel = new JPanel();
@@ -232,7 +233,7 @@ public class ClientGUI extends JFrame implements Runnable {
         // Message Area
         messageArea = new JTextArea();
         messageArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(messageArea);
+        scrollPane = new JScrollPane(messageArea);
 
         // Top Panel
         JPanel topPanel = new JPanel();
@@ -310,7 +311,6 @@ public class ClientGUI extends JFrame implements Runnable {
                         System.out.println("user = " + user);
                         //groupChatDropdown = new JComboBox<>(chats.toArray());
 
-
                         mainPanel.remove(chatsScrollPane);
                         System.out.println("chatsScrollPane is removed");
 
@@ -371,7 +371,11 @@ public class ClientGUI extends JFrame implements Runnable {
                 } else if (e.getSource() == logoutButton) {
                     startFrame.setVisible(true);
                     mainMenuFrame.setVisible(false);
-                    messageArea = new JTextArea();
+
+                    //messageArea = new JTextArea();
+                    //scrollPane = new JScrollPane(messageArea);
+                    messageArea.selectAll();
+                    messageArea.replaceSelection("");
                 } else if (e.getSource() == sendButton) {
                     String message = messageField.getText();
                     String recipients = recipientField.getText();
@@ -395,6 +399,9 @@ public class ClientGUI extends JFrame implements Runnable {
                             displayChatWindow(chat, true);
 
                             chats = client.viewChats(user);
+
+                            messageField.setText("Enter message here");
+                            recipientField.setText("Enter recipient(s) like: a;b;c");
                             /*
                             mainPanel.add(refresh(), BorderLayout.CENTER);
                             mainMenuPanel.add(mainPanel, BorderLayout.CENTER);
@@ -421,6 +428,7 @@ public class ClientGUI extends JFrame implements Runnable {
                             JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
                                             " or has you blocked. Make sure you enter your Recipients like: a;b;c.", "Error",
                                     JOptionPane.ERROR_MESSAGE);
+                            messageArea.append("Could not send message!");
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Please enter a message", "Error",
@@ -520,7 +528,10 @@ public class ClientGUI extends JFrame implements Runnable {
                     if (inChat) {
                         // send messageInChat function from server
                         System.out.println("chat in GUI: \n" + chat);
-                        client.message1(chat, user, message); //msv
+                        if (!client.message1(chat, user, message)) { //msv
+                            JOptionPane.showMessageDialog(null, "One of the recipients does not exist" +
+                                    " or has you blocked.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         String info = chat.replace("-", ",");
                         String[] split = info.split(",");
@@ -535,7 +546,7 @@ public class ClientGUI extends JFrame implements Runnable {
                 JPanel messageContainer = new JPanel(new BorderLayout());
                 JLabel messageLabel = new JLabel(message);
                 messageLabel.setPreferredSize(new Dimension(300, 50));
-                
+
                 messageLabel.setName(Integer.toString(chatLog.size()) + 1);
                 messageContainer.add(messageLabel, BorderLayout.WEST);
 
