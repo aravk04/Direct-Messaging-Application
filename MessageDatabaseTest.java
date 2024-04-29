@@ -1,3 +1,7 @@
+import static org.junit.Assert.*;
+import org.junit.Test;
+import java.io.*;
+import java.util.ArrayList;
 /**
  * MessageDatabaseTest
  *
@@ -5,13 +9,8 @@
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version April 15, 2024
+ * @version April 29th, 2024
  */
-import static org.junit.Assert.*;
-import org.junit.Test;
-import java.io.*;
-import java.util.ArrayList;
-
 public class MessageDatabaseTest {
     @Test
     public void testAddMessage() {
