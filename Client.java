@@ -199,9 +199,9 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean editProfile(String name, String password, String email) {
+    public boolean editProfile(String username, String name, String password, String email) {
         try {
-            String newInfo = "edt" + name + ";" + password + ";" + email;
+            String newInfo = "edt" + username + ";" + name + ";" + password + ";" + email;
             pw.write(newInfo);
             pw.println();
             pw.flush();
@@ -222,7 +222,7 @@ public class Client implements Runnable {
             pw.flush();
 
             if (bfr.readLine().equals("True")) {
-                 return bfr.readLine();
+                return bfr.readLine();
             } else {
                 return "Failure";
             }
