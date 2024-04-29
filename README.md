@@ -1,6 +1,6 @@
 Phase 3 implementing the GUI
 
-Arav submitted Phase 3 Code, and the Report
+Arav submitted Phase 3 Code and the Report
 Zonglin submitted the Presentation
 
 Client GUI Class
