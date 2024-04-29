@@ -53,8 +53,10 @@ public class Database implements Data {
                 }
             }
             //test userlist
+            //System.out.print("username in userlist: ");
+
             for (User u : userList) {
-                //System.out.print("name in userlist: " + u.getRealName() + ";");
+                //System.out.print(u.getUsername() + ";");
             }
 
             for (int i = 0; i < userList.size(); i++) {
@@ -63,17 +65,18 @@ public class Database implements Data {
                     //test
                     //System.out.println("friends.get(" + i + ")[" + j + "]= " + friends.get(i)[j]);
                     //System.out.println(searchUser(friends.get(i)[j]));
+
                     boolean validFriends = false;
                     for (User u : userList) {
-                        if (u.retrieveName().equals(friends.get(i)[j])) {
+                        if (u.getUsername().equals(friends.get(i)[j])) {
                             validFriends = true;
                         }
                     }
 
                     if (validFriends) {
                         for (int k = 0; k < userList.size(); k++) {
-                            if (userList.get(k).retrieveName().equals(friends.get(i)[j])) {
-                                userList.get(i).addFriend(userList.get(k));
+                            if (userList.get(k).getUsername().equals(friends.get(i)[j])) {
+                                userList.get(i).addFriend(userList.get(k).getUsername());
                             }
                         }
                     } else {
@@ -88,15 +91,15 @@ public class Database implements Data {
 
                     boolean validBlocked = false;
                     for (User u : userList) {
-                        if (u.retrieveName().equals(blocked.get(i)[j])) {
+                        if (u.getUsername().equals(blocked.get(i)[j])) {
                             validBlocked = true;
                         }
                     }
 
                     if (validBlocked) {
                         for (int k = 0; k < userList.size(); k++) {
-                            if (userList.get(k).retrieveName().equals(blocked.get(i)[j])) {
-                                userList.get(i).blockUser(userList.get(k));
+                            if (userList.get(k).getUsername().equals(blocked.get(i)[j])) {
+                                userList.get(i).blockUser(userList.get(k).getUsername());
                             }
                         }
                     } else {
@@ -115,7 +118,7 @@ public class Database implements Data {
     }
 
 
-    public void rewriteFile() {
+    public synchronized void rewriteFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
 
             boolean lineIsBlank = false;
@@ -151,7 +154,7 @@ public class Database implements Data {
         try {
             User user = createUser(info);
 
-            if (searchUser(user.retrieveName())) {
+            if (searchUser(user.getUsername())) {
                 return false;
             } else {
                 users.add(user);
@@ -196,12 +199,12 @@ public class Database implements Data {
             //If the name is in the friendList
             for (int j = 0; j < users.get(i).getFriends().size(); j++) {
 
-                User friend = users.get(i).getFriends().get(j);
+                String friend = users.get(i).getFriends().get(j);
                 //System.out.println("friend name=" + friend.retrieveName());
 
-                if (friend.retrieveName().contains(oldInfo.split(",")[0])) {
-                    users.get(i).removeFriend(users.get(index));
-                    users.get(i).addFriend(newUser);
+                if (friend.contains(oldInfo.split(",")[0])) {
+                    users.get(i).removeFriend(users.get(index).getUsername());
+                    users.get(i).addFriend(newUser.getUsername());
                     rewriteFile();
                     //System.out.println("friends data of " + users.get(i).retrieveName() + " is successfully updated");
 
@@ -212,12 +215,12 @@ public class Database implements Data {
             //If the name is in the blocked
             for (int j = 0; j < users.get(i).getBlocked().size(); j++) {
 
-                User block = users.get(i).getBlocked().get(j);
+                String block = users.get(i).getBlocked().get(j);
                 //System.out.println("blocked name=" + block.retrieveName());
 
-                if (block.retrieveName().contains(oldInfo.split(",")[0])) {
-                    users.get(i).unblockUser(users.get(index));
-                    users.get(i).blockUser(newUser);
+                if (block.contains(oldInfo.split(",")[0])) {
+                    users.get(i).unblockUser(users.get(index).getUsername());
+                    users.get(i).blockUser(newUser.getUsername());
                     rewriteFile();
                     //System.out.println("blocked data of " + users.get(i).retrieveName() + " is successfully updated");
                 }
@@ -246,8 +249,8 @@ public class Database implements Data {
             for (int j = 0; j < friendNames.length; j++) {
                 if (searchUser(friendNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
-                        if (users.get(k).retrieveName().equals(friendNames[j])) {
-                            user.addFriend(users.get(k));
+                        if (users.get(k).getUsername().equals(friendNames[j])) {
+                            user.addFriend(users.get(k).getUsername());
                         }
                     }
                 } else {
@@ -257,8 +260,8 @@ public class Database implements Data {
             for (int j = 0; j < blockedNames.length; j++) {
                 if (searchUser(blockedNames[j])) {
                     for (int k = 0; k < users.size(); k++) {
-                        if (users.get(k).retrieveName().equals(blockedNames[j])) {
-                            user.blockUser(users.get(k));
+                        if (users.get(k).getUsername().equals(blockedNames[j])) {
+                            user.blockUser(users.get(k).getUsername());
                         }
                     }
                 } else {
@@ -272,7 +275,7 @@ public class Database implements Data {
     }
 
 
-    public boolean searchUser(String realName) {
+    public boolean searchUser(String username) {
 
         //System.out.println(users.size());
 
@@ -280,7 +283,7 @@ public class Database implements Data {
             //System.out.println("realname: " + realName);
             //System.out.println("u.getRealName" + u.getRealName());
 
-            if (u.retrieveName().equals(realName)) {
+            if (u.getUsername().equals(username)) {
                 return true;
             }
         }

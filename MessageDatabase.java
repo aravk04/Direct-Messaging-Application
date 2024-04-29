@@ -21,7 +21,7 @@ public class MessageDatabase implements MessageData {
 
     }
 
-    public boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException {
+    public synchronized boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException {
         File file = new File(fileName);
         if (!file.exists()) {
             file.createNewFile();
@@ -44,7 +44,7 @@ public class MessageDatabase implements MessageData {
         }
     }
 
-    public boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException {
+    public synchronized boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             ArrayList<String> rewriteLines = new ArrayList<>();
             boolean removed = false;
@@ -71,9 +71,7 @@ public class MessageDatabase implements MessageData {
                     writer.write(rewriteLines.get(i));
                 }
                 writer.close();
-
             }
-
             if (removed) {
                 return true;
             } else {
@@ -110,7 +108,7 @@ public class MessageDatabase implements MessageData {
         return fileContent;
     }
 
-    public boolean updateChatLog(String chatId, List<String> messages) {
+    public synchronized boolean updateChatLog(String chatId, List<String> messages) {
         // alphabatize file name
         String filename = chatId.replaceAll("-", ",");
         String[] users = filename.split(",");

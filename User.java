@@ -15,8 +15,8 @@ import java.util.Collections;
 public class User extends Thread implements UserInterface {
     // Variables
     private String realName;
-    private ArrayList<User> friends;
-    private ArrayList<User> blocked;
+    private ArrayList<String> friends;
+    private ArrayList<String> blocked;
     private String password;
     private String emailAddress;
     private String userName;
@@ -36,25 +36,27 @@ public class User extends Thread implements UserInterface {
         this.userName = userName;
         this.password = password;
         this.emailAddress = emailAddress;
-        this.friends = new ArrayList<User>();
-        this.blocked = new ArrayList<User>();
+        this.friends = new ArrayList<String>();
+        this.blocked = new ArrayList<String>();
     }
-  
+
+    // Check if a user is blocked
+    public boolean isBlocked(String username) {
+        return blocked.contains(username);
+    }
+
     // Add friend to list
+    public boolean addFriend(String username) {
 
-    public boolean addFriend(User u) {
-
-        if ((u != null && !friends.contains(u)) && (!blocked.contains(u))) {
-            friends.add(u);
+        if ((username != null && !friends.contains(username)) && (!blocked.contains(username))) {
+            friends.add(username);
             return true;
         }
         return false;
     }
 
     // Block a user
-    public boolean blockUser(User u) {
-
-
+    public boolean blockUser(String u) {
         if ((u != null && !blocked.contains(u))) {
             blocked.add(u);
             this.removeFriend(u);
@@ -63,17 +65,23 @@ public class User extends Thread implements UserInterface {
         return false;
     }
     // unblock a user
-    public boolean unblockUser(User u) {
-        if (u != null && blocked.contains(u)) {
-            blocked.remove(u);
-            return true;
+    public boolean unblockUser(String u) {
+
+        for (int i = 0; i < blocked.size(); i++) {
+            System.out.println("u = " + u);
+            System.out.println("blocked.get(i) = " + blocked.get(i));
+            System.out.println("equal?" + blocked.get(i).equals(u));
+            if (blocked.get(i).equals(u)) {
+                blocked.remove(i);
+                return true;
+            }
         }
         return false;
     }
 
 
     // Remove friend from list
-    public boolean removeFriend(User u) {
+    public boolean removeFriend(String u) {
         for (int i = 0; i < friends.size(); i++) {
             if (friends.get(i).equals(u)) {
                 friends.remove(i);
@@ -103,12 +111,12 @@ public class User extends Thread implements UserInterface {
 
     // Getters
 
-    public ArrayList<User> getFriends() {
-        return new ArrayList<User>(friends);
+    public ArrayList<String> getFriends() {
+        return new ArrayList<String>(friends);
     }
 
-    public ArrayList<User> getBlocked() {
-        return new ArrayList<User>(blocked);
+    public ArrayList<String> getBlocked() {
+        return new ArrayList<String>(blocked);
     }
 
     public String getPassword() {
@@ -147,13 +155,13 @@ public class User extends Thread implements UserInterface {
     public String toString() {
         String output = realName + ",";
         for (int i = 0; i < friends.size(); i++) {
-            output = output + friends.get(i).getUsername() + ";";
+            output = output + friends.get(i) + ";";
         }
         output += ",";
 
         for (int i = 0; i < blocked.size(); i++) {
             System.out.println();
-            output = output + blocked.get(i).getUsername() + ";";
+            output = output + blocked.get(i) + ";";
         }
 
         output = output + "," + password + "," + emailAddress + "," + userName;

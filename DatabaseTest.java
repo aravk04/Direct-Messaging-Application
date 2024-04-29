@@ -33,6 +33,7 @@ public class DatabaseTest {
     }
 
 
+
     public static class TestCase {
 
         private static final String INFILE = "input.txt";
@@ -44,8 +45,8 @@ public class DatabaseTest {
                 Database database = new Database(INFILE);
                 //System.out.println("viewUser result: " + database.viewUser("zj133"));
                 assertEquals(
-                        "Zonglin Jia,Chenfeng Lyu;Er Yue;," +
-                                "yeslol;MajiaQi;,12345678,zonglin.2017@outlook.com,zj133",
+                        "Zonglin Jia,cl47;ey533;," +
+                                "yl13;mq05;,12345678,zonglin.2017@outlook.com,zj133",
                         database.viewUser("zj133"));
 
             } catch (Exception e) {
@@ -58,8 +59,10 @@ public class DatabaseTest {
         public void testAddUser() {
             try {
                 Database database = new Database(INFILE);
-                database.addUser("Mitch Daniels,fri1;,block2;,00000000,MitchDaniel@purdue.edu,Daniel123");
-                assertEquals("Mitch Daniels,fri1;,block2;,00000000,MitchDaniel@purdue.edu,Daniel123",
+                database.addUser("Mitch Daniels,defaultFriend1;," +
+                        "defaultBlock2;,00000000,MitchDaniel@purdue.edu,Daniel123");
+                assertEquals("Mitch Daniels,defaultFriend1;," +
+                                "defaultBlock2;,00000000,MitchDaniel@purdue.edu,Daniel123",
                         database.viewUser("Daniel123"));
 
             } catch (Exception e) {
@@ -82,14 +85,15 @@ public class DatabaseTest {
         }
 
 
+
         @Test(timeout = 1000)
         public void testEditUser() {
             try {
 
                 Database database = new Database(INFILE);
-                String oldInfo = "Zonglin Jia,Chenfeng Lyu;Er Yue;,yeslol;MajiaQi;," +
+                String oldInfo = "Zonglin Jia,cl47;ey533;,yl13;mq05;," +
                         "12345678,zonglin.2017@outlook.com,zj133";
-                String newInfo = "Zonglin Wang,fri1;,block2;,00000000," +
+                String newInfo = "Zonglin Wang,defaultFriend1;,defaultBlock2;,00000000," +
                         "zonglin.2017@outlook.com.com,zj133";
 
                 database.editUser(oldInfo, newInfo);
@@ -97,8 +101,8 @@ public class DatabaseTest {
                 database.editUser(newInfo, oldInfo); //set the input.txt to default
 
 
-                oldInfo = "MajiaQi,yeslol;,block1;,12345678,majiaqi.2024@gmail.com,mq05";
-                newInfo = "MajiaQi,yeslol;,block2;,12345678,majiaqi.2024@gmail.com,mq05";
+                oldInfo = "MajiaQi,yl13;,defaultBlock1;,12345678,majiaqi.2024@gmail.com,mq05";
+                newInfo = "MajiaQi,yl13;,defaultBlock2;,12345678,majiaqi.2024@gmail.com,mq05";
 
                 database.editUser(oldInfo, newInfo);
                 assertEquals(newInfo, database.viewUser("mq05"));
@@ -108,6 +112,7 @@ public class DatabaseTest {
                 e.printStackTrace();
             }
         }
+
 
     }
 

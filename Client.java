@@ -14,7 +14,7 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
-            socket = new Socket("localhost", 12345);
+            socket = new Socket("localhost", 4422);
             bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             pw = new PrintWriter(socket.getOutputStream());
 
@@ -55,7 +55,7 @@ public class Client implements Runnable {
 
     public boolean message(String username, String recievers, String message) {
         try {
-            String info = "msg" + username + "," + recievers + message;
+            String info = "msg" + username + "," + recievers + ";" + message;
             pw.write(info);
             pw.println();
             pw.flush();
@@ -68,9 +68,9 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean message(String chat, String message) {
+    public boolean message1(String chat, String username, String message) {
         try {
-            String info = "msv" + chat + "," + message;
+            String info = "msv" + username + "," + chat + "," + message;
             pw.write(info);
             pw.println();
             pw.flush();
@@ -78,7 +78,7 @@ public class Client implements Runnable {
             return bfr.readLine().equals("True");
 
         } catch (IOException i) {
-            System.out.println("IOException in message(Chat Variant)");
+            System.out.println("IOException in message(Receivers Variant)");
             return false;
         }
     }
@@ -123,10 +123,10 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean editBlocked(boolean block, String username) {
+    public boolean editFriends(boolean add, String username, String user) {
         try {
-            if (block) {
-                String info = "blo" + username;
+            if (add) {
+                String info = "add" + user + "," + username;
                 pw.write(info);
                 pw.println();
                 pw.flush();
@@ -134,7 +134,32 @@ public class Client implements Runnable {
                 return bfr.readLine().equals("True");
 
             } else {
-                String info = "unb" + username;
+                String info = "rem" + user + "," + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            }
+        } catch (IOException i) {
+            System.out.println("IOException in editFriends");
+            return false;
+        }
+    }
+
+    public boolean editBlocked(boolean block, String username, String user) {
+        try {
+            if (block) {
+                String info = "blo" + user + "," + username;
+                pw.write(info);
+                pw.println();
+                pw.flush();
+
+                return bfr.readLine().equals("True");
+
+            } else {
+                String info = "unb" + user + "," + username;
                 pw.write(info);
                 pw.println();
                 pw.flush();
@@ -199,9 +224,9 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean editProfile(String name, String password, String email) {
+    public boolean editProfile(String username, String name, String password, String email) {
         try {
-            String newInfo = "edt" + name + ";" + password + ";" + email;
+            String newInfo = "edt" + username + ";" + name + ";" + password + ";" + email;
             pw.write(newInfo);
             pw.println();
             pw.flush();
@@ -214,18 +239,59 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean viewUser(String username) {
+    public String viewUser(String username, boolean personal) {
         try {
-            String newInfo = "vUr" + username;
+            String newInfo = "vUr" + personal + "," + username;
             pw.write(newInfo);
             pw.println();
             pw.flush();
 
-            return bfr.readLine().equals("True");
+            if (bfr.readLine().equals("True")) {
+                return bfr.readLine();
+            } else {
+                return "Failure";
+            }
 
         } catch (IOException i) {
             System.out.println("IOException in viewUser");
-            return false;
+            return "Failure";
+        }
+    }
+    public String getFriends(String username) {
+        try {
+            pw.write("gFr" + username);
+            pw.println();
+            pw.flush();
+
+            String response = bfr.readLine();
+            if (response.equals("")) {
+                return "Failure";
+            } else {
+                return response;
+            }
+
+        } catch (IOException i) {
+            System.out.println("IOException in getFriends");
+            return "Failure";
+        }
+    }
+
+    public String getBlocked(String username) {
+        try {
+            pw.write("gBl" + username);
+            pw.println();
+            pw.flush();
+
+            String response = bfr.readLine();
+            if (response.equals("")) {
+                return "Failure";
+            } else {
+                return response;
+            }
+
+        } catch (IOException i) {
+            System.out.println("IOException in getFriends");
+            return "Failure";
         }
     }
 }
