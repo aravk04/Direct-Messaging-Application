@@ -45,8 +45,8 @@ public class DatabaseTest {
                 Database database = new Database(INFILE);
                 //System.out.println("viewUser result: " + database.viewUser("zj133"));
                 assertEquals(
-                        "Zonglin Jia,cl47;ey533;," +
-                                "yl13;mq05;,12345678,zonglin.2017@outlook.com,zj133",
+                        "Zonglin Jia,cl47;ey533;wang001;,yl13;mq05;xiao157;," +
+                                "12345678,jia133@purdue.edu,zj133",
                         database.viewUser("zj133"));
 
             } catch (Exception e) {
@@ -91,10 +91,11 @@ public class DatabaseTest {
             try {
 
                 Database database = new Database(INFILE);
-                String oldInfo = "Zonglin Jia,cl47;ey533;,yl13;mq05;," +
-                        "12345678,zonglin.2017@outlook.com,zj133";
-                String newInfo = "Zonglin Wang,defaultFriend1;,defaultBlock2;,00000000," +
-                        "zonglin.2017@outlook.com.com,zj133";
+
+                String oldInfo = database.viewUser("zj133");
+
+                String newInfo = "Zonglin Jia,cl47;ey533;wang001;,yl13;mq05;xiao157;," +
+                        "12345678,jia133@purdue.edu,zj133";
 
                 database.editUser(oldInfo, newInfo);
                 assertEquals(newInfo, database.viewUser("zj133"));
