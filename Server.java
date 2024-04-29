@@ -22,7 +22,7 @@ public class Server implements Runnable {
 
     public static void main(String[] args) {
         try {
-            ServerSocket serverSocket = new ServerSocket(12345);
+            ServerSocket serverSocket = new ServerSocket(4422);
             System.out.println("Server started on port 12345");
 
             //read user's data from database
@@ -92,7 +92,6 @@ public class Server implements Runnable {
         private Socket clientSocket;
         private BufferedReader in;
         private PrintWriter out;
-        private String username;
 
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
@@ -172,6 +171,12 @@ public class Server implements Runnable {
                 case "vUr":
                     viewUser(payload);
                     break;
+                case "gFr":
+                    getFriends(payload);
+                    break;
+                case "gBl":
+                    getBlocked(payload);
+                    break;
                 default:
                     out.println("Invalid command");
             }
@@ -213,7 +218,7 @@ public class Server implements Runnable {
                 User value = entry.getValue();
 
                 if (key.equals(username) && value.getPassword().equals(password)) {
-                    this.username = username;
+
                     randomString = true;
                     System.out.println("user successfully logged in!");
                     out.println("True");
@@ -358,14 +363,18 @@ public class Server implements Runnable {
         }
 
         //add friend to the user friend list if they are friends
+        //add friend to the user friend list if they are friends
         private void addFriend(String payload) throws BadInputException {
-            String username = payload;
+            String[] userList = payload.split(",");
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                if (key.equals(username)) {
-                    users.get(this.username).addFriend(username);
+                if (key.equals(userList[0])) {
+                    String oldInfo = value.toString();
+                    value.addFriend(userList[1]);
+                    String newInfo = value.toString();
+                    database.editUser(oldInfo, newInfo);
                     database.rewriteFile();
                     database = new Database(INFILE);
                     out.println("True");
@@ -382,14 +391,17 @@ public class Server implements Runnable {
 
         // remove friend from user list if they exist
         private void removeFriend(String payload) throws BadInputException {
-            String username = payload;
+            String[] userList = payload.split(",");
             boolean randomString = false;
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
 
-                if (key.equals(username)) {
-                    users.get(this.username).removeFriend(username);
+                if (key.equals(userList[0])) {
+                    String oldInfo = value.toString();
+                    value.removeFriend(userList[1]);
+                    String newInfo = value.toString();
+                    database.editUser(oldInfo, newInfo);
                     database.rewriteFile();
                     database = new Database(INFILE);
                     out.println("True");
@@ -406,14 +418,17 @@ public class Server implements Runnable {
 
         // block user parses through the usernames and checks if they exist and adds them to the blocked list
         private void blockUser(String payload) throws BadInputException {
-            String username = payload;
+            String[] userList = payload.split(",");
             boolean randomString = true;
 
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                if (key.equals(username)) {
-                    users.get(this.username).blockUser(username);
+                if (key.equals(userList[0])) {
+                    String oldInfo = value.toString();
+                    value.blockUser(userList[1]);
+                    String newInfo = value.toString();
+                    database.editUser(oldInfo, newInfo);
                     database.rewriteFile();
                     database = new Database(INFILE);
                     out.println("True");
@@ -429,14 +444,21 @@ public class Server implements Runnable {
 
         // unblocks user and removes them from the blocked list if they are there
         private void unblockUser(String payload) throws BadInputException {
-            String username = payload;
+            String[] userList = payload.split(",");
+
+            System.out.println("userList[0]" + userList[0]);
+            System.out.println("userList[1]" + userList[1]);
             boolean randomString = true;
 
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                if (key.equals(username)) {
-                    users.get(this.username).unblockUser(username);
+                if (key.equals(userList[0])) {
+
+                    String oldInfo = value.toString();
+                    value.unblockUser(userList[1]);
+                    String newInfo = value.toString();
+                    database.editUser(oldInfo, newInfo);
                     database.rewriteFile();
                     database = new Database(INFILE);
                     out.println("True");
@@ -526,6 +548,27 @@ public class Server implements Runnable {
             }
         }
 
+        private void getFriends(String payload) {
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                if (key.equals(payload)) {
+                    out.println(value.getFriends());
+                    break;
+                }
+            }
+        }
+
+        private void getBlocked(String payload) {
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                if (key.equals(payload)) {
+                    out.println(value.getBlocked());
+                    break;
+                }
+            }
+        }
         // creates unique chat between users
         public synchronized String createChat(String sender, ArrayList<String> receivers) throws FileNotFoundException, IOException {
             String fileName = "";
