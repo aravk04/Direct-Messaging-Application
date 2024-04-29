@@ -1,5 +1,4 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 
@@ -206,8 +205,6 @@ public class Server implements Runnable {
             String[] parts = payload.split(",");
             String username = parts[0];
             String password = parts[1];
-            //System.out.println("Key=" + key + ", Value=" + value);
-            //System.out.println("user's password=" + value.getPassword());
             boolean randomString = false;
 
             //test
@@ -221,8 +218,6 @@ public class Server implements Runnable {
                     System.out.println("user successfully logged in!");
                     out.println("True");
                     System.out.println("B: ");
-                    //out.println();
-                    //out.flush();
                     break;
                 }
             }
@@ -255,7 +250,6 @@ public class Server implements Runnable {
                     if (!users.containsKey(receiver) || users.get(receiver).isBlocked(sender)) {
 
                         System.out.println("C: ");
-                        //System.out.println("message is successfully sent");
                         success = false;
                         break;
                     }
@@ -303,36 +297,18 @@ public class Server implements Runnable {
 
             payload = sender + "," + receivers + message;
             sendMessage(payload);
-
-            /*
-            Message m = new Message(sender, receiveArrayList, message);
-            System.out.println("msv chatid: " + chatId);
-
-            writeToChat(chatId, m.getSender() + "," + receivers + "," +
-                    m.getTimestamp() + "," + m.getExactTime() + "," + m.getContent());
-            //List<String> messages = chats.get(chatId);
-            //System.out.println(messages);
-            messsageDatabase.addMessage(chatId, m);
-             */
         }
 
         //gets username and checks which chats the user is in
         private void viewChats(String payload) {
             String username = payload;
             ArrayList<String> chatIds = new ArrayList<>();
-            /*
-            for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-                if (entry.getValue().contains(username)) {
-                    chatIds.add(entry.getKey());
-                }
-            }
-             */
+
             for (String key : chats.keySet()) {
                 if (key.contains(payload)) {
                     chatIds.add(key);
                 }
             }
-            //String[] listOfChatId = String.join(",", chatIds).split(",");
 
             for (String s : chatIds) {
                 out.println(s);
@@ -352,10 +328,6 @@ public class Server implements Runnable {
             }
 
         }
-
-        // sends message within a chat
-        //String sendMessage = "msg" + username + "," + recievers + message;
-
 
         //deletes username in specific chat and check username and line number of message to delete
         private void deleteMessage(String payload) {
@@ -392,7 +364,6 @@ public class Server implements Runnable {
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
                 if (key.equals(username)) {
                     users.get(this.username).addFriend(username);
                     database.rewriteFile();
@@ -416,7 +387,6 @@ public class Server implements Runnable {
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
 
                 if (key.equals(username)) {
                     users.get(this.username).removeFriend(username);
@@ -442,7 +412,6 @@ public class Server implements Runnable {
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
                 if (key.equals(username)) {
                     users.get(this.username).blockUser(username);
                     database.rewriteFile();
@@ -466,7 +435,6 @@ public class Server implements Runnable {
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
                 if (key.equals(username)) {
                     users.get(this.username).unblockUser(username);
                     database.rewriteFile();
@@ -498,7 +466,6 @@ public class Server implements Runnable {
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
                 User value = entry.getValue();
-                //System.out.println("Key= " + key + ", Value= " + value);
                 if (key.equals(info[0])) {
 
                     String oldInfo = users.get(info[0]).toString();
@@ -510,8 +477,6 @@ public class Server implements Runnable {
                     String newInfo = tempUser.toString();
 
                     database.editUser(oldInfo, newInfo);
-                    //database.rewriteFile();
-                    //database = new Database(INFILE);
 
                     out.println("True");
                     System.out.println("I: ");
@@ -521,25 +486,34 @@ public class Server implements Runnable {
         }
 
         private void viewUser(String payload) { //vUr + username
-
             boolean success = false;
-            if (payload.toUpperCase().equals("EXIT")) {
-                out.println("EXIT");
-            } else {
+
+            boolean personal = Boolean.parseBoolean(payload.substring(0, payload.indexOf(",")));
+            String username = payload.substring(payload.indexOf(",") + 1);
                 for (Map.Entry<String, User> entry : users.entrySet()) {
                     String key = entry.getKey();
                     User value = entry.getValue();
                     System.out.println("Key= " + key + ", Value= " + value);
-                    if (key.equals(payload)) {
-                        out.println("True" + value.retrieveName() +
-                                ";" + value.getEmailAddress() + ";" + value.getUsername());
-                        System.out.println("J: ");
-                        success = true;
-                        break;
+                    if (key.equals(username)) {
+                        if (personal) {
+                            out.println("True");
+                            out.println(value.retrieveName() +
+                                    ";" + value.getEmailAddress() + ";" + value.getUsername() + ";" + value.getPassword());
+                            System.out.println("J: ");
+                            success = true;
+                            break;
+                        } else {
+                            out.println("True");
+                            out.println(value.retrieveName() +
+                                    ";" + value.getEmailAddress() + ";" + value.getUsername());
+                            System.out.println("J: ");
+                            success = true;
+                            break;
+                        }
                     }
                     System.out.println("success " + success);
                 }
-            }
+
             System.out.println("success OUT of the loop " + success);
             if (!success) {
                 out.println("S");
@@ -567,50 +541,13 @@ public class Server implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<String> participants = new ArrayList<>();
-                // participants.add(user1);
-                // participants.add(user2);
                 chats.put(fileName, participants);
             }
             return fileName;
         }
 
-
-        /*
-        private String createChat(String user1, String user2) {
-            // needs to be alphabetized to check for uniqueness
-            String chatId;
-            if (user1.compareTo(user2) < 0) {
-                chatId = user1 + "-" + user2;
-            } else {
-                chatId = user2 + "-" + user1;
-            }
-
-            System.out.println(chatId);
-            if (!chats.containsKey(chatId)) {
-                // add new unique chat to a file to save after server dies
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(chatsFile, true))) {
-                    writer.write(chatId);
-                    writer.newLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ArrayList<String> participants = new ArrayList<>();
-                // participants.add(user1);
-                // participants.add(user2);
-                chats.put(chatId, participants);
-            }
-            return chatId;
-        }
-
-         */
-
         // iterates through the chats to find the chat with the given username
         private String getChatIdForUser(String username) {
-            // for (Map.Entry<String, ArrayList<String>> entry : chats.entrySet()) {
-            //     if (entry.getValue().contains(username)) {
-            //         return entry.getKey();
-            //     }
-            // }
             for (String key : chats.keySet()) {
                 if (key.contains(username)) {
                     return key;
