@@ -1,14 +1,15 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 /**
  * Server
- * 
+ * <p>
  * Handles client connections and requests
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version April 29th, 2024
+ * @version April 14th, 2024
  */
 public class Server implements Runnable {
     private static Map<String, User> users = new HashMap<>();
