@@ -1,4 +1,4 @@
-Zonglin Jia,cl47;ey533;wang001;,yl13;mq05;xiao157;,12345678,jia133@purdue.edu,zj133
+Zonglin Jia,cl47;ey533;wang001;,yl13;mq05;xiao157;Daniel123;,12345678,jia133@purdue.edu,zj133
 Chenfeng Lyu,ey533;zj133;,yl13;mq05;,12345678,chenfeng.2018@outlook.com,cl47
 Er Yue,cl47;zj133;,yl13;mq05;,12345678,er.2019@outlook.com,ey533
 yeslol,mq05;,defaultBlock1;,12345678,yeslol.2020@outlool.com,yl13
@@ -14,12 +14,10 @@ xiaomifeng,defaultFriend1;wang001;,defaultBlock1;,11111111,mifeng@gmail.com,feng
 DanielMitch,defaultFriend1;,defaultBlock1;,00000000,Iampurdue@purdue.edu,Daniel123
 Mitch Daniel,defaultFriend1;,defaultBlock1;,00000000,email,00000000
 Jia,defaultFriend1;,defaultBlock1;zj133;,12345678,jia133@purdue.edu,jia133
-Timmy,defaultFriend1;,defaultBlock1;,12345678,Timmy@purdue.edu,Timmy200
+Timmy,defaultFriend1;Timmy200;,defaultBlock1;,12345678,Timmy@purdue.edu,Timmy200
 wangxiaotao,defaultFriend1;,defaultBlock1;,00000000,wangxiao@purdue.edu,xiao157
 I am boss,defaultFriend1;,defaultBlock1;,I am boss,i AM BOOSS,I am boss
 wang4433,defaultFriend1;,defaultBlock1;,12345678,wang4433@purdue.edu,wang4433
 wangz,defaultFriend1;,defaultBlock1;,12345678,wang4444@purdue.edu,Zhaopeng Wang
 Danny,defaultFriend1;,defaultBlock1;,Danny001,Danny@purdue.edu,Danny001
 zjj,defaultFriend1;,defaultBlock1;,12345678,zjj@purdue.edu,zonglin133
-Eesha,defaultFriend1;,defaultBlock1;zonglin133;,eesha1234,efaruqi@gmail.com,efaruqi
-keya,defaultFriend1;,defaultBlock1;,iamkeya123,keya@gmail.com,Keya

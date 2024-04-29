@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * MessageDatabase
- *
+ * <p>
  * Add messages to files
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
@@ -16,11 +16,12 @@ import java.util.List;
 public class MessageDatabase implements MessageData {
 
     private ArrayList<String> fileList = new ArrayList<>();
+
     public MessageDatabase() {
 
     }
 
-    public boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException {
+    public synchronized boolean addMessage(String fileName, Message m) throws FileNotFoundException, IOException {
         File file = new File(fileName);
         if (!file.exists()) {
             file.createNewFile();
@@ -30,7 +31,7 @@ public class MessageDatabase implements MessageData {
             for (String r : m.getReceivers()) {
                 receivers += r + ";";
             }
-            receivers = receivers.substring(0,receivers.length()-1);
+            receivers = receivers.substring(0, receivers.length() - 1);
             if (!fileList.contains(fileName)) {
                 fileList.add(fileName);
             }
@@ -42,7 +43,8 @@ public class MessageDatabase implements MessageData {
             return false;
         }
     }
-    public boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException {
+
+    public synchronized boolean deleteMessage(String fileName, String username, int lineNum) throws FileNotFoundException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             ArrayList<String> rewriteLines = new ArrayList<>();
             boolean removed = false;
@@ -69,14 +71,12 @@ public class MessageDatabase implements MessageData {
                     writer.write(rewriteLines.get(i));
                 }
                 writer.close();
-
             }
-
-           if (removed) {
-               return true;
-           } else {
-               return false;
-           }
+            if (removed) {
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (IOException e) {
             return false;
@@ -90,9 +90,9 @@ public class MessageDatabase implements MessageData {
         Arrays.sort(users);
         filename = "";
         for (int i = 0; i < users.length; i++) {
-            filename += users[i] + ",";
+            filename += users[i] + "-";
         }
-        // remove last comma
+        // remove last dash
         filename = filename.substring(0, filename.length() - 1);
         filename += ".csv";
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -108,14 +108,14 @@ public class MessageDatabase implements MessageData {
         return fileContent;
     }
 
-    public boolean updateChatLog(String chatId, List<String> messages) {
+    public synchronized boolean updateChatLog(String chatId, List<String> messages) {
         // alphabatize file name
         String filename = chatId.replaceAll("-", ",");
         String[] users = filename.split(",");
         Arrays.sort(users);
         filename = "";
         for (int i = 0; i < users.length; i++) {
-            filename += users[i] + ",";
+            filename += users[i] + "-";
         }
         // remove last comma
         filename = filename.substring(0, filename.length() - 1);
@@ -137,7 +137,7 @@ public class MessageDatabase implements MessageData {
 
     public ArrayList<String> getChats(String username) {
         ArrayList<String> chats = new ArrayList<>();
-
+        System.out.println("getChats in messageDatabase: ");
         for (int i = 0; i < fileList.size(); i++) {
             if (fileList.get(i).contains(username)) {
                 chats.add(fileList.get(i).substring(0, fileList.get(i).length() - 4));

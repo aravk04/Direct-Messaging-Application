@@ -66,9 +66,15 @@ public class User extends Thread implements UserInterface {
     }
     // unblock a user
     public boolean unblockUser(String u) {
-        if (u != null && blocked.contains(u)) {
-            blocked.remove(u);
-            return true;
+
+        for (int i = 0; i < blocked.size(); i++) {
+            System.out.println("u = " + u);
+            System.out.println("blocked.get(i) = " + blocked.get(i));
+            System.out.println("equal?" + blocked.get(i).equals(u));
+            if (blocked.get(i).equals(u)) {
+                blocked.remove(i);
+                return true;
+            }
         }
         return false;
     }

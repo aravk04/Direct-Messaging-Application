@@ -1,7 +1,3 @@
-import static org.junit.Assert.*;
-import org.junit.Test;
-import java.io.*;
-import java.util.ArrayList;
 /**
  * MessageDatabaseTest
  *
@@ -9,8 +5,13 @@ import java.util.ArrayList;
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version April 29th, 2024
+ * @version April 15, 2024
  */
+import static org.junit.Assert.*;
+import org.junit.Test;
+import java.io.*;
+import java.util.ArrayList;
+
 public class MessageDatabaseTest {
     @Test
     public void testAddMessage() {
@@ -18,12 +19,20 @@ public class MessageDatabaseTest {
             // temp file for test
             File tempFile = File.createTempFile("temp", ".txt");
             String fileName = tempFile.getAbsolutePath();
+            //initialize a new user for test
             User u = new User("John Doe", "johndoe", "password123", "johndoe@example.com");
             String sender = u.getUsername();
+
+            //initialize new receivers
             ArrayList<String> receivers = new ArrayList<>();
             receivers.add(new User("Jane Smith", "janesmith", "password456", "janesmith@example.com").getUsername());
+
+            //initialize new message with the given sender and receivers
             Message message = new Message(sender, receivers, "Hello Jane!");
             MessageDatabase database = new MessageDatabase();
+
+
+            //test
             assertTrue(database.addMessage(fileName, message));
             BufferedReader br = new BufferedReader(new FileReader(tempFile));
             String line = br.readLine();
@@ -40,7 +49,7 @@ public class MessageDatabaseTest {
             fail("Exception occurred: " + e.getMessage());
         }
     }
-     @Test
+    @Test
     public void testDeleteMessage() throws IOException, BadInputException {
         MessageDatabase db = new MessageDatabase();
         User sender = new User("John Doe", "johndoe", "password123", "john@example.com");
