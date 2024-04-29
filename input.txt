@@ -11,8 +11,7 @@ Yueyang Wang,defaultFriend1;,defaultBlock1;,00000000,wang@gmail.com,wang147
 jiayi Li,defaultFriend1;,defaultBlock1;,00001111,jiayi@purdue.edu,lee10
 xiao wang,defaultFriend1;,defaultBlock1;,00000000,wang@purdue.edu,wang001
 xiaomifeng,defaultFriend1;wang001;,defaultBlock1;,11111111,mifeng@gmail.com,feng111
-DanielMitch,defaultFriend1;,defaultBlock1;,00000000,Iampurdue@purdue.edu,Daniel123
-Mitch Daniel,defaultFriend1;,defaultBlock1;,00000000,email,00000000
+Mitch Daniel,defaultFriend1;,defaultBlock1;,00000000,email,Daniel123
 Jia,defaultFriend1;,defaultBlock1;zj133;,12345678,jia133@purdue.edu,jia133
 Timmy,defaultFriend1;Timmy200;,defaultBlock1;,12345678,Timmy@purdue.edu,Timmy200
 wangxiaotao,defaultFriend1;,defaultBlock1;,00000000,wangxiao@purdue.edu,xiao157
