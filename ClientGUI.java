@@ -2,6 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+/**
+ * ClientGUI
+ *
+ * Interface for user
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version April 29th, 2024
+ */
 
 public class ClientGUI extends JFrame implements Runnable {
     private Client client;
