@@ -214,18 +214,22 @@ public class Client implements Runnable {
         }
     }
 
-    public boolean viewUser(String username) {
+    public String viewUser(String username, boolean personal) {
         try {
-            String newInfo = "vUr" + username;
+            String newInfo = "vUr" + personal + "," + username;
             pw.write(newInfo);
             pw.println();
             pw.flush();
 
-            return bfr.readLine().equals("True");
+            if (bfr.readLine().equals("True")) {
+                 return bfr.readLine();
+            } else {
+                return "Failure";
+            }
 
         } catch (IOException i) {
             System.out.println("IOException in viewUser");
-            return false;
+            return "Failure";
         }
     }
 }
