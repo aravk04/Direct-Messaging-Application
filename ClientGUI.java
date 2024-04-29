@@ -619,7 +619,7 @@ public class ClientGUI extends JFrame implements Runnable {
                         viewing = username;
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "User does not exit",
+                        JOptionPane.showMessageDialog(null, "User does not exist",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else if ((e.getSource() == add) || (e.getSource() == unAdd)) {
