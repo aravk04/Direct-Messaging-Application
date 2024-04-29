@@ -2,14 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+
 /**
  * ClientGUI
- *
- * Interface for user
+ * <p>
+ * The GUI that implements the function
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version April 29th, 2024
+ * @version April 29,th 2024
  */
 
 public class ClientGUI extends JFrame implements Runnable {
@@ -619,7 +620,7 @@ public class ClientGUI extends JFrame implements Runnable {
                         viewing = username;
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "User does not exit",
+                        JOptionPane.showMessageDialog(null, "User does not exist",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else if ((e.getSource() == add) || (e.getSource() == unAdd)) {

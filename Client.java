@@ -1,14 +1,15 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+
 /**
  * Client
- *
- * Client class
+ * <p>
+ * The client that works the server
  *
  * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
  * Harshil Shah, Benjamin Ascano
- * @version April 29th, 2024
+ * @version April 29th 2024
  */
 
 public class Client implements Runnable {

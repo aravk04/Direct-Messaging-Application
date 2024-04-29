@@ -59,9 +59,10 @@ public class Message implements MessageInterface {
         receivers.add(sender);
         Collections.sort(receivers);
         for (String username : receivers) {
-            fileName += username + ",";
+            fileName += username + "-";
         }
         fileName = fileName.substring(0, fileName.length() - 1) + ".csv";
+        System.out.println("filename in message: " + fileName);
         receivers.remove(sender);
 
         return fileName;

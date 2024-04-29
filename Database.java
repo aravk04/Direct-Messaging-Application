@@ -53,18 +53,18 @@ public class Database implements Data {
                 }
             }
             //test userlist
-            System.out.print("username in userlist: ");
+            //System.out.print("username in userlist: ");
 
             for (User u : userList) {
-                System.out.print(u.getUsername() + ";");
+                //System.out.print(u.getUsername() + ";");
             }
 
             for (int i = 0; i < userList.size(); i++) {
                 for (int j = 0; j < friends.get(i).length; j++) {
 
                     //test
-                    System.out.println("friends.get(" + i + ")[" + j + "]= " + friends.get(i)[j]);
-                    System.out.println(searchUser(friends.get(i)[j]));
+                    //System.out.println("friends.get(" + i + ")[" + j + "]= " + friends.get(i)[j]);
+                    //System.out.println(searchUser(friends.get(i)[j]));
 
                     boolean validFriends = false;
                     for (User u : userList) {
@@ -118,7 +118,7 @@ public class Database implements Data {
     }
 
 
-    public void rewriteFile() {
+    public synchronized void rewriteFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
 
             boolean lineIsBlank = false;

@@ -18,4 +18,5 @@ public interface MessageData {
     String getChat(String filename) throws IOException;
     public ArrayList<String> getChats(String username);
     public boolean updateChatLog(String chatId, List<String> messages);
+
 }
