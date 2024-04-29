@@ -1,3 +1,11 @@
+Phase 3 implementing the GUI
+
+Arav submitted Phase 3 Code, and the Report
+Zonglin submitted the Presentation
+
+Client GUI Class
+Developed a ClientGUI which follows the Client class code. Allows the user to create a new account or log into their previous account. Implemented functionality to edit user information, message other users, and search other users. All inputs are sent to the client class which then sends it to the server. To run the class, run the Server Class and then run the ClientGUI class which creates an instance of the client to connect to the server. The ClientGUI will then open a window asking the user to either sign up or log in, after either of this actions the user will be presented with the main menu GUI which will access all other functionalities with buttons. Our code utilized Java swing features, a GUI toolkit for Java. In order to allow the server to run 2.csv files are required to create every messaging chat and to format the chat names, these are chats.csv and defaultFriend1-defaultFriend2.csv and are included in the repository. One .txt is also required to make sure new users are properly written to the database called input.txt, also included in the repository. No new methods are created in the ClientGUI class and it is run using the .run function from Runnable to allow concurrency in our project. To make sure our ClientGUI class worked we tested every possible input into text fields and implemented error handling for certain edge cases. Our code utilized JPanels when any significant error that wasn’t predicted such as password length or user messaging was encountered. This was followed up with a short JPanel Error showcasing the error to the user, then they are allowed to continue. 
+
 Phase 2 implementing Server and Client classes
 
 Client Class
@@ -13,6 +21,9 @@ Server class Methods: All of the following methods are private. createUser(Strin
 
 Server Interface
 This is where the server class is run through
+
+
+Phase 1 implementing the Database
 
 For this phase of the Team Project, create 5 classes total to serve as the basis of your Social Media Platform. The classes are as follows: BadInputException Is thrown whenever the input data is incorrect either due to parse error or just incorrect format
 
@@ -142,3 +153,4 @@ This interface specifies methods that User class should use which include the ad
 
 Data:
 This interface specifies methods that the Database class should use which include void setUsers(ArrayList<User> users), void readFile() throws IncorrectInfoException, boolean searchUser(String username), boolean addUser(String info), String viewUser(String username), boolean editUser(String oldInfo, String newInfo), boolean removeUser(String username)
+
