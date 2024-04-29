@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class ClientGUI extends JFrame implements Runnable {
     private Client client;
     private String user;
+    private String viewing;
     private ArrayList<String> chats;
     private JTextArea messageArea = new JTextArea();
     private ArrayList<String> chatLog;
@@ -384,33 +385,36 @@ public class ClientGUI extends JFrame implements Runnable {
         infoViewUser.setEditable(false);
         infoViewUser.setText("");
 
-        JLabel searchViewUser = new JLabel("Search User:");
-        searchViewUser.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        searchViewUser.setSize(200, 20);
-        searchViewUser.setLocation(75, 160);
+        JButton block = new JButton("Block");
+        block.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        block.setSize(100, 20);
+        block.setLocation(200, 200);
+        block.setVisible(false);
 
-        JTextField tsearchViewUser = new JTextField();
-        tsearchViewUser.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        tsearchViewUser.setSize(120, 20);
-        tsearchViewUser.setLocation(210, 160);
+        JButton unblock = new JButton("Unblock");
+        unblock.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        unblock.setSize(100, 20);
+        unblock.setLocation(200, 200);
+        unblock.setVisible(false);
 
-        JButton saveViewUser = new JButton("Search");
-        saveViewUser.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        saveViewUser.setSize(100, 20);
-        saveViewUser.setLocation(145, 220);
+        JButton add = new JButton("Add");
+        add.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        add.setSize(100, 20);
+        add.setLocation(90, 200);
+        add.setVisible(false);
 
-        JButton newUser = new JButton("Block");
-        newUser.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        newUser.setSize(100, 20);
-        newUser.setLocation(145, 280);
-        newUser.setVisible(false);
+        JButton unAdd = new JButton("Unfriend");
+        unAdd.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        unAdd.setSize(100, 20);
+        unAdd.setLocation(90, 200);
+        unAdd.setVisible(false);
 
-        viewContent.add(newUser);
+        viewContent.add(add);
+        viewContent.add(unAdd);
+        viewContent.add(block);
+        viewContent.add(unblock);
         viewContent.add(backViewUser);
         viewContent.add(infoViewUser);
-        viewContent.add(searchViewUser);
-        viewContent.add(tsearchViewUser);
-        viewContent.add(saveViewUser);
 
 
         ActionListener actionListener = new ActionListener() {
@@ -579,16 +583,72 @@ public class ClientGUI extends JFrame implements Runnable {
                     if (!client.viewUser(username, false).equals("Failure")) {
                         editUserFrame.setVisible(false);
                         viewUserFrame.setVisible(true);
+                        infoViewUser.selectAll();
+                        infoViewUser.replaceSelection("");
+                        String[] strings = client.viewUser(username, false).split(";");
+                        infoViewUser.append("Current Info\nUsername: " + strings[2] + "\nName: " + strings[0]
+                                + "\nEmail: " + strings[1]);
+                        System.out.println(client.getFriends(user));
+
+                        if (client.getFriends(user).contains(username)) {
+                            unAdd.setVisible(true);
+                            System.out.println("unadd");
+                        } else {
+                            add.setVisible(true);
+                            System.out.println("add");
+                        }
+
+                        if (client.getBlocked(user).contains(username)) {
+                            unblock.setVisible(true);
+                            add.setVisible(false);
+                            System.out.println("unblock");
+                        } else {
+                            block.setVisible(true);
+                            System.out.println("block");
+                        }
+
+                        viewing = username;
+
                     } else {
                         JOptionPane.showMessageDialog(null, "User does not exit",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else if (e.getSource() == saveViewUser) {
-                    String user = tsearchViewUser.getText();
-                    newUser.setVisible(true);
-                    /* if (client.viewUser(user) {
+                } else if ((e.getSource() == add) || (e.getSource() == unAdd)) {
+                    boolean friending = false;
 
-                    } */
+                    if (e.getSource() == add) {
+                        friending = true;
+                    }
+                    client.editFriends(friending, viewing, user);
+
+                    if (friending) {
+                        unAdd.setVisible(true);
+                        add.setVisible(false);
+                    } else {
+                        unAdd.setVisible(false);
+                        add.setVisible(true);
+                    }
+                } else if ((e.getSource() == block) || (e.getSource() == unblock)) {
+                    boolean blocking = false;
+
+                    if (e.getSource() == block) {
+                        blocking = true;
+                    }
+                    client.editBlocked(blocking, viewing, user);
+
+                    if (blocking) {
+                        unblock.setVisible(true);
+                        block.setVisible(false);
+                        add.setVisible(false);
+                        unAdd.setVisible(false);
+                    } else {
+                        unblock.setVisible(false);
+                        block.setVisible(true);
+                        add.setVisible(true);
+                    }
+                } else if (e.getSource() == backViewUser) {
+                    editUserFrame.setVisible(true);
+                    viewUserFrame.setVisible(false);
                 }
             }
         };
@@ -604,8 +664,12 @@ public class ClientGUI extends JFrame implements Runnable {
         sendButton.addActionListener(actionListener);
         backEditUser.addActionListener(actionListener);
         saveEditUser.addActionListener(actionListener);
-        saveViewUser.addActionListener(actionListener);
         search.addActionListener(actionListener);
+        add.addActionListener(actionListener);
+        unAdd.addActionListener(actionListener);
+        block.addActionListener(actionListener);
+        unblock.addActionListener(actionListener);
+        backViewUser.addActionListener(actionListener);
     }
 
     private void displayChatWindow(String chat, boolean inChat) {
@@ -710,7 +774,6 @@ public class ClientGUI extends JFrame implements Runnable {
 
                 messageContainer.add(deleteButton, BorderLayout.EAST);
                 messagePanel.repaint();
-
                 messageField.setText("");
                 messagePanel.repaint();
                 displayChatWindow(chat, inChat);
