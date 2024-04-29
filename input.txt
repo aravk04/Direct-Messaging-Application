@@ -21,3 +21,5 @@ wang4433,defaultFriend1;,defaultBlock1;,12345678,wang4433@purdue.edu,wang4433
 wangz,defaultFriend1;,defaultBlock1;,12345678,wang4444@purdue.edu,Zhaopeng Wang
 Danny,defaultFriend1;,defaultBlock1;,Danny001,Danny@purdue.edu,Danny001
 zjj,defaultFriend1;,defaultBlock1;,12345678,zjj@purdue.edu,zonglin133
+Eesha,defaultFriend1;,defaultBlock1;zonglin133;,eesha1234,efaruqi@gmail.com,efaruqi
+keya,defaultFriend1;,defaultBlock1;,iamkeya123,keya@gmail.com,Keya

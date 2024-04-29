@@ -86,7 +86,7 @@ public class MessageDatabase implements MessageData {
     public String getChat(String filename) throws IOException {
         String fileContent = "";
         // alphabatize file name
-        String[] users = filename.split(",");
+        String[] users = filename.split("-");
         Arrays.sort(users);
         filename = "";
         for (int i = 0; i < users.length; i++) {

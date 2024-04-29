@@ -39,13 +39,16 @@ public class Server implements Runnable {
                 ArrayList<String> participantChats = new ArrayList<String>();
                 while (line != null) {
                     chatId = line;
+                    if (chatId.equals("")) {
+                        continue;
+                    }
                     // now add each message to chats
                     //String chatFilename = chatId.replaceAll("-", ",");
                     String[] chatUsers = chatId.split("-");
                     Arrays.sort(chatUsers);
                     String chatFilename = "";
                     for (int i = 0; i < chatUsers.length; i++) {
-                        chatFilename += chatUsers[i] + "-";
+                        chatFilename += chatUsers[i] + ",";
                     }
                     chatFilename = chatFilename.substring(0, chatFilename.length() - 1);
                     chatFilename += ".csv";
