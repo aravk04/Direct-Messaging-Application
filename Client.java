@@ -1,6 +1,15 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+/**
+ * Client
+ *
+ * Client class
+ *
+ * @author Eesha Faruqi, Arav Kolli, Zonglin Jia,
+ * Harshil Shah, Benjamin Ascano
+ * @version April 29th, 2024
+ */
 
 public class Client implements Runnable {
     private Socket socket;
