@@ -465,18 +465,24 @@ public class Server implements Runnable {
             String[] info = payload.split(";");
             for (Map.Entry<String, User> entry : users.entrySet()) {
                 String key = entry.getKey();
+
                 User value = entry.getValue();
+
                 if (key.equals(info[0])) {
 
                     String oldInfo = users.get(info[0]).toString();
+                    System.out.println("oldInfo " + oldInfo);
+
                     User tempUser = users.get(info[0]);
                     tempUser.updateName(info[1]);
                     tempUser.setPassword(info[2]);
                     tempUser.setEmailAddress(info[3]);
 
                     String newInfo = tempUser.toString();
+                    System.out.println("newInfo =" + newInfo);
 
                     database.editUser(oldInfo, newInfo);
+                    database.rewriteFile();
 
                     out.println("True");
                     System.out.println("I: ");
@@ -490,29 +496,29 @@ public class Server implements Runnable {
 
             boolean personal = Boolean.parseBoolean(payload.substring(0, payload.indexOf(",")));
             String username = payload.substring(payload.indexOf(",") + 1);
-                for (Map.Entry<String, User> entry : users.entrySet()) {
-                    String key = entry.getKey();
-                    User value = entry.getValue();
-                    System.out.println("Key= " + key + ", Value= " + value);
-                    if (key.equals(username)) {
-                        if (personal) {
-                            out.println("True");
-                            out.println(value.retrieveName() +
-                                    ";" + value.getEmailAddress() + ";" + value.getUsername() + ";" + value.getPassword());
-                            System.out.println("J: ");
-                            success = true;
-                            break;
-                        } else {
-                            out.println("True");
-                            out.println(value.retrieveName() +
-                                    ";" + value.getEmailAddress() + ";" + value.getUsername());
-                            System.out.println("J: ");
-                            success = true;
-                            break;
-                        }
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String key = entry.getKey();
+                User value = entry.getValue();
+                System.out.println("Key= " + key + ", Value= " + value);
+                if (key.equals(username)) {
+                    if (personal) {
+                        out.println("True");
+                        out.println(value.retrieveName() +
+                                ";" + value.getEmailAddress() + ";" + value.getUsername() + ";" + value.getPassword());
+                        System.out.println("J: ");
+                        success = true;
+                        break;
+                    } else {
+                        out.println("True");
+                        out.println(value.retrieveName() +
+                                ";" + value.getEmailAddress() + ";" + value.getUsername());
+                        System.out.println("J: ");
+                        success = true;
+                        break;
                     }
-                    System.out.println("success " + success);
                 }
+                System.out.println("success " + success);
+            }
 
             System.out.println("success OUT of the loop " + success);
             if (!success) {
