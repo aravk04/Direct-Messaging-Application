@@ -519,7 +519,9 @@ public class ClientGUI extends JFrame implements Runnable {
                     infoEditUser.replaceSelection("");
                     infoViewUser.selectAll();
                     infoViewUser.replaceSelection("");
-
+                    tnameEditUser.setText("");
+                    tpasswordEditUser.setText("");
+                    temailEditUser.setText("");
                 } else if (e.getSource() == sendButton) {
                     String message = messageField.getText();
                     String recipients = recipientField.getText();
