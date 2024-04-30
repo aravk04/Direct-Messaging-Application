@@ -292,7 +292,7 @@ public class Server implements Runnable {
             for (String s : receiverArray) {
                 if (!s.equals(sender)) {
                     receiveArrayList.add(s);
-                    receivers = s + ";";
+                    receivers = receivers + s + ";";
                 }
             }
 
